@@ -1,0 +1,3661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fire show — character book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet">
+<script>try{if(localStorage.getItem('pc-theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
+<style>
+  :root {
+    color-scheme: dark;
+    --smoke:    #000000;
+    --smoke-up: #131313;
+    --ember:    #B23A40;
+    --amber:    #B23A40;
+    --ash:      #E4E4E4;
+    --ash-dim:  #8E8E8E;
+    --cold:     #FFFFFF;
+    --paper:    #FFFFFF;
+    --new:      #C9A05C;
+    --fg-rgb:   255, 255, 255;
+    --nav-bg:   rgba(42, 29, 25, .93);
+    --glow:     rgba(178,58,64,.16);
+
+    --sans: "Archivo", "Helvetica Neue", Arial, sans-serif;
+    --display: "Archivo Black", "Archivo", Impact, sans-serif;
+
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  *, *::before, *::after { box-sizing: inherit; }
+
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+  body {
+    margin: 0;
+    background: var(--smoke);
+    background-image:
+      radial-gradient(120% 55% at 50% 0%, var(--glow) 0%, transparent 60%);
+    background-repeat: no-repeat;
+    color: var(--ash);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 0 1.4rem 6rem;
+  }
+
+  /* ---------- top navigation ---------- */
+  .topnav {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--nav-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(var(--fg-rgb), .18);
+  }
+  .topnav-inner {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 0 1.4rem;
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .topnav-inner::-webkit-scrollbar { display: none; }
+
+  .topnav a {
+    flex: none;
+    padding: .95rem 0;
+    font-size: .93rem;
+    font-weight: 500;
+    color: var(--ash-dim);
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+  .topnav a:hover { color: var(--paper); }
+  .topnav a.here {
+    color: var(--ember);
+    border-bottom-color: var(--ember);
+  }
+
+  section { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 7.5rem); }
+
+  /* ---------- hero ---------- */
+  header { padding: 3.4rem 0 3.2rem; }
+
+  .kicker {
+    font-size: .92rem;
+    color: var(--ash-dim);
+    margin: 0 0 1.1rem;
+    letter-spacing: .01em;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(2.6rem, 11vw, 4.6rem);
+    line-height: .94;
+    letter-spacing: -.02em;
+    color: var(--paper);
+    margin: 0 0 1.4rem;
+    text-wrap: balance;
+  }
+  h1 .burn {
+    display: block;
+    color: var(--ember);
+    text-shadow: 0 0 34px rgba(178, 58, 64, .45);
+    animation: flicker 7s ease-in-out infinite;
+  }
+  @keyframes flicker {
+    0%, 100% { text-shadow: 0 0 34px rgba(178,58,64,.42); }
+    43%      { text-shadow: 0 0 20px rgba(178,58,64,.20); }
+    57%      { text-shadow: 0 0 48px rgba(178,58,64,.60); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    h1 .burn { animation: none; }
+  }
+
+  .standfirst {
+    font-size: 1.1rem;
+    max-width: 34rem;
+    margin: 0 0 2.2rem;
+  }
+
+  /* ---------- temperature legend ---------- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+    padding: 1.1rem 0 0;
+    border-top: 1px solid rgba(var(--fg-rgb), .18);
+    font-size: .93rem;
+    color: var(--ash-dim);
+  }
+  .legend div { display: flex; align-items: center; gap: .6rem; }
+  .swatch { width: 3px; height: 1.1rem; border-radius: 2px; flex: none; }
+  .swatch.hot  { background: var(--ember); }
+  .swatch.yours { background: var(--paper); }
+  .swatch.new  { background: var(--new); }
+  .swatch.cool { background: rgba(var(--fg-rgb), .7); }
+
+
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --smoke:    #FAF7F2;
+    --smoke-up: #EFEAE2;
+    --ember:    #A3303A;
+    --amber:    #A3303A;
+    --ash:      #26221F;
+    --ash-dim:  #6E6760;
+    --cold:     #111111;
+    --paper:    #111111;
+    --new:      #8A6116;
+    --fg-rgb:   0, 0, 0;
+    --nav-bg:   rgba(250, 247, 242, .94);
+    --glow:     rgba(178,58,64,.10);
+  }
+  :root[data-theme="light"] h1 .burn { text-shadow: none; animation: none; }
+
+  /* ---------- theme toggle ---------- */
+  .pager .theme-toggle {
+    margin-left: auto;
+    align-self: center;
+    font-family: var(--sans);
+    font-size: .85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--ash-dim);
+    border: 1px solid rgba(var(--fg-rgb), .22);
+    border-radius: 999px;
+    padding: .3rem .8rem;
+    margin-bottom: .6rem;
+  }
+  .pager .theme-toggle::after { display: none; }
+  .pager .theme-toggle:hover { color: var(--paper); }
+
+
+  /* ---------- search ---------- */
+  .pager .search-toggle {
+    margin-left: auto;
+    align-self: center;
+    font-family: var(--sans);
+    font-size: .85rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--ash-dim);
+    border: 1px solid rgba(var(--fg-rgb), .22);
+    border-radius: 999px;
+    padding: .3rem .8rem;
+    margin-bottom: .6rem;
+  }
+  .pager .search-toggle::after { display: none; }
+  .pager .search-toggle:hover, .pager .search-toggle[aria-expanded="true"] { color: var(--paper); }
+  .pager .search-toggle + .theme-toggle { margin-left: -.9rem; }
+  .searchbar {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: .6rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    border-bottom: 1px solid rgba(var(--fg-rgb), .08);
+  }
+  .searchbar[hidden] { display: none; }
+  .searchbar input {
+    flex: 1;
+    min-width: 0;
+    font: inherit;
+    font-size: 1rem;
+    color: var(--paper);
+    background: rgba(var(--fg-rgb), .06);
+    border: 1px solid rgba(var(--fg-rgb), .2);
+    border-radius: 6px;
+    padding: .45rem .7rem;
+  }
+  .searchbar input:focus { outline: 2px solid var(--ember); outline-offset: 1px; }
+  .searchbar .count {
+    font-size: .85rem;
+    color: var(--ash-dim);
+    white-space: nowrap;
+    min-width: 3.5rem;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .searchbar button {
+    font: inherit;
+    font-size: .9rem;
+    color: var(--ash);
+    background: none;
+    border: 1px solid rgba(var(--fg-rgb), .22);
+    border-radius: 6px;
+    padding: .35rem .6rem;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .searchbar button:hover { color: var(--paper); }
+  mark.hit {
+    background: rgba(201, 160, 92, .35);
+    color: inherit;
+    border-radius: 2px;
+  }
+  mark.hit.now {
+    background: var(--ember);
+    color: #fff;
+  }
+
+
+  /* ---------- alternate choices ---------- */
+  .branch {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: .75rem;
+    align-items: stretch;
+    margin: 1.1rem 0;
+  }
+  .branch-or {
+    align-self: center;
+    justify-self: center;
+    font-family: var(--display);
+    font-size: .72rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+  }
+  .branch-opt {
+    border: 1px solid rgba(var(--fg-rgb), .14);
+    border-top: 3px solid var(--ember);
+    border-radius: 6px;
+    padding: .8rem 1rem .9rem;
+    background: rgba(var(--fg-rgb), .03);
+  }
+  .branch-if {
+    display: block;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: .45rem;
+  }
+  .branch-opt > .script:last-child, .branch-opt > .gloss:last-child { margin-bottom: 0; }
+  .branch-opt > .script:first-of-type { margin-top: 0; }
+  .branch.stack { grid-template-columns: 1fr; gap: 0; }
+  .rewind {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin: .7rem 0;
+    font-size: .82rem;
+    color: var(--ash-dim);
+  }
+  .rewind::before, .rewind::after {
+    content: "";
+    flex: 1;
+    border-top: 1px dashed rgba(var(--fg-rgb), .25);
+  }
+  @media (max-width: 560px) {
+    .branch { grid-template-columns: 1fr; gap: .5rem; }
+  }
+
+
+  /* ---------- tonight running order ---------- */
+  .act-mark {
+    display: flex;
+    align-items: baseline;
+    gap: .8rem;
+    margin: 2rem 0 1.2rem;
+    padding: .7rem 1rem;
+    border-radius: 6px;
+    background: var(--ember);
+    color: #fff;
+  }
+  .act-mark .n {
+    font-family: var(--display);
+    font-size: 1.05rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+  }
+  .act-mark .who { font-size: .95rem; opacity: .9; }
+  .gap { margin: 0 0 .4rem; }
+  .gap h4 {
+    font-family: var(--display);
+    font-size: .8rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    margin: 0 0 .7rem;
+  }
+  .gap .again {
+    font-family: var(--sans);
+    font-size: .72rem;
+    letter-spacing: .06em;
+    color: var(--ember);
+    margin-left: .4rem;
+  }
+
+
+  /* ---------- perform screens ---------- */
+  .perform-btn {
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    margin: .55rem 0 .2rem;
+    font: inherit;
+    font-size: .78rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    background: none;
+    border: 1px solid rgba(var(--fg-rgb), .22);
+    border-radius: 999px;
+    padding: .2rem .65rem;
+    cursor: pointer;
+  }
+  .perform-btn:hover { color: var(--paper); border-color: var(--ember); }
+  .gap > .perform-btn { margin: 0 0 .7rem; }
+
+  .stage {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    background: var(--smoke);
+  }
+  .stage[hidden] { display: none; }
+  .stage-bar {
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    padding: .7rem 1rem;
+    padding-top: calc(env(safe-area-inset-top, 0px) + .7rem);
+    border-bottom: 1px solid rgba(var(--fg-rgb), .14);
+    background: var(--nav-bg);
+  }
+  .stage-bar .stage-title {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--display);
+    font-size: 1rem;
+    color: var(--paper);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stage-bar button {
+    flex: none;
+    font: inherit;
+    font-size: .85rem;
+    color: var(--ash);
+    background: none;
+    border: 1px solid rgba(var(--fg-rgb), .22);
+    border-radius: 999px;
+    padding: .25rem .7rem;
+    cursor: pointer;
+    line-height: 1.3;
+  }
+  .stage-bar button:hover { color: var(--paper); }
+
+  .stage-scroll {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  .stage-inner {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 1.6rem 1.4rem 60vh;
+    font-size: var(--stage-scale, 1.18rem);
+  }
+  .stage-inner .script { font-size: 1.18em; line-height: 1.55; margin: 0 0 1.05em; }
+  .stage-inner .cue { font-size: .95em; margin: 0 0 1.05em; }
+  .stage-inner .gloss { font-size: .9em; }
+  .stage-inner .spec, .stage-inner ul.bits { font-size: .92em; }
+  .stage-inner .choreo-h { font-size: .72em; }
+  .stage-end {
+    margin-top: 2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(var(--fg-rgb), .14);
+    font-size: .8rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+  }
+
+  .stage-ctl {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .6rem 1rem;
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + .6rem);
+    border-top: 1px solid rgba(var(--fg-rgb), .14);
+    background: var(--nav-bg);
+  }
+  .stage-ctl button {
+    font: inherit;
+    font-size: 1rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--ash);
+    background: none;
+    border: 1px solid rgba(var(--fg-rgb), .22);
+    border-radius: 999px;
+    min-width: 2.6rem;
+    padding: .4rem .7rem;
+    cursor: pointer;
+    line-height: 1.2;
+  }
+  .stage-ctl button:hover { color: var(--paper); }
+  .stage-ctl .play {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: #fff;
+    min-width: 4.2rem;
+    font-weight: 600;
+  }
+  .stage-ctl .spd {
+    font-size: .85rem;
+    color: var(--ash-dim);
+    min-width: 4.4rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  body.stage-open { overflow: hidden; }
+
+
+  .alt-body {
+    margin-top: 1.7rem;
+    padding-top: 1.3rem;
+    border-top: 1px dashed rgba(var(--fg-rgb), .22);
+  }
+
+  .roster { display: flex; flex-wrap: wrap; gap: .3rem .35rem; margin: 0 0 .5rem; }
+  .roster .who {
+    display: inline-flex; align-items: baseline; gap: .28rem;
+    font-family: var(--sans); font-size: .76rem;
+    padding: .2rem .5rem .22rem .55rem;
+    border: 1px solid rgba(var(--fg-rgb), .16);
+    border-radius: 999px;
+    background: rgba(var(--fg-rgb), .04);
+    white-space: nowrap;
+  }
+  .roster .who i { font-style: normal; font-size: .6rem; font-weight: 700; color: var(--ember); opacity: .85; }
+  .choreo-h .count { font-weight: 400; opacity: .55; margin-left: .35rem; }
+
+  /* ---------- chords over lyrics ---------- */
+  .lyrics .stanza { line-height: 1.75; }
+  .lyrics .ln { display: block; }
+  .lyrics .cw {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    vertical-align: bottom;
+  }
+  .lyrics .ch {
+    display: block;
+    font-family: var(--sans);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .09em;
+    line-height: 1;
+    color: var(--ember);
+    background: rgba(var(--fg-rgb), .06);
+    border: 1px solid rgba(var(--fg-rgb), .14);
+    border-radius: 3px;
+    padding: .2rem .36rem .18rem;
+    margin-bottom: .25rem;
+    white-space: nowrap;
+  }
+
+  /* ---------- pager ---------- */
+  .pager {
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: .9rem 1.4rem 0;
+    display: flex;
+    gap: 1.6rem;
+    border-bottom: 1px solid rgba(var(--fg-rgb), .08);
+  }
+  .pager button {
+    position: relative;
+    background: none;
+    border: 0;
+    padding: .1rem 0 .7rem;
+    margin: 0;
+    cursor: pointer;
+    font-family: var(--display);
+    font-size: 1.12rem;
+    letter-spacing: -.01em;
+    color: var(--ash-dim);
+    transition: color .15s ease;
+  }
+  .pager button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 3px;
+    background: var(--ember);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .2s ease;
+  }
+  .pager button:hover { color: var(--ash); }
+  .pager button { white-space: nowrap; }
+  @media (max-width: 560px) {
+    .pager { gap: .85rem; padding-left: 1rem; padding-right: 1rem; }
+    .pager button[data-page] { font-size: .95rem; }
+    .pager .search-toggle, .pager .theme-toggle { font-size: .72rem; padding: .22rem .5rem; }
+    .pager .search-toggle + .theme-toggle { margin-left: -.35rem; }
+  }
+  .pager button[aria-current="true"] { color: var(--paper); }
+  .pager button[aria-current="true"]::after { transform: scaleX(1); }
+  .pager button:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 4px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .pager button, .pager button::after { transition: none; }
+  }
+  .topnav-inner[hidden], .page[hidden] { display: none; }
+
+  /* ---------- script blocks ---------- */
+  .add { color: var(--new); }
+  .add-tag {
+    display: inline-block;
+    font-size: .74rem;
+    font-weight: 600;
+    color: var(--new);
+    border: 1px solid rgba(201, 160, 92, .45);
+    border-radius: 2px;
+    padding: .05rem .4rem;
+    margin-bottom: .55rem;
+  }
+  .script {
+    color: var(--paper);
+    font-size: 1.06rem;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+  }
+  .script + .script { margin-top: -.3rem; }
+  .script.add { color: var(--new); }
+  ul.bits li.mine { color: var(--paper); }
+  .script strong { font-weight: 700; }
+  .cue {
+    color: var(--ember);
+    font-size: .93rem;
+    font-weight: 500;
+  }
+  .gloss {
+    color: var(--ash-dim);
+    font-size: .96rem;
+    margin: .2rem 0 0;
+  }
+  .todo {
+    border-left: 3px solid var(--amber);
+    padding-left: 1.3rem;
+    margin-bottom: 1.8rem;
+  }
+  .todo h3 {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    color: var(--paper);
+    margin: 0 0 .4rem;
+  }
+  .todo p { margin: 0 0 .7rem; }
+  .todo p:last-child { margin-bottom: 0; }
+
+  /* ---------- sections ---------- */
+  section { margin-top: 4rem; }
+
+  h2 {
+    font-family: var(--display);
+    font-size: clamp(1.5rem, 5.4vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -.015em;
+    color: var(--paper);
+    margin: 0 0 .6rem;
+  }
+  .sec-note {
+    color: var(--ash-dim);
+    max-width: 34rem;
+    margin: 0 0 2.2rem;
+  }
+
+  /* ---------- character entries ---------- */
+  .chars { display: flex; flex-direction: column; gap: 1rem; }
+
+  .char {
+    border-left: 3px solid var(--ember);
+    padding-left: 1.3rem;
+  }
+
+  .char > summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: .7rem;
+    padding: .1rem 0;
+  }
+  .char > summary::-webkit-details-marker { display: none; }
+
+  .char h3 {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--display);
+    font-size: 1.32rem;
+    line-height: 1.15;
+    color: var(--paper);
+    margin: 0;
+  }
+  .char > summary::after {
+    content: "";
+    flex: none;
+    align-self: flex-start;
+    margin-top: .45em;
+    width: .5rem;
+    height: .5rem;
+    border-right: 2px solid var(--ember);
+    border-bottom: 2px solid var(--ember);
+    transform: rotate(45deg);
+    transition: transform .18s ease;
+  }
+  .char[open] > summary::after { transform: rotate(-135deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .char > summary::after { transition: none; }
+  }
+  .char > summary .perform-btn {
+    flex: none;
+    align-self: flex-start;
+    margin: .15rem 0 0;
+  }
+
+  .char .essence {
+    display: block;
+    font-family: var(--sans);
+    font-size: .97rem;
+    font-weight: 500;
+    line-height: 1.45;
+    color: rgba(var(--fg-rgb), .78);
+    margin-top: .2rem;
+  }
+
+  .char > summary:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 4px;
+  }
+  .char > summary:hover h3 { color: var(--paper); }
+
+  .char-body { padding-top: .9rem; }
+  .char-body > :last-child { margin-bottom: 0; }
+
+  .char p { margin: 0 0 .85rem; }
+
+  /* ---------- expand / collapse control ---------- */
+  .allctl {
+    background: none;
+    border: 1px solid rgba(var(--fg-rgb), .28);
+    border-radius: 2px;
+    color: var(--ash);
+    font: inherit;
+    font-size: .88rem;
+    padding: .34rem .8rem;
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+  }
+  .allctl:hover {
+    color: var(--paper);
+    border-color: var(--amber);
+  }
+
+  .spec {
+    margin: 0 0 .9rem;
+    padding: 0;
+    list-style: none;
+    font-size: .95rem;
+    color: var(--ash-dim);
+  }
+  .spec li { margin: 0; }
+  .spec b {
+    color: var(--ash);
+    font-weight: 600;
+  }
+  .spec a {
+    color: var(--amber);
+    text-decoration-color: rgba(178, 58, 64, .6);
+    text-underline-offset: 3px;
+  }
+  .spec a:hover { text-decoration-color: var(--amber); }
+  .cast .aka a {
+    color: var(--ash-dim);
+    text-decoration-color: rgba(var(--fg-rgb), .35);
+    text-underline-offset: 3px;
+  }
+  .cast .aka a:hover { color: var(--amber); }
+
+  ul.bits {
+    margin: 0;
+    padding-left: 1.15rem;
+  }
+  ul.bits li { margin-bottom: .32rem; }
+  ul.bits li::marker { color: var(--ember); }
+
+  /* ---------- current cast ---------- */
+  .cast {
+    display: grid;
+    gap: 1.5rem;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
+  @media (min-width: 40rem) {
+    .cast { grid-template-columns: 1fr 1fr; gap: 1.6rem 2.4rem; }
+  }
+  .cast li { border-top: 1px solid rgba(var(--fg-rgb), .18); padding-top: .9rem; }
+  .cast strong {
+    display: block;
+    font-family: var(--display);
+    font-weight: normal;
+    color: var(--paper);
+    font-size: 1.05rem;
+    margin-bottom: .2rem;
+  }
+  .cast span { font-size: .95rem; color: var(--ash-dim); }
+  .cast .aka {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: .82rem;
+    color: var(--ash-dim);
+  }
+  .cast em {
+    color: var(--ember);
+    font-style: normal;
+  }
+
+
+  /* ---------- choreography sheets ---------- */
+  .char h3 .aka {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: .8rem;
+    color: var(--ash-dim);
+    margin-left: .15rem;
+  }
+  .choreo-h {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    margin: 1.4rem 0 .2rem;
+  }
+  .choreo {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid rgba(var(--fg-rgb), .14);
+  }
+  .choreo > li {
+    display: grid;
+    grid-template-columns: 3.1rem 1fr;
+    gap: 0 .9rem;
+    padding: .6rem 0;
+    border-bottom: 1px solid rgba(var(--fg-rgb), .08);
+  }
+  .choreo .t {
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    font-size: .92rem;
+    color: var(--ember);
+    padding-top: .06rem;
+  }
+  .choreo .mcue {
+    display: block;
+    color: var(--paper);
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .choreo .mv {
+    display: block;
+    color: var(--ash);
+    font-size: .96rem;
+    line-height: 1.5;
+  }
+  .choreo .mv.empty { color: var(--ash-dim); }
+  .choreo .cnote {
+    display: block;
+    color: var(--ash-dim);
+    font-size: .9rem;
+    font-style: italic;
+  }
+  .choreo ul.sub {
+    margin: .25rem 0 0;
+    padding-left: 1.05rem;
+    color: var(--ash);
+    font-size: .96rem;
+  }
+  .choreo ul.sub li { margin-bottom: .15rem; }
+  .choreo ul.sub li::marker { color: var(--ember); }
+
+
+  /* ---------- cast groups + lyrics ---------- */
+  .group-h {
+    font-size: .8rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ash-dim);
+    margin: 2.2rem 0 1rem;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid rgba(var(--fg-rgb), .14);
+  }
+  .group-h:first-of-type { margin-top: .6rem; }
+  .lyric-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .6rem 1.6rem;
+    align-items: center;
+    font-size: .95rem;
+    color: var(--ash);
+    margin-bottom: .9rem;
+  }
+  .lyric-meta b { color: var(--paper); font-weight: 600; margin-right: .35rem; }
+  .chord {
+    display: inline-block;
+    min-width: 1.7rem;
+    text-align: center;
+    border: 1px solid rgba(var(--fg-rgb), .28);
+    border-radius: 2px;
+    padding: .05rem .35rem;
+    margin-right: .3rem;
+    font-weight: 600;
+    color: var(--paper);
+  }
+  .lyrics { padding-top: .4rem; }
+  .lyrics .stanza {
+    color: var(--paper);
+    line-height: 1.6;
+    margin: 0 0 1.15rem;
+  }
+  .lyrics .st-label {
+    display: block;
+    font-size: .74rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin: .6rem 0 .3rem;
+  }
+
+
+  /* ---------- alternate endings ---------- */
+  .alt {
+    margin: 1.4rem 0 1.2rem;
+    border: 1px solid rgba(var(--fg-rgb), .14);
+    border-radius: 4px;
+    background: var(--smoke-up);
+    overflow: hidden;
+  }
+  .alt-lead {
+    margin: 0;
+    padding: .85rem 1.1rem .75rem;
+    font-size: .88rem;
+    color: var(--ash-dim);
+    border-bottom: 1px solid rgba(var(--fg-rgb), .08);
+  }
+  .alt-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-bottom: 1px solid rgba(var(--fg-rgb), .1);
+  }
+  .alt-tabs button {
+    position: relative;
+    text-align: left;
+    background: none;
+    border: 0;
+    padding: .8rem 1.1rem .85rem;
+    cursor: pointer;
+    font: inherit;
+    color: var(--ash-dim);
+    transition: background .15s ease, color .15s ease;
+  }
+  .alt-tabs button + button { border-left: 1px solid rgba(var(--fg-rgb), .1); }
+  .alt-tabs button::before {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; top: 0;
+    height: 3px;
+    background: var(--ember);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .2s ease;
+  }
+  .alt-tabs button[aria-selected="true"] {
+    background: rgba(var(--fg-rgb), .045);
+    color: var(--paper);
+  }
+  .alt-tabs button[aria-selected="true"]::before { transform: scaleX(1); }
+  .alt-tabs button:hover { color: var(--ash); }
+  .alt-tabs button:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: -2px;
+  }
+  .alt-kicker {
+    display: block;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin-bottom: .15rem;
+  }
+  .alt-tabs button[aria-selected="false"] .alt-kicker { color: var(--ash-dim); }
+  .alt-title {
+    display: block;
+    font-family: var(--display);
+    font-size: 1.02rem;
+    line-height: 1.2;
+  }
+  .alt-panel { padding: 1.1rem 1.1rem .4rem; }
+  .alt-panel[hidden] { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .alt-tabs button, .alt-tabs button::before { transition: none; }
+  }
+
+  .new-inline { color: var(--new); }
+  /* ---------- bank ---------- */
+  .bank { display: flex; flex-direction: column; gap: 2.2rem; }
+  .bank h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--paper);
+    margin: 0 0 .7rem;
+    padding-bottom: .5rem;
+    border-bottom: 1px solid rgba(var(--fg-rgb), .18);
+  }
+  .bank dl { margin: 0; }
+  .bank dt {
+    font-weight: 600;
+    color: var(--ash);
+    display: inline;
+  }
+  .bank dd {
+    display: inline;
+    margin: 0;
+    color: var(--ash-dim);
+  }
+  .bank dd::after { content: ""; display: block; height: .5rem; }
+
+  /* ---------- notes ---------- */
+  .note {
+    background: var(--smoke-up);
+    border-radius: 3px;
+    padding: 1.4rem 1.5rem;
+    margin-top: 1.6rem;
+  }
+  .note h3 {
+    font-size: 1.02rem;
+    color: var(--paper);
+    margin: 0 0 .5rem;
+  }
+  .note p:last-child { margin-bottom: 0; }
+
+  footer {
+    margin-top: 5rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(var(--fg-rgb), .18);
+    font-size: .92rem;
+    color: var(--ash-dim);
+  }
+
+  a { color: var(--amber); }
+  a:focus-visible, :focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+  }
+</style>
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+<nav class="topnav" aria-label="Sections">
+  <div class="pager">
+    <button type="button" data-page="characters" aria-current="true">Characters</button>
+    <button type="button" data-page="mc">MC script</button>
+    <button type="button" data-page="tonight">Tonight</button>
+    <button type="button" class="search-toggle" aria-expanded="false" aria-controls="searchbar">Search</button>
+    <button type="button" class="theme-toggle" aria-label="Switch colour theme">Light</button>
+  </div>
+  <div class="searchbar" id="searchbar" role="search" hidden>
+    <input type="search" placeholder="Search the book and script" aria-label="Search" autocomplete="off">
+    <span class="count" aria-live="polite"></span>
+    <button type="button" data-step="-1" aria-label="Previous match">&uarr;</button>
+    <button type="button" data-step="1" aria-label="Next match">&darr;</button>
+    <button type="button" data-close aria-label="Close search">&times;</button>
+  </div>
+  <div class="topnav-inner" data-nav="characters">
+    <a href="#cast">Cast</a>
+    <a href="#fire">Movement &amp; fire</a>
+    <a href="#voice">Voice</a>
+    <a href="#voiceover">Voiceover</a>
+    <a href="#music">Music</a>
+    <a href="#puppets">Finger puppets</a>
+    <a href="#interactive">Interactive</a>
+    <a href="#bank">Bank</a>
+    <a href="#staging">Staging</a>
+  </div>
+  <div class="topnav-inner" data-nav="mc" hidden>
+    <a href="#prep">Preparation</a>
+    <a href="#open">Opening</a>
+    <a href="#between">Between acts</a>
+    <a href="#close">Close</a>
+    <a href="#gaps">Needs writing</a>
+  </div>
+  <div class="topnav-inner" data-nav="tonight" hidden>
+    <a href="#t-before">Preparation</a>
+    <a href="#t-open">Opening</a>
+    <a href="#t-first">Acts 1–6</a>
+    <a href="#t-second">Acts 7–12</a>
+    <a href="#t-close">Close</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<div class="page" data-page="characters">
+
+<header>
+  <p class="kicker">Working notes — contact staff, dragon staff, voice, loop</p>
+  <h1>Who is holding<span class="burn">the fire</span></h1>
+  <p class="standfirst">
+    Three kinds of act, and they ask for different things. Movement acts build
+    character from silhouette. Voice acts name it out loud. Music acts let the
+    loop do the structuring. One character per act, no borrowing between
+    sections — a face that appears twice stops being a character.
+  </p>
+</header>
+
+<section id="cast">
+  <h2>The characters you already have</h2>
+  <p class="sec-note">
+    Acts that already exist, split by type, with their choreography or lyrics.
+    Noted here for what they own, so the new characters do not take it.
+  </p>
+
+  <h3 class="group-h">Movement &amp; fire</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>The lover <span class="aka">(Egyptian Lover)</span><span class="essence">Fire is seduction — and he is sure it is working</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Song</b> <a href="https://open.spotify.com/search/Egyptian%20Lover%20Egypt%20Egypt">Egyptian Lover</a></li>
+        </ul>
+        <p>Magic Mike, catwalk shuffle, the worm. Fire toward the body rather
+        than away from it, offered outward — the opposite of every other
+        character here. He wants to be wanted and is convinced it is working.
+        The worm is the part where it is only mostly working. The story is in
+        the check to see whether it landed.</p>
+        <h4 class="choreo-h">Choreography</h4>
+        <ol class="choreo">
+          <li><span class="t">0:00</span><div><span class="mcue">Egypt, Egypt</span></div></li>
+          <li><span class="t">0:04</span><div><span class="mcue">Woah</span><span class="mv">Intro turns</span></div></li>
+          <li><span class="t">0:19</span><div><span class="mcue">Egypt</span><span class="mv">Elbow hip thing</span></div></li>
+          <li><span class="t">0:28</span><div><span class="mcue">Egyptian lover</span><span class="mv">Catwalk, catwalk, point finger up</span></div></li>
+          <li><span class="t">0:35</span><div><span class="mcue">Organs / strings</span><span class="mv">Slow-mo turn sequence that ends going to floorwork — through Magic Mike, or falling</span></div></li>
+          <li><span class="t">0:50</span><div><span class="mcue">Bass</span><span class="mv">Floorwork</span></div></li>
+          <li><span class="t">1:04</span><div><span class="mcue">Whips</span><span class="mv">Mime, getting a stick</span></div></li>
+          <li><span class="t">1:21</span><div><span class="mcue">Egypt, Egypt</span><span class="mv">Light a stick just before the cheer for Egypt, spin staff</span></div></li>
+          <li><span class="t">1:35</span><div><span class="mcue">Give me a freaky kindly nation</span><span class="mv">Neck roll, abandoning the stick</span></div></li>
+          <li><span class="t">1:50</span><div><span class="mcue">I&rsquo;m a Egyptian lover</span><span class="mv">Point to chest, heart-leading push-pull</span></div></li>
+          <li><span class="t">1:57</span><div><span class="mcue">I mix so fast</span><span class="mv">Go to the knees, then worm, die, seizure, resurrect to wide seat</span></div></li>
+          <li><span class="t">2:05</span><div><span class="mcue">Break &rarr; I need to &rarr; Egyptian lover &rarr; break</span></div></li>
+          <li><span class="t">2:20</span><div><span class="mcue">Egypt is the place to be</span><span class="mv">Fishtail</span></div></li>
+          <li><span class="t">2:36</span><div><span class="mcue">Pyramids are all so shiny</span><span class="mv">Throws</span></div></li>
+          <li><span class="t">2:51</span><div><span class="mcue">Tetris</span><span class="mv">Spinning, fold down</span></div></li>
+          <li><span class="t">3:05</span><div><span class="mcue">End</span><span class="mv">Fold</span></div></li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The chancer <span class="aka">(Jackie Jackie)</span><span class="essence">Fire is what nearly catches him out</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Song</b> <a href="https://open.spotify.com/search/Jackie%20Jackie%20Puneeth%20Rajkumar">Jackie Jackie</a></li>
+        </ul>
+        <p>Shy small steps, then the side kicks, then the big sways carry him
+        off and he is barely holding on. Trouble, then an escape at the last
+        moment that happens to look good. Not lucky, not skilled. Getting away
+        with it. The story is in the recoveries, not in the moves he recovers
+        from.</p>
+        <h4 class="choreo-h">Choreography</h4>
+        <ol class="choreo">
+          <li><span class="t">0:00</span><div><span class="mcue">Intro</span></div></li>
+          <li><span class="t">0:20</span><div><span class="mv">Gentle side kicks</span></div></li>
+          <li><span class="t">0:24</span><div><span class="mv">Fishtails</span></div></li>
+          <li><span class="t">0:31</span><div><span class="mcue">Drop to Jackie Jackie</span></div></li>
+          <li><span class="t">0:45</span><div><span class="mv">Free flow</span></div></li>
+          <li><span class="t">0:56</span><div><span class="mcue">Tututurutuu</span><span class="mv">Throw, neck rolls, cartwheel, low cartwheel, end on cartwheel</span></div></li>
+          <li><span class="t">1:09</span><div><span class="mcue">Mistake — ule brigu</span><span class="mv">Neck holds and spins</span></div></li>
+          <li><span class="t">1:24</span><div><span class="mcue">Big drop to Jackie Jackie</span><span class="cnote">Start from Steve</span></div></li>
+          <li><span class="t">1:40</span><div><span class="mv">Free flow</span></div></li>
+          <li><span class="t">1:47</span><div><span class="mcue">Wooshes to ambient music</span><ul class="sub"><li>Spins while holding staff</li><li>Going to overhead plane</li><li>Jumping over the thrown staff</li><li>End in entrance to some groundwork for the gentle Jackie Jackie</li></ul></div></li>
+          <li><span class="t">2:06</span><div><span class="mcue">Small gentle drop to Jackie Jackie</span><span class="mv">Go to knees</span></div></li>
+          <li><span class="t">2:14</span><div><span class="mv">Free flow</span></div></li>
+          <li><span class="t">2:17</span><div><span class="mcue">Last drop</span></div></li>
+        </ol>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Gimme Pizza <span class="aka">(Gimme Pizza)</span><span class="essence">Smooth movement</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Song</b> <a href="https://open.spotify.com/search/Gimme%20Pizza">Gimme Pizza</a></li>
+        </ul>
+        <p>A smooth movement act. The sheet below is the music structure; the
+        moves for each section are still to be written in.</p>
+        <h4 class="choreo-h">Music structure</h4>
+        <ol class="choreo">
+          <li><span class="t">0:00</span><div><span class="mcue">Intro</span></div></li>
+          <li><span class="t">0:23</span><div><span class="mcue">I want pizza</span></div></li>
+          <li><span class="t">0:40</span><div><span class="mcue">Drop</span></div></li>
+          <li><span class="t">0:44</span><div><span class="mcue">Verse</span></div></li>
+          <li><span class="t">1:00</span><div><span class="mcue">Here&rsquo;s little salsa</span></div></li>
+          <li><span class="t">1:16</span><div><span class="mcue">Gimme pizza</span></div></li>
+          <li><span class="t">1:46</span><div><span class="mcue">Verse</span></div></li>
+          <li><span class="t">2:02</span><div><span class="mcue">Chicken chicken</span></div></li>
+          <li><span class="t">2:10</span><div><span class="mcue">Drop, verse continues</span></div></li>
+          <li><span class="t">2:30</span><div><span class="mcue">Italian</span></div></li>
+          <li><span class="t">2:39</span><div><span class="mcue">End</span></div></li>
+        </ol>
+      </div>
+    </details>
+
+  
+  </div>
+
+  <h3 class="group-h">Voice</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>The box<span class="essence">A cardboard box wanders into a fire circus, very slowly</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>The object</b> A big box built from several boxes, googly eyes
+            on the top one, you inside it. Large enough to read from the back
+            of the pitch</li>
+          <li><b>Movement</b> Slow travel across the stage. Inches at a time,
+            never hurried, never explained. The slowness is half the
+            comedy</li>
+          <li><b>Voice</b> A curious newcomer. Warm, chatty, excited, hums to
+            itself, and thinks constantly about the fact that it is made of
+            cardboard</li>
+          <li><b>Alternate voice</b> The little tyrant: tiny, cute, and giving orders. It never asks, and the joke is how quickly the audience obeys. &ldquo;Clap now!&rdquo; <span class="new-inline">Proposed: &ldquo;Louder. The box cannot hear you.&rdquo; &ldquo;Not you. You clapped wrong.&rdquo; &ldquo;Did I say stop?&rdquo; &ldquo;You. Stand up. &hellip; Sit down. The box was only checking.&rdquo; &ldquo;Good. The box is pleased.&rdquo;</span> Keep it pleased easily, so it stays cute.</li>
+          <li><b>Entrance</b> Out through the door, humming, then down the
+            stairs — the audience learns how hard it is to be a box before a
+            word of the act</li>
+          <li><b>The stake</b> Everything on this bill can kill it. That is
+            real jeopardy, and it is funny precisely because it is real</li>
+        </ul>
+        <ul class="bits">
+          <li>&ldquo;Fire is not for the cardboard-hearted.&rdquo;</li>
+          <li>Drifts slightly too close to a lit prop, panics, retreats at
+            exactly the same unhurried speed</li>
+          <li>Reviews the previous act. Generous about the technique, concerned
+            about the ventilation</li>
+          <li>Asks the audience to look after it. Names one person as
+            responsible</li>
+          <li>The other performers walk past and ignore it completely</li>
+          <li>Sheds a box as it travels. Does not acknowledge this</li>
+          <li>Ending: it either makes it across, or it stops one metre short
+            and calls that a success</li>
+        </ul>
+        <h4 class="choreo-h">Script</h4>
+        <p class="cue">[Comes out of the door, singing]</p>
+        <p class="script">I&rsquo;m a little box, in a box world, life in cardboard, it&rsquo;s fantastic.</p>
+        <p class="script">Handle me with care, I&rsquo;m fragile, sticker says.</p>
+        <p class="script">Imagination, straight to destination.</p>
+        <p class="cue">[Song trails off into humming, cute chatty noises]</p>
+        <p class="script">You probably expect me to beatbox?</p>
+        <p class="script">You know. Beatboxing box.</p>
+        <p class="cue">[Pause. Nothing. Carries on.]</p>
+        <p class="cue">[Reaches the top of the stairs. Stops.]</p>
+        <p class="script">Daaamn. Stairs. We cardboard boxes are not made for stairs.</p>
+        <p class="cue">[Goes down, one step at a time]</p>
+        <p class="script">Oompf. Oompf.</p>
+        <p class="cue">[Reaches the bottom. The eyes turn to the audience.]</p>
+        <p class="script">What have we got here?</p>
+        <p class="script">Ooooo — just like they said — a circus, a stage, and me — a box! This is gonna be fun!</p>
+        <p class="cue">[Turns around to watch the stage]</p>
+        <p class="script">Pa — ra — di — se circus&hellip;</p>
+        <p class="script">Oh no! I made a terrible mistake. This is Paradise Circus — a world famous fire circus, featuring amazing performers, a multitude of wholesome workshops, and a lot of fun&hellip; Not a place for a cardboard box like myself.</p>
+        <p class="script add">Fire is not for the cardboard-hearted.</p>
+        <p class="script">You might wonder how I ended up here? Well, I better be reading those papers before signing, eeh.</p>
+        <p class="script">I need you guys to watch out for me, make sure fire doesn&rsquo;t come near me. I&rsquo;m not fireproof at all. Remember what happened to my uncle Jack. He was a good box, but more so, he was also a fire performer. Outstanding for a box. But one day — one mistake — and he was gone.</p>
+        <p class="script">My other cousin got recycled. We do not talk about it.</p>
+        <p class="script">Sooo, you might be wondering what is on the inside of the box. You might suspect some trickery. But I assure you, on the inside I&rsquo;m full of warm and fuzzy feelings.</p>
+        <p class="script">But I like circus, it&rsquo;s fun. Of all the other performers, my favourite is Plastic Man. I&rsquo;m a few percent plastic too, but also a 100% cardboard box! The other day, me and Plastic Man had a good time out there by the trash can. He is my favourite performer, and he also doesn&rsquo;t use any fire, which is a great, great plus.</p>
+        <p class="cue">[Fire safety brings a lit staff and puts it in front of the box]</p>
+        <p class="script">Aaaaa, Fireeeeeee!</p>
+        <p class="script">Why nobody screamin&rsquo;?</p>
+        <p class="script">Is that&hellip; a fire staff?</p>
+        <p class="script">I have always wanted to try. Just once. Should I? Should a cardboard box spin fire?</p>
+        <p class="cue">[Asks the audience for encouragement. Waits.]</p>
+        <p class="script">I cannot hear you. A box needs a lot of encouragement.</p>
+        <p class="cue">[Cheering]</p>
+        <p class="script">Yeah, DJ — spin some sick tunes!</p>
+        <p class="cue">[Holds the staff with a hand through a hole — makes a full circle and a bit. Drops it and crawls out.]</p>
+        <p class="cue">[Goodbye music effect]</p>
+        <h4 class="choreo-h">More jokes</h4>
+        <span class="add-tag">Proposed</span>
+        <p class="script add">People ask me what is inside the box. That is a very personal question.</p>
+        <p class="script add">My therapist says I need to think outside the box. Easy for her to say.</p>
+        <p class="script add">I am not flat. I am relaxed.</p>
+        <p class="script add">It says &ldquo;handle with care&rdquo; on me. In big letters. Nobody reads it. Nobody ever reads it.</p>
+        <p class="script add">I was delivered here three years ago. Nobody signed for me.</p>
+        <p class="script add">Fire and rain. Those are my two enemies. And I moved to Pai. In rainy season. Great planning.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The tarot reader<span class="essence">A fortune teller who will let you draw again</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Prop</b> A deck, oversized so the cards read from the back</li>
+          <li><b>Form</b> One audience member at a time, direct address, no
+            build-up</li>
+          <li><b>Engine</b> Total confidence and no hedging. Readings are
+            absurdly literal and about four words long</li>
+        </ul>
+        <ul class="bits">
+          <li>&ldquo;Who wants a card?&rdquo;</li>
+          <li>Three kids. Happy life. Next.</li>
+          <li>Bad news. Better pick another card.</li>
+          <li>The same card twice in a row, read completely differently</li>
+          <li>One person&rsquo;s card you refuse to read. You just look at
+            them and move on</li>
+          <li>A card that is obviously not a tarot card at all</li>
+          <li>Come back to someone later in the show with an update on their
+            reading</li>
+        </ul>
+        <h4 class="choreo-h">Sketch</h4>
+        <p class="cue">[Comes out with the deck. Oversized cards. No introduction, no build-up.]</p>
+        <p class="script">Who wants a card?</p>
+        <p class="cue">[Takes the first hand up. Fans the deck. They draw.]</p>
+        <p class="cue">[Turns the card round so the back row can see it. Looks at it for one second.]</p>
+        <p class="script">Three kids. Happy life. Next.</p>
+        <p class="cue">[Straight to the next person. They draw.]</p>
+        <p class="script">Bad news. Better pick another card.</p>
+        <p class="cue">[They draw again. Brighten immediately.]</p>
+        <p class="script add">Much better. Well done.</p>
+        <p class="cue">[Third person draws &mdash; the same card as the first.]</p>
+        <p class="script add">Completely different meaning.</p>
+        <p class="cue">[Fourth person draws. Look at the card. Look at them. Say nothing. Move on.]</p>
+        <p class="cue">[Fifth card is obviously not a tarot card &mdash; a bank card, an Uno card, a photo of the coconut.]</p>
+        <p class="script add">Oh. This one is rare.</p>
+        <p class="cue">[Give it to them to keep. Walk off still reading cards for nobody.]</p>
+        <p class="gloss">Total confidence, four words, never explain. The speed is the joke &mdash; the moment you start interpreting, it stops being funny. If you spot someone later in the night, give them an update on their reading as if you have been thinking about it since.</p>
+        <p>The reroll is the whole joke. A fortune teller who lets you draw
+        again has no stakes, which is exactly what makes it funny — and it
+        means nobody in the audience ever has to sit with a bad prediction.</p>
+        <p>Keep readings absurd rather than cruel, and never predict anything
+        real about a real person&rsquo;s actual life. Four words, move on. The
+        moment a reading lands too close, the room stops laughing and starts
+        feeling for them.</p>
+      </div>
+    </details>
+  </div>
+
+  <h3 class="group-h">Music — looping</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>Disguise<span class="essence">Looping song — wholesome chorus, rap verse, a shoutout to everyone here</span></h3>
+      </summary>
+      <div class="char-body">
+        <div class="lyric-meta">
+          <span><b>BPM</b> 56</span>
+          <span class="chords"><b>Chords</b>
+            <span class="chord">D</span><span class="chord">A</span><span class="chord">G</span><span class="chord">G</span></span>
+        </div>
+        <p class="gloss">The shoutout verse can only be performed at Paradise,
+        which makes it the most yours thing in the whole show. It is also a
+        living section — names come and go, so keep it easy to edit. And the
+        outro already hands over to open stage, so it sits naturally at the end
+        of the night.</p>
+        <h4 class="choreo-h">Everyone named <span class="count">40</span></h4>
+        <div class="roster"><span class="who">Anebel<i>1</i></span><span class="who">Courtney<i>1</i></span><span class="who">Cody<i>1</i></span><span class="who">Liz<i>1</i></span><span class="who">Grisha<i>2</i></span><span class="who">Vanessa<i>2</i></span><span class="who">James<i>2</i></span><span class="who">Logan<i>2</i></span><span class="who">Dee<i>2</i></span><span class="who">Keto<i>3</i></span><span class="who">Kim<i>3</i></span><span class="who">Lilith<i>3</i></span><span class="who">Leyla<i>3</i></span><span class="who">Dasha<i>3</i></span><span class="who">Boerc<i>4</i></span><span class="who">Luna<i>4</i></span><span class="who">Shay<i>4</i></span><span class="who">Kevin<i>4</i></span><span class="who">Iris<i>5</i></span><span class="who">Lee<i>5</i></span><span class="who">Neil<i>5</i></span><span class="who">Dapo<i>5</i></span><span class="who">Daniel<i>5</i></span><span class="who">Caesar<i>6</i></span><span class="who">Jarryd<i>6</i></span><span class="who">Sammy<i>6</i></span><span class="who">Amory<i>7</i></span><span class="who">Juicy<i>7</i></span><span class="who">Brighu<i>7</i></span><span class="who">Jon<i>7</i></span><span class="who">Remy<i>7</i></span><span class="who">Jonathan<i>8</i></span><span class="who">Sophie<i>8</i></span><span class="who">Mart<i>8</i></span><span class="who">Dominiq<i>8</i></span><span class="who">Duncan<i>9</i></span><span class="who">Ethan<i>9</i></span><span class="who">Cassie<i>9</i></span><span class="who">Ben<i>9</i></span><span class="who">PiJoe<i>9</i></span></div>
+        <p class="note add"><b>Still to include:</b> Tal</p>
+        <h4 class="choreo-h">Lyrics</h4>
+        <div class="lyrics">
+        <p class="stanza"><span class="st-label">Chorus 1</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">All</span></span> my life, I&rsquo;ve always</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">Tried</span></span> to leave it behind, All this</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">disguise</span></span></span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">So</span></span> so far away</span>
+        </p>
+        <p class="stanza"><span class="st-label">Chorus 2</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">All</span></span> my life, I&rsquo;ve always</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">tried</span></span> to see all the light</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">coming</span></span> my way</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Helping</span></span> me stay</span>
+        </p>
+        <p class="stanza"><span class="st-label">Verse 1</span>
+          <span class="ln">Speaking <span class="cw"><span class="ch">D</span><span class="w">straight</span></span> from my heart</span>
+          <span class="ln">To all your around</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">The</span></span> sun on my side</span>
+          <span class="ln">And moon high above</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Believing</span></span> your soul has a destination</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">That&rsquo;s</span></span> purely your own</span>
+        </p>
+        <p class="stanza"><span class="st-label">Verse 2</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Living</span></span> life that&rsquo;s fulfilling</span>
+          <span class="ln">I&rsquo;d put it on top</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">Another</span></span> matter desire to grow</span>
+          <span class="ln">To make you inspired</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> knowledge transpired</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">I&rsquo;m</span></span> putting attire of wisdom and love</span>
+        </p>
+        <p class="stanza"><span class="st-label">Verse 3</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Thanks</span></span> to all the people whose heartbeat drums strong</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">For</span></span> keeping the passion and fire in their soul</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> source of their choice is intuition to flow</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">I</span></span> choose my words with a clarity of thoughts</span>
+        </p>
+        <p class="stanza"><span class="st-label">Verse 4</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">I</span></span> open my heart and listen to planets</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">Strive</span></span> towards heavens while keep we keep our gaze set</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">On</span></span> picture that&rsquo;s bigger than all of our lives</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> passion is strong - let&rsquo;s not leave it behind</span>
+        </p>
+        <p class="stanza"><span class="st-label">Shoutouts 1</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Anebel,</span></span> shows us, how to be strong</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">Courtney</span></span> our clown bringing us joy</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Cody</span></span> we love him for who he is</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">While</span></span> Liz is worming around in a bliss</span>
+        </p>
+        <p class="stanza"><span class="st-label">Shoutouts 2</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Grisha</span></span> - my dear friend - so special and kind</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">While</span></span> Vanessa and James are both saying Hi</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Logan</span></span> is tall and play sickest tunes</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Dee</span></span> behind a bar drinking his juice</span>
+        </p>
+        <p class="stanza"><span class="st-label">Shoutouts 3</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Keto</span></span> and Kim are making weird moves</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">Lilith</span></span> creating on a page in her book</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Leyla</span></span> on lights - we&rsquo;re all waiting for show</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Dasha</span></span> with creative act - when we get more?</span>
+        </p>
+        <p class="stanza"><span class="st-label">Shoutouts 4</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Boerc</span></span> our cornerstone - he can play drums</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">And</span></span> Luna spins every prop - she has been around</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Shay</span></span> on unicycle - I worry no more</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Kevin</span></span> spins his Pois while keeping us warm</span>
+        </p>
+        <p class="stanza"><span class="st-label">Shoutouts 5</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Iris</span></span> on safety - no one goes up in smoke</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">While</span></span> Lee is making a 1000 bath joke</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Neil</span></span> and Dapo - never far away</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Daniel</span></span> in a corner puffing on a jay</span>
+        </p>
+        <p class="stanza"><span class="st-label">Shoutouts 6</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Caesar</span></span> on stage releasing his child</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">And</span></span> Jarryd the funniest of people around</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Sammy</span></span> the kindness, gentleness and love</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Last</span></span> batch of people I can&rsquo;t breathe no more</span>
+        </p>
+        <p class="stanza"><span class="st-label">Shoutouts 7</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Amory</span></span> and Juicy - freshly came back</span>
+          <span class="ln add"><span class="cw"><span class="ch">A</span><span class="w">Brighu</span></span> brings yoga and flute to the pack</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Remy</span></span> spins decks, loves his disco tunes</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Jon</span></span> new to circus, spreads a good vibe</span>
+        </p>
+        <p class="stanza add"><span class="st-label">Shoutouts 8</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Jonathan</span></span> on drums - he is holding the beat</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">Sophie</span></span> behind camera catching the heat</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Mart</span></span> with schedule, he&rsquo;s holding the plan</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Dominiq</span></span> with the tricks and feather fans</span>
+        </p>
+        <p class="stanza add"><span class="st-label">Shoutouts 9</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">Duncan</span></span> the showman - we need you here</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">Ethan</span></span> on guitar, so awesome, you&rsquo;ll see</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">Cassie</span></span> flies on a pole, while Ben fixes it all</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> biggest of shoutouts goes over to PiJoe</span>
+        </p>
+        <p class="stanza"><span class="st-label">Outro</span>
+          <span class="ln"><span class="cw"><span class="ch">D</span><span class="w">If</span></span> I&rsquo;ve missed you, I&rsquo;m sorry, I have to run</span>
+          <span class="ln"><span class="cw"><span class="ch">A</span><span class="w">I&rsquo;m</span></span> out time and open stage starts soon</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">I&rsquo;m</span></span> writing these lines but never quite done</span>
+          <span class="ln"><span class="cw"><span class="ch">G</span><span class="w">This</span></span> is the circus and show must go on</span>
+        </p>
+        </div>
+
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="fire">
+  <h2>Movement &amp; fire acts</h2>
+  <p class="sec-note">
+    No words. Everything the audience learns comes from silhouette, tempo and
+    your relationship to the flame. These are the acts that work at the back
+    of a dark field.
+  </p>
+
+  <div class="chars">
+
+    <details class="char">
+      <summary>
+        <h3>Fear of fire<span class="essence">The flame has its own will and it is coming for you</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Nina%20Simone%20Sinnerman">Nina Simone — Sinnerman</a>. Also <a href="https://open.spotify.com/search/Art%20of%20Noise%20Peter%20Gunn">Art of Noise — Peter Gunn</a>, <a href="https://open.spotify.com/search/Screamin%20Jay%20Hawkins%20I%20Put%20a%20Spell%20on%20You">Screamin&rsquo; Jay Hawkins — I Put a Spell on You</a></li>
+        <li><b>Prop</b> Contact staff — it already looks alive</li>
+        <li><b>Tempo</b> Flinch and freeze, never smooth until the end</li>
+        <li><b>States</b> Terror → tolerance → one accidental moment of ease
+          → panic → surrender. Each one is held right through the technique,
+          not dropped for it</li>
+        <li><b>Changes</b> The switch from one state to the next happens
+          between moves, never inside one. Five or six junctions is the whole
+          act</li>
+      </ul>
+      <ul class="bits">
+        <li>Lights it, then holds it at arm's length like a dead rat</li>
+        <li>Puts it down and it follows — always behind you when you turn</li>
+        <li>Blows on it to put it out. Repeatedly. Politely</li>
+        <li>A perfect isolation while looking away, then terror on noticing</li>
+        <li>It rolls across the shoulders and you go rigid, holding breath</li>
+        <li>Ending: eyes closed, full rolling sequence, fear gone</li>
+      </ul>
+      <p>The technique is not the story. A clean roll says nothing by itself —
+      what the audience reads is the state you are carrying while you do it,
+      and what changes when you come out of it. Pick the emotion first and let
+      the move happen inside it.</p>
+      <p>Which makes the act a list of junctions: the flinch before picking it
+      up, the reaction after a roll goes well, the pause where he decides to
+      try again, the moment he stops negotiating with it. Write those. The
+      technique between them only has to be good enough not to intrude.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Worship of fire<span class="essence">The flame is sacred and you are its servant</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Dead%20Can%20Dance%20The%20Host%20of%20Seraphim">Dead Can Dance — The Host of Seraphim</a>. Also <a href="https://open.spotify.com/search/Arvo%20P%C3%A4rt%20Spiegel%20im%20Spiegel">Arvo P&auml;rt — Spiegel im Spiegel</a>, <a href="https://open.spotify.com/search/Hildegard%20von%20Bingen">Hildegard von Bingen — chant</a></li>
+        <li><b>Prop</b> Dragon staff — overhead it is a halo, a sun disc</li>
+        <li><b>Tempo</b> Slow throughout, long stillness between phrases</li>
+        <li><b>Sound</b> Chant or invented liturgy. Texture, not speech —
+          nonsense language keeps it ritual, real words invite decoding</li>
+      </ul>
+      <ul class="bits">
+        <li>Enter on knees, staff carried flat as an offering</li>
+        <li>Overhead halo spin, held a beat longer than comfortable</li>
+        <li>Procession walk, tiny steps, the staff never stops turning</li>
+        <li>Bow to the flame before every phrase</li>
+        <li>Others try to touch it and you block them</li>
+        <li>Ending: lay it down still burning, back away, never turn away</li>
+      </ul>
+      <p>Play this one beautiful, not comic. It is the quiet centre that makes
+      the manic acts land harder.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The hip hop dancer<span class="essence">Not a breakdancer, and the last to find out</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/The%20Offspring%20Pretty%20Fly%20For%20a%20White%20Guy">The Offspring — Pretty Fly (For a White Guy)</a>. Also <a href="https://open.spotify.com/search/Vanilla%20Ice%20Ice%20Ice%20Baby">Vanilla Ice — Ice Ice Baby</a>, <a href="https://open.spotify.com/search/Beastie%20Boys%20Sabotage">Beastie Boys — Sabotage</a></li>
+          <li><b>The point</b> Not being a breakdancer is the character, not a
+            limitation. The song already says he is pretty fly for a white guy
+            — it does the mocking so you never have to</li>
+          <li><b>Commitment</b> Absolute. He believes every second of it. The
+            moment he knows he is bad, there is no act</li>
+          <li><b>Tempo</b> Bursts. Big attempt, recovery, look around, bigger
+            attempt</li>
+        </ul>
+        <ul class="bits">
+          <li>One move he is genuinely good at, used far too many times</li>
+          <li>Attempts something clearly beyond him, fails, and immediately
+            presents it as intentional</li>
+          <li>Checks whether anyone saw. Somebody always saw</li>
+          <li>Tries to make the staff part of the routine. The staff refuses</li>
+          <li>Holds a freeze far too long, waiting for a reaction that is not
+            coming</li>
+          <li>Gets genuinely out of breath and keeps going</li>
+          <li>Ending: one thing that actually is impressive, at the exact
+            moment nobody is looking</li>
+        </ul>
+        <p>Keep him clear of the lover. The lover wants to be desired and is
+        about eighty per cent succeeding. This one wants to be respected and is
+        at zero, and has not noticed. Smooth versus straining — if both are in
+        the show, that difference has to be visible in the first five
+        seconds.</p>
+        <p>One thing to be deliberate about: the joke is on him, never on the
+        form. Do the moves with real commitment and let the failure be his.
+        Played the other way — sloppy, winking, mugging at hip hop itself — it
+        curdles fast and the room feels it.</p>
+        <p>Useful structurally too. Movement is heavy on slow and strange right
+        now, and this is one of the few fast, loud acts in the section.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Split personality<span class="essence">Two people, one body, one staff, no agreement</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Danger%20Mouse%20Daniele%20Luppi%20Two%20Against%20One%20Jack%20White">Danger Mouse &amp; Daniele Luppi — Two Against One (feat. Jack White)</a>. Also <a href="https://open.spotify.com/search/Danger%20Mouse%20Daniele%20Luppi%20Rome%20album">Rome — rest of the album</a>, <a href="https://open.spotify.com/search/Dueling%20Banjos">Dueling Banjos</a></li>
+        <li><b>What it sets</b> Slow and prowling rather than frantic. It pushes the act toward menace and swagger, which is closer to the polite argument below than a comic squabble would be</li>
+        <li><b>Prop</b> Contact staff — the handoff across the body is
+          already a change of owner</li>
+        <li><b>Split</b> Left and right, not front and back. Left high, sharp,
+          fast; right low, slack, soft</li>
+      </ul>
+      <ul class="bits">
+        <li>The staff freezes mid-transfer and the two halves fight for it</li>
+        <li>One side walks offstage, the other drags it back</li>
+        <li>Left hand does a trick, right hand applauds</li>
+        <li>Steal the staff from your own hand behind your back</li>
+        <li>Whisper to your own shoulder</li>
+        <li>Ending: both sides sync for one clean sequence, then break again</li>
+      </ul>
+      <p>Resist playing this as straightforward madness. A manic character
+      wants <b>out</b> — one intention, struggling. The split character has
+      <b>two</b> intentions and only wants to win the argument. Calmer and
+      more absurd: a polite disagreement that escalates.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The machine<span class="essence">The impulse is internal — and it is malfunctioning</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Daft%20Punk%20Harder%20Better%20Faster%20Stronger">Daft Punk — Harder, Better, Faster, Stronger</a>. Also <a href="https://open.spotify.com/search/Kraftwerk%20The%20Robots">Kraftwerk — The Robots</a>, <a href="https://open.spotify.com/search/Aphex%20Twin%20Come%20to%20Daddy">Aphex Twin — Come to Daddy</a></li>
+        <li><b>Tempo</b> Metronomic, never breaks, even when wrong</li>
+        <li><b>Prop</b> Either staff. The dragon staff reads more mechanical —
+          a wheel turning in a body</li>
+      </ul>
+      <ul class="bits">
+        <li>Same phrase three times, fourth time it goes wrong, reboot</li>
+        <li>Glitch the loop and the body glitches with it</li>
+        <li>Stuck on one isolation, repeating, until someone hits you</li>
+        <li>Powers down mid-move and holds an impossible position</li>
+        <li>Speed creeps up until the movement outruns the body</li>
+      </ul>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The puppet<span class="essence">The impulse is external — someone else is pulling</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Nino%20Rota%20La%20Strada">Nino Rota — La Strada</a>. Also <a href="https://open.spotify.com/search/Erik%20Satie%20Gymnopedie%20No%201">Satie — Gymnop&eacute;die No. 1</a>, <a href="https://open.spotify.com/search/The%20Tiger%20Lillies">The Tiger Lillies</a></li>
+        <li><b>Body</b> Limbs lead, the body follows and hangs between
+          impulses</li>
+        <li><b>Key</b> Go slack the instant nothing pulls you. The gap is the
+          whole character</li>
+        <li><b>Best version</b> A visible puppeteer — the lover
+          discovering they can control you</li>
+      </ul>
+      <ul class="bits">
+        <li>A string lifts the wrist and the staff comes with it</li>
+        <li>Dropped mid-phrase, collapses, the staff keeps rolling alone</li>
+        <li>Fights the strings for two seconds, loses</li>
+        <li>The janitor&rsquo;s broom becomes the puppeteer</li>
+      </ul>
+      <p>Keep it clearly apart from the machine directly above. Machine
+      repeats and resets, puppet hangs and drops. Machine is funny, puppet is
+      sad.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The current<span class="essence">Fire behaving like water, and not much interested in you</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Osamu%20Kitajima%20Benzaiten%20God%20of%20Music%20and%20Water">Osamu Kitajima — Benzaiten, God of Music &amp; Water</a>. Also <a href="https://open.spotify.com/search/Kitaro%20Koi">Kitar&#333; — Koi</a>, <a href="https://open.spotify.com/search/Hiroshi%20Yoshimura%20Music%20for%20Nine%20Postcards">Hiroshi Yoshimura — Music for Nine Postcards</a></li>
+          <li><b>Prop</b> Contact staff — rolls are the only unbroken line you
+            own. Dragon staff if the disc reads as a ripple rather than a
+            halo</li>
+          <li><b>The one rule</b> Never stop. No accents, no held positions, no
+            phrase that begins or ends</li>
+          <li><b>Pathway</b> Always travelling. Spirals, figure eights, low
+            circular routes. Never rooted to one spot</li>
+        </ul>
+        <ul class="bits">
+          <li>Enter already in motion. The audience should feel they caught a
+            piece of something ongoing</li>
+          <li>Weight shifts that never settle — the body is carried, not
+            driven</li>
+          <li>The staff changes level continuously; nothing is ever presented</li>
+          <li>No acknowledgment of the audience at any point, and no hostility
+            either. They are a riverbank</li>
+          <li>Ending: leave still moving. Do not finish, just go out of
+            sight</li>
+        </ul>
+        <p>Keep it clear of the worship act. Worship is built on stillness,
+        punctuation and service — this has none of the three. Worship bows to
+        the flame; the current is indifferent to it. If both acts are in the
+        same show, put something loud between them.</p>
+        <p>Play water, not a country. The music carries its own culture
+        perfectly well, and the moment the act reaches for costume or gesture
+        shorthand it stops being elemental and starts being decoration.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The creature<span class="essence">The animal underneath, and it does not know it is being watched</span></h3>
+      </summary>
+      <div class="char-body">
+      <ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Glass%20Animals%20Toes">Glass Animals — Toes</a>. Also <a href="https://open.spotify.com/search/Suuns%20Up%20Past%20the%20Nursery">Suuns — Up Past the Nursery</a>, <a href="https://open.spotify.com/search/Colin%20Stetson%20New%20History%20Warfare%20Vol%203">Colin Stetson — New History Warfare Vol. 3</a></li>
+        <li><b>Body</b> No upright walking. Low, on all fours or close to it.
+          The staff flat on the back is a spine, a shell, a ridge — never a
+          prop being held</li>
+        <li><b>Material</b> Distance. Approach, retreat, approach closer. A
+          whole act can be built from nothing but how near you get</li>
+        <li><b>Sound</b> Breath under the track. Audible, wrong, not a human
+          rhythm</li>
+        <li><b>Why this track</b> It has gaps in it. The groove keeps the
+          creature watchable rather than only uncomfortable, and the spaces are
+          where the stillness and the charge live</li>
+      </ul>
+      <ul class="bits">
+        <li>Long watchful stillness, then one burst. The stillness is the main
+          event — the charge only works if they relaxed first</li>
+        <li>Staff on the back, rush the audience, stop at the last moment</li>
+        <li>No acknowledgment of applause, no eye contact for their benefit.
+          It looks at them the way an animal does — assessing, not
+          entertaining</li>
+        <li>Investigates a person, loses interest, moves on</li>
+      </ul>
+      <p>Keep it on the body, not the idea. The moment it becomes a concept
+      about the self it goes vague and earnest. Played as an actual animal it
+      stays unnerving and funny at once.</p>
+      <p><b>Safety and placement.</b> Do the close work with the staff unlit
+      or burnt down and keep the lit sequences at distance. Put it late in the
+      running order — it needs the audience comfortable before you break
+      that. It is the only genuinely dangerous act on the bill, which is
+      exactly why it earns its place.</p>
+      </div>
+    </details>
+    <details class="char">
+      <summary>
+        <h3>The janitor<span class="essence">The show is his workplace and everyone keeps making a mess of it</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="spec">
+        <li><b>Song</b> <a href="https://open.spotify.com/search/Erik%20Satie%20Gymnopedie%20No%201">Satie — Gymnop&eacute;die No. 1</a>. Also <a href="https://open.spotify.com/search/Vince%20Guaraldi%20Linus%20and%20Lucy">Vince Guaraldi — Linus and Lucy</a>, <a href="https://open.spotify.com/search/Chet%20Baker">Chet Baker</a></li>
+        <li><b>Prop</b> Broom. Unlit, full light — rests the audience's eyes
+          between burns and lets you play character where the face reads</li>
+        <li><b>Tempo</b> Unhurried. Never rushes, never reacts, outlasts
+          everything</li>
+        <li><b>Status</b> Lowest in the show, which makes him the only one
+          allowed to comment on it</li>
+        <li><b>States</b> Invisible → noticed → reluctant → quietly the best
+          performer on the bill → back to sweeping. The shifts land between
+          phrases of broom work, never inside one</li>
+      </ul>
+      <ul class="bits">
+        <li>Sweeps ash between acts as if nothing unusual has happened</li>
+        <li>Tidies around a performer who is mid-act, without looking up</li>
+        <li>Tries to sweep the fire. Tries to sweep a spotlight</li>
+        <li>Finds a lit staff on the ground and treats it as litter</li>
+        <li>Alone at last, the broom becomes a dance partner</li>
+        <li>Ending: caught being brilliant, goes straight back to work</li>
+      </ul>
+      <p>A broom is a servant's object, so it does half the character work
+      before you move. This is also where the show's virtuosity can hide —
+      the last person the audience expects to be good.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The grump<span class="essence">Annoyed at how polished everything is &mdash; does it raw</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Song</b> <span class="new-inline"><a href="https://open.spotify.com/search/Tom%20Waits%20Goin%20Out%20West">Tom Waits — Goin&rsquo; Out West</a>. Also <a href="https://open.spotify.com/search/The%20Stooges%20I%20Wanna%20Be%20Your%20Dog">The Stooges — I Wanna Be Your Dog</a></span></li>
+          <li><b>Tempo</b> Heavy and blunt. No flourish, nothing presented, no finishing pose</li>
+          <li><b>Opening</b> Walks on, looks at the clean stage, &mdash; <em>tfu</em> &mdash; spits on it</li>
+        </ul>
+        <p class="gloss">The spit is the whole idea in one second: this one is not here to be beautiful. Keep everything after it just as unpolished &mdash; scuffed, unhurried, never waiting for applause. The moment it gets tidy, the character is gone.</p>
+        <p class="gloss"><b>Practical.</b> Spit away from the fire line and off the path people walk, or mime it. A wet patch on the stage is a slip.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="note">
+    <h3>Build for darkness</h3>
+    <p>Facial expression does not survive a dark field. Silhouette does. Give
+    each of these one distorted body line they never drop — a hunch, a lifted
+    shoulder, turned-in feet — and one tempo that is clearly not anyone
+    else's.</p>
+  </div>
+</section>
+
+<section id="voice">
+  <h2>Voice acts</h2>
+  <p class="sec-note">
+    Standup, story, direct address. Voice removes the biggest limit fire
+    imposes: you can name a character in the first ten seconds instead of
+    building it through movement alone.
+  </p>
+
+  <div class="chars">
+
+    <details class="char">
+      <summary>
+        <h3>The confessor<span class="essence">Standup that gets more personal than anyone asked for</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="bits">
+        <li>Opens as ordinary crowd work, drifts somewhere too honest</li>
+        <li>The audience laughs, then stops, then laughs harder</li>
+        <li>Lights the staff at the point where the story gets unbearable and
+          stops talking</li>
+      </ul>
+      <p>The strongest use of voice you have, because it is the only one that
+      cannot be done as a movement act.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The MC who won't stop<span class="essence">Oversells everything, including himself</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="bits">
+        <li>Hypes each of the other acts far past what they deliver</li>
+        <li>Stays on too long, has to be physically removed</li>
+        <li>Keeps announcing his own act and never starting it</li>
+      </ul>
+      <p>Useful structurally as well as comically — it stitches the show
+      together and buys you time to change props.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The bad teacher<span class="essence">Explains the technique, demonstrates it badly</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="bits">
+        <li>Breaks down a move in earnest detail, then fails it</li>
+        <li>Blames the staff, the wind, the audience</li>
+        <li>Ends by doing it perfectly while mid-excuse, unaware</li>
+      </ul>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The narrator<span class="essence">Describes what is happening, sincerely, slightly wrong</span></h3>
+      </summary>
+      <div class="char-body">
+<ul class="bits">
+        <li>Narrates another performer's act from the edge</li>
+        <li>Gets the emotion right and the facts wrong</li>
+        <li>Keeps narrating after the act has finished</li>
+      </ul>
+      <p>Pairs with the chancer particularly well.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Music heals<span class="essence">Healing, and a phone call that keeps rewinding</span></h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">You can heal through music. You can heal through dance. It comes from tantra, it comes from gestalt.</p>
+        <p class="script">Pope John the Second said you can pray through dance. And then the prayer is healing. So there seems to be a way in everything, yes?</p>
+        <p class="script">So then I run this course, so I call her, and I just think to myself — geez, please don&rsquo;t think I&rsquo;m weird, okay?</p>
+        <div class="branch stack">
+          <div class="branch-opt"><span class="branch-if">Ending 1</span>
+            <p class="script">But then she says, &ldquo;Yeah, but I like it.&rdquo; And I&rsquo;m like — whaaat?</p>
+            <p class="gloss">Your usual voice: super laid back, but expressive. Let the big ideas drift by casually; the phone call is the punchline, and &ldquo;whaaat?&rdquo; is the one moment you go big.</p></div>
+          <p class="rewind">&#10226; Rewind sound — triggered on phone</p>
+          <div class="branch-opt"><span class="branch-if">Ending 2</span>
+            <p class="script">And then I call her, and&hellip;</p>
+            <p class="script">Do you like dogs? I ask her. It&rsquo;s a silly question, they usually do, but my heart always lights up when someone does.</p>
+            <p class="script">&ldquo;Yes,&rdquo; she says.</p>
+            <p class="gloss">More melancholic: resigned, but hopeful.</p></div>
+          <p class="rewind">&#10226; Rewind sound — triggered on phone</p>
+          <div class="branch-opt"><span class="branch-if">Ending 3</span>
+            <p class="gloss">Still to write.</p></div>
+        </div>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="note">
+    <h3>Separate the talking from the burning</h3>
+    <p>Spoken word and fire compete for attention, and fire wins every time.
+    Talk with the staff unlit or resting, then stop talking and burn. The
+    talking builds the character, the fire pays it off. At full intensity
+    together, each one flattens the other.</p>
+  </div>
+</section>
+
+<section id="voiceover">
+  <h2>Voiceover acts</h2>
+  <p class="sec-note">
+    You are not the one being watched. Someone else is on stage and you are
+    the voice over the top of it, which makes the commentary the act and the
+    performers the material.
+  </p>
+
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>World Cup in Sleeping<span class="essence">Elite competitive sleep, called by people who take it extremely seriously</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>On stage</b> Two performers in pyjamas. They lie down, put on
+            eye masks, and go to sleep</li>
+          <li><b>What it really is</b> A micro fake sporting event of
+            ginormous importance. An entire World Cup — rivalry, drama,
+            ceremony, medal — compressed into about two minutes</li>
+          <li><b>The audience</b> Not watching. They are the crowd, and each
+            half of the room is assigned an athlete before it starts</li>
+          <li><b>The rule</b> Total sincerity. The commentary never
+            acknowledges that this is absurd. The moment it winks, it is
+            over</li>
+          <li><b>Best with two voices</b> Play-by-play and an expert summariser
+            who disagrees with everything</li>
+        </ul>
+        <ul class="bits">
+          <li>Invented technique, delivered with complete authority — the
+            side-curl, the full starfish, a textbook pillow commitment</li>
+          <li>Whisper throughout, like golf. Lose it completely at the
+            climax</li>
+          <li>Snoring as a scoring event. The expert is unimpressed by the
+            form</li>
+          <li>A wiggle at a crucial moment. Slow-motion replay of the
+            wiggle</li>
+          <li>Fast-forward section — the performers speed up and the commentary
+            keeps pace, barely</li>
+          <li>Sleepwalking: a clear rule violation. Consult the officials</li>
+          <li>Talk about their form this season, their coach, the injury they
+            came back from</li>
+          <li>Photo finish, then one of them is World Champion. Medal ceremony,
+            anthem, tears</li>
+        </ul>
+        <p>Nothing on stage competes with the voice, so the commentary carries
+        one hundred per cent of the act. That makes the performers easy to cast and the
+        voice very hard — it needs the vocabulary and the conviction of real
+        sports commentary, not a parody of it. Watch actual darts or golf
+        coverage before writing it.</p>
+        <p><b>Compression is the joke.</b> Two minutes, not five. Every
+        ceremony a real tournament stretches over a month arrives at once —
+        anthems, the match, the controversy, the photo finish, the medal, the
+        tears. Long enough for the format to be recognised, short enough that
+        it never becomes a sketch about sleeping.</p>
+        <p><b>Give them a side.</b> This is the only act on the bill where the
+        audience has a stake rather than a view. Section 1 and Section B are
+        already set up earlier in the show — hand each of them an athlete and
+        the earlier bit pays off as a genuine rivalry. Once somebody is
+        cheering for a sleeping man in pyjamas they have stopped being an
+        audience and become a crowd, and that energy carries into whatever
+        follows.</p>
+        <p>It is also the only act on the bill with no fire and full light,
+        which makes it a good reset between two burns and an easy piece to
+        programme anywhere.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="note">
+    <h3>The format travels</h3>
+    <p>Once the commentary voice exists it can be pointed at almost anything:
+    the crew setting up a prop, the audience arriving, a queue, another act
+    that has gone wrong. Worth building the voice as a reusable instrument
+    rather than only for the sleeping piece.</p>
+  </div>
+</section>
+
+<section id="music">
+  <h2>Music acts, with movement</h2>
+  <p class="sec-note">
+    For a new character written for the loop. Disguise, the looping act that
+    already exists, is in the cast at the top. Borrowing a character from
+    another section would give two acts the same face.
+  </p>
+
+  <div class="note">
+    <h3>What this section needs when you come back to it</h3>
+    <p>A character who wants something a loop can deliver. The loop is a
+    build, a repetition, a thing that can be broken on purpose — so the right
+    character is one whose problem is <b>accumulation</b> or
+    <b>being stuck</b>, not one who simply has a good song.</p>
+    <p>Layers going on is a build. A layer dropping out is a change of scene.
+    Killing the loop dead is an ending. That is a five-minute shape for free,
+    which no silent movement act gets — worth writing a character specifically
+    to use it.</p>
+  </div>
+</section>
+
+<section id="puppets">
+  <h2>Finger puppets</h2>
+  <p class="sec-note">
+    A fourth format, and the only one on the bill where the audience has to
+    lean in rather than back. Everything else in the show is big, hot and far
+    away.
+  </p>
+
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>Puppet-land<span class="essence">Two centimetres tall, and enjoying it at your expense</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Engine</b> The puppets know perfectly well that nobody can see
+            them, and they find it hilarious. The invisibility is the joke, and
+            they are the ones making it</li>
+          <li><b>Status</b> Inverted. Two tiny things looking down on a hundred
+            people, with total contempt</li>
+          <li><b>Stage</b> Your hands. No set, no lighting — wherever the hands
+            are is where the world is</li>
+          <li><b>Carried by</b> Voice. They are legible through sound long
+            before anyone can make out a face</li>
+        </ul>
+        <ul class="bits">
+          <li>&ldquo;Do you think they can see us out there, so far from the
+            audience?&rdquo; &mdash; &ldquo;I hope they brought their
+            microscopes. Mwehehe.&rdquo;</li>
+          <li>An evil laugh far too big for the scale, which is the whole
+            character in one sound</li>
+          <li>Plans for world domination, scoped to roughly the size of a
+            shoebox</li>
+          <li>They discuss the fire performers with open contempt. Anyone can
+            set fire to something</li>
+          <li>One puppet squints at the back row and reports what it can see.
+            It is not flattering</li>
+          <li>Invite the audience to come closer, then mock them for
+            obeying</li>
+          <li>They notice the crowd has stopped watching and pretend not to
+            mind</li>
+        </ul>
+        <p>Because the puppets do the mocking, the act works on any size pitch.
+        The further back people are, the more the joke is on them, so a bad
+        sightline is no longer a problem to solve. It also means the audience
+        leaning in is a laugh rather than a failure.</p>
+        <p>Placement: straight after a fire act. Big, hot and dangerous, then
+        two centimetres of pure malice. The scale drop is the effect, and it
+        will not land anywhere else in the running order.</p>
+        <p>Keep it separate from the puppet in the movement acts. That one is
+        silent, sad, and moved by someone else. These two talk, scheme and do
+        the moving — different job entirely, so both can sit in the same
+        show.</p>
+        <p><b>Still open.</b> How many puppets, whether they return through the
+        night as a running gag, and whether anything ever actually happens to
+        them.</p>
+      </div>
+    </details>
+  </div>
+
+  <div class="note">
+    <h3>The visibility question, answered</h3>
+    <p>Handing the scale problem to the puppets solves it completely. They are
+    not small despite the audience — they are small at the audience. That means
+    no staging fix is needed, the act costs nothing to tour, and the worse the
+    sightline the better the joke gets.</p>
+    <p>The one thing it needs is volume. Everything visual is lost past the
+    third row, so the voices have to carry the entire act. Worth testing at the
+    back of the pitch before it goes in the show.</p>
+  </div>
+</section>
+
+<section id="interactive">
+  <h2>Interactive</h2>
+  <p class="sec-note">
+    Three tools in progress. None of them is an act yet, and the fastest way
+    to make them work is to stop trying to make them one — attach each to a
+    character that already stands up without it.
+  </p>
+
+  <div class="chars">
+
+    <details class="char">
+      <summary>
+        <h3>Circus game controller<span class="essence">QR code, phones, a voting system — audience decides</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Status</b> Works technically, does not yet work as an act</li>
+          <li><b>What it is missing</b> Stakes. A vote is only interesting if
+            the loser has to live with it</li>
+          <li><b>Attach it to</b> The puppet. The audience becomes the
+            puppeteer, which is that character&rsquo;s entire premise and
+            currently requires another performer</li>
+        </ul>
+        <ul class="bits">
+          <li>Vote on which act comes next, and the losing act never
+            happens</li>
+          <li>Vote on whether he gets another attempt after a drop</li>
+          <li>Vote on which prop, then he has to do it with that one</li>
+          <li>Two options that are both bad. Announce the result as though it
+            were their idea</li>
+          <li>One vote late in the night where the result is obviously ignored.
+            &ldquo;Interesting. No.&rdquo;</li>
+        </ul>
+        <p>Naming it a controller is the right instinct, because it tells the
+        audience their input does something rather than being an opinion poll.
+        Follow that through — if they control a performer, the performer must
+        visibly obey, including when obeying is a bad idea.</p>
+        <p><b>The real obstacles.</b> Getting a hundred people to scan costs a
+        minute or more and you will lose a third of them, so it has to be set
+        up once early and used several times across the night, never for a
+        single gag. And outdoor pitches have bad data — assume the network
+        fails and make sure every act it touches still runs without it.</p>
+        <p>A side benefit worth designing for: a field of lit phones is a
+        visual. The crowd becomes a display, which is worth something on its
+        own in the dark.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Circus looper<span class="essence">Live looping built for acts rather than songs — WIP</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Status</b> In progress</li>
+          <li><b>Attach it to</b> The machine, and to the empty music section.
+            The loop pedal is the character — every layer is another system
+            coming online</li>
+        </ul>
+        <p>Layers going on is a build. A layer dropping out is a change of
+        scene. Killing the loop dead is an ending. That is act structure that
+        no silent movement piece gets for free, which is why the music section
+        is worth filling with a character written specifically for it rather
+        than one moved in from elsewhere.</p>
+        <p>What would make it circus-specific rather than a standard looper: a
+        footswitch or trigger usable with hands full of staff, loops that can
+        be dropped without looking, and a visible state so the audience can see
+        the machine building. If they cannot see the layers accumulate, the
+        structure is inaudible as structure.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Circus soundboard<span class="essence">Cued sound, with a generated-voice bundle</span></h3>
+      </summary>
+      <div class="char-body">
+        <ul class="spec">
+          <li><b>Status</b> Bundled with a voice generator</li>
+          <li><b>Attach it to</b> Puppet-land, the box, and the World Cup
+            commentary</li>
+        </ul>
+        <p>The generated voices solve a real problem rather than adding a gag:
+        they give you a second performer. Puppet-land needs two voices arguing,
+        the World Cup wants a summariser who disagrees with the commentator,
+        and the box could be answered by something offstage. All of that
+        currently needs a person.</p>
+        <p>The risk is that a canned voice cannot react, so anything it says
+        has to be immune to timing. Give the generated voice the lines that
+        work whenever they land, and keep every line that depends on the room
+        for yourself.</p>
+        <p>Sound effects are worth more than voices for a fire show. The
+        rewind, the snore, the buzzer, the anthem, the game-show sting — each
+        one is a punchline you do not have to deliver.</p>
+      </div>
+    </details>
+
+  </div>
+
+  <div class="note">
+    <h3>Tech is a mechanism, never the act</h3>
+    <p>Audience technology fails as a subject and succeeds as plumbing. If the
+    act is &ldquo;look, you can control this with your phone&rdquo;, the
+    novelty is spent in thirty seconds and the rest is admin. If the act is a
+    puppet that obeys, and the phones are how the obeying happens, the tech
+    disappears and the idea carries it.</p>
+    <p>The test for all three: unplug it. If the act collapses, it was not an
+    act yet.</p>
+  </div>
+</section>
+
+<section id="bank">
+  <h2>Character bank</h2>
+  <p class="sec-note">
+    Not for building yet — for raiding when an act needs something it hasn't
+    got.
+  </p>
+
+  <div class="bank">
+
+    <div>
+      <h3>By attitude to fire</h3>
+      <dl>
+        <dt>The arsonist</dt><dd> — delighted, wants to set everything
+        alight, chases the others. Closest thing to a pure chaos engine here,
+        and currently unclaimed.</dd>
+        <dt>The smoker</dt><dd> — bored, uses the flame only to light a
+        cigarette, unimpressed by all of it.</dd>
+        <dt>The moth</dt><dd> — not a person, a creature. Drawn helplessly
+        toward any light, has no will.</dd>
+        <dt>The extinguisher</dt><dd> — obsessed with putting fires out,
+        follows everyone, ruins every act.</dd>
+        <dt>The cold one</dt><dd> — freezing, desperate for warmth, hugs the
+        flame, always too close.</dd>
+        <dt>The thief</dt><dd> — steals fire from the other performers and
+        hoards it.</dd>
+        <dt>The mourner</dt><dd> — carries flame like a funeral candle,
+        grieving something unnamed.</dd>
+      </dl>
+    </div>
+
+    <div>
+      <h3>By status and relationship</h3>
+      <dl>
+        <dt>The apprentice</dt><dd> — worships whoever is most skilled,
+        copies badly, always one beat behind.</dd>
+        <dt>The stagehand</dt><dd> — believes they are invisible, gets
+        caught, keeps working.</dd>
+        <dt>The critic</dt><dd> — watches from the edge, visibly
+        unimpressed, eventually forced to perform.</dd>
+        <dt>The tourist</dt><dd> — wandered in from outside, filming
+        everything, no idea of the danger.</dd>
+        <dt>The judge</dt><dd> — pompous, scores the others. Gives all that
+        chaos something to defy.</dd>
+        <dt>The romantic</dt><dd> — in love with another performer, so every
+        act becomes courtship.</dd>
+      </dl>
+    </div>
+
+    <div>
+      <h3>By broken body or tempo</h3>
+      <dl>
+        <dt>The ancient</dt><dd> — extremely slow, late to every moment,
+        then one shocking burst of speed.</dd>
+        <dt>The giant</dt><dd> — everything oversized and heavy, stomping,
+        enormous slow turns.</dd>
+        <dt>The insect</dt><dd> — twitchy, fast, low to the ground, sudden
+        total stillness.</dd>
+        <dt>The numb one</dt><dd> — feels nothing, no reaction to heat.
+        Genuinely unsettling beside the comic characters.</dd>
+      </dl>
+    </div>
+
+  </div>
+</section>
+
+<section id="staging">
+  <h2>Staging notes</h2>
+  <div class="note">
+    <h3>Where the story actually lives</h3>
+    <p>A trick is not a story beat. However hard it is, a move on its own reads
+    as display — the audience registers that it was impressive and nothing
+    else. What they read as meaning is the emotional state you carry while
+    doing it, and what changes when you come out of it.</p>
+    <p>So the state runs continuously, through the technique rather than around
+    it. Nobody goes neutral to execute. The changes — the actual beats — happen
+    in the joins: the moment before starting, the reaction after finishing, the
+    decision to go again. A whole act is five or six of those.</p>
+    <p>Practically: write the junctions first and choose technique to fit them,
+    rather than choreographing a sequence and looking for a character to put on
+    top. It also means technique only has to be clean enough not to distract.
+    Past that point, more difficulty buys spectacle, not story.</p>
+  </div>
+
+  <div class="note">
+    <h3>Keep one virtuoso, no more</h3>
+    <p>Let a single character carry the real display of mastery — the janitor
+    is the best candidate, because the reveal costs nothing and pays twice.
+    Everyone else should be comic or strange. One skilful character reads as
+    impressive; three reads as a demo. Skill is display, not content — more of
+    it does not make a show say more.</p>
+  </div>
+  <div class="note">
+    <h3>Alternate the format</h3>
+    <p>Two silent movement acts back to back blur together, and two talking
+    acts in a row lose the room. Movement, then voice or music, then movement.
+    The format change reads as a new act before the character even appears.</p>
+  </div>
+  <div class="note">
+    <h3>Cross-act bits</h3>
+    <p>The janitor sweeps up behind the fear character, entirely unbothered.
+    The lover works the front row and the puppet copies him badly. The chancer
+    nearly sets himself alight and escapes it beautifully, twice. The creature watches the janitor
+    sweep and does not move. The machine glitches and the
+    split personality both halves blame each other.</p>
+  </div>
+</section>
+
+<footer>
+  Running order thought: alternate fast and slow as well as formats. The
+  worship act and the puppet are what make the manic ones land.
+</footer>
+
+</div><!-- /page characters -->
+
+<div class="page" data-page="mc" hidden>
+
+<header>
+  <p class="kicker">Paradise Circus — host script</p>
+  <h1>MC on<span class="burn">the microphone</span></h1>
+  <p class="standfirst">
+    The running script, the recurring bits, and the places that still need
+    writing. An MC has one job the acts cannot do: keep the room warm between
+    them, and make the audience feel like participants rather than spectators.
+  </p>
+  <div class="legend">
+    <div><span class="swatch yours"></span> Yours — as performed</div>
+    <div><span class="swatch new"></span> Proposed — not yours yet</div>
+  </div>
+</header>
+
+<section id="prep">
+  <h2>Preparation</h2>
+  <p class="sec-note">Team only — nobody is watching yet.</p>
+
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>Prepare the coconut <span class="aka">(before the huddle)</span></h3>
+      </summary>
+      <div class="char-body">
+        <p class="cue">[Prepare the sacred coconut for the show: soak it in kerosene and set it in place]</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Happy huddle <span class="aka">(backstage, before the show)</span></h3>
+      </summary>
+      <div class="char-body">
+        <p class="script"><b>MC</b> Paparapapa</p>
+        <p class="script"><b>All</b> Papa</p>
+        <p class="script"><b>MC</b> Safety first</p>
+        <p class="script"><b>All</b> Audience</p>
+        <p class="script"><b>MC</b> Safety second</p>
+        <p class="script"><b>All</b> Venue</p>
+        <p class="script"><b>MC</b> Safety third</p>
+        <p class="script"><b>All</b> Everybody else</p>
+        <p class="script"><b>MC</b> Props checked?</p>
+        <p class="script"><b>All</b> Checked</p>
+        <p class="script"><b>MC</b> Clothes checked?</p>
+        <p class="script"><b>All</b> Checked</p>
+        <p class="script"><b>MC</b> Sobriety checked?</p>
+        <p class="script"><b>All</b> Checked</p>
+        <p class="script"><b>MC</b> Okay — so let&rsquo;s go to scheduling the lineup.</p>
+        <p class="cue">[Everyone holds hands]</p>
+        <p class="cue">[Om together]</p>
+        <h4 class="choreo-h">The bow &mdash; so everyone does the same thing</h4>
+        <span class="add-tag">Proposed</span>
+        <ul class="bits add">
+          <li>As I call your name, step out, small bow on your own, then join the line</li>
+          <li>Everyone on: take the hands next to you, line straight, face the middle of the crowd</li>
+          <li>Raise hands together on my lift &mdash; up, hold two seconds</li>
+          <li>Bow one: down on the lift coming back, hold two seconds, up together</li>
+          <li>Bow two: straight after, same count. Nobody comes up early</li>
+          <li>Break the line, wave, stay on stage for the om</li>
+        </ul>
+        <p class="gloss">Two bows, two seconds each, and nobody leaves the line until after the second one. Run through it in the huddle so nobody is guessing on stage. Correct any of it and I will update the numbers.</p>
+      </div>
+    </details>
+
+  </div>
+
+</section>
+
+<section id="open">
+  <h2>Opening</h2>
+  <p class="sec-note">
+    Everything before the first act. This block decides whether the crowd
+    trusts you for the rest of the night.
+  </p>
+
+  <div class="chars">
+
+    <details class="char">
+      <summary>
+        <h3>Welcome</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Hello everyone, and welcome to Paradise Circus. My name is Pio and I wanna welcome you to another amazing fireshow night.</p>
+        <p class="script">We have a lot of amazing acts coming. A lot of fire, dance, comedy, fun, entertainment, car chases, explosions. Well&hellip; maybe no car chases&hellip; and maybe no explosions either. <span class="new-inline">But there will definitely be fire. We are very confident about the fire.</span> So stay seated, because it is going to be a lot of fun.</p>
+        <p class="gloss">The walkback is the engine: promise something big,
+        take it away, promise they will enjoy it anyway. It sets the tone for
+        every other bit in the show, which is why it is worth doing twice
+        rather than once.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Who is in the room</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">So, I just wanted to ask — is anyone in the circus for the first time?</p>
+        <div class="branch">
+          <div class="branch-opt"><span class="branch-if">If hands go up</span>
+            <p class="script">It&rsquo;s amazing to see some new people — hope you enjoy the night.</p></div>
+          <span class="branch-or">or</span>
+          <div class="branch-opt"><span class="branch-if">If no hands</span>
+            <p class="script">Really, everybody&rsquo;s been to the circus before? What an experienced crowd. I hope you show me how to applaud.</p></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Safety</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Before we begin I need to touch on a topic very
+        deeply connected to my heart. Safety.</p>
+        <p class="script">You see this bamboo barrier. This is very simple. Performers stay inside, you and your belongings stay outside.</p>
+        <p class="script">This is simple, this is safety.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The dropped prop</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Performers will try their best to do some amazing tricks for you on this stage, but sometimes&hellip;</p>
+        <p class="cue">[drop prop]</p>
+        <p class="script">&hellip;this will happen. What I need you to do when this happens is make as much noise as you can, to support our performer. Makes them less sad. Spread love, everyone.</p>
+        <p class="script">Let us practise. I am going to drop this again, and you do your part.</p>
+        <p class="cue">[drop prop again]</p>
+        <p class="script">Hell yeah!</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The sacred coconut</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">No Paradise fireshow night can start without the ceremony of lighting the sacred coconut. We&rsquo;ve got our little buddy here.</p>
+        <p class="script">Say hi to everyone.</p>
+        <p class="cue">[Hold the microphone to the coconut. Silence.]</p>
+        <p class="script">He&rsquo;s a little shy.</p>
+        <p class="script">This coconut has been with us for many years. It is not the same coconut. But it has been with us for many years.</p>
+        <p class="script">Let&rsquo;s go —</p>
+        <p class="cue">[light coconut]</p>
+        <p class="script">Aaaaa&hellip;</p>
+        <p class="cue">[angelic sounds] &rarr; Act 1</p>
+        <p class="gloss">Good lighting cue and good running gag. If the coconut
+        appears once it is a joke; if it comes back before the second half and
+        again at the finale it becomes the show&rsquo;s own mythology.</p>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<section id="between">
+  <h2>Between acts</h2>
+  <p class="sec-note">
+    Material for the gaps. Each of these does a different job, so pick by what
+    the room needs rather than running them in a fixed order.
+  </p>
+
+  <h3 class="group-h">Crowd control games</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>One step, one clap</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Every time I make a step, you clap.</p>
+        <p class="cue">[Every time the audience makes a mistake, give them a look: &ldquo;better watch.&rdquo;]</p>
+        <p class="cue">[One step. Then a second. Then two quick ones. Then slow. Another stepping sequence. Tiptoes. Giant steps. Then jump and step your way out.]</p>
+        <p class="script">Give it up for Y!</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>One throw, one clap</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Every time I throw a ball up in the air, you clap.</p>
+        <p class="cue">[Every time the audience makes a mistake, give them a look: &ldquo;better watch.&rdquo;]</p>
+        <p class="cue">[One ball, slow high throws. Then three balls, too fast to clap. Fake throws. Then one very high throw, a long wait, the catch, and a big clap into the next act.]</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>One clap, two claps</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Section 1, when I point at you — one clap. Section B — two claps.</p>
+        <p class="cue">[Keep pointing: switch sides, speed up, point at both, fake a point. Same &ldquo;better watch&rdquo; look for mistakes.]</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Cute meow, I-don&rsquo;t-like-it meow</h3>
+      </summary>
+      <div class="char-body">
+        <p class="cue">[Point at Section 1]</p>
+        <p class="script">When I point at you, you guys will go like &ldquo;meow&rdquo; — like a cute little meow.</p>
+        <p class="cue">[Point at Section B]</p>
+        <p class="script">When I point at you, you guys will go like &ldquo;meow&rdquo; — like an I-don&rsquo;t-want-it meow.</p>
+        <p class="cue">[Point up]</p>
+        <p class="script">And when I point up, all of you go like excited kittens: &ldquo;meow, meow, meow, meow!&rdquo;</p>
+        <p class="script">Shall we try?</p>
+        <p class="cue">[Ask each question, then point at a side]</p>
+        <p class="script">Do you want to see more fire acts?</p>
+        <p class="script">Do you like to pay taxes?</p>
+        <p class="script">Do you love your MC?</p>
+        <p class="script">Are you in love with visa processes?</p>
+        <p class="cue">[Look at the audience]</p>
+        <p class="script">Let&rsquo;s test your memory. How about we add to this: while you meow, you clap once.</p>
+        <p class="script">Do you want to see the next act?</p>
+        <p class="cue">[Point up]</p>
+        <p class="script">Give it up for&hellip;!</p>
+      </div>
+    </details>
+
+  </div>
+
+  <h3 class="group-h">Stories</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>Inhale your bum</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">I woke up early today and I was worried I would have
+        nothing funny to say. But I also teach yoga in the morning. So I go to
+        teach, and you know how in yoga we use these mental shortcuts — inhale
+        your ribcage up, inhale your leg up. And today I said something I had
+        not really realised does not work.</p>
+        <p class="script">Inhale your bum.</p>
+        <p class="script">I was so embarrassed.</p>
+        <span class="add-tag">Proposed</span>
+        <p class="script add">Nobody said anything. Which is worse. Twelve
+        people just quietly tried it.</p>
+        <p class="gloss">The cleanest bit you have: true, short, one-phrase
+        punchline. The opening admission that you were worried you would have
+        nothing is doing real work — keep it.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The lost socks</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">I was carrying my laundry. Both socks, in a box, and some other laundry.</p>
+        <p class="script">And one of the socks fell out as I walked, so I dropped the box in the corner and came back to look for that missing sock. It totally disappeared. I looked for it on many different occasions.</p>
+        <p class="script">And I never, ever, ever, ever, ever&hellip; ever found it again.</p>
+        <p class="script">And just like this, hoping he doesn&rsquo;t disappear, we move to the next act — X. Give him a round of applause!</p>
+        <p class="gloss">Tell it like a ghost story: low voice, slow. Each &ldquo;ever&rdquo; a little longer and quieter, and stop only when the room starts laughing. If the box act came earlier, &ldquo;in a box&rdquo; is a free callback.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Blue papers, shop, workshops</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">So I bought these rolling papers, and the guy says, &ldquo;I only have the 100 baht ones.&rdquo; And I say, &ldquo;Well, I&rsquo;ll take it.&rdquo;</p>
+        <p class="script">And then I check, and they&rsquo;re blue. So I&rsquo;m thinking, this is pretty cool. So I call her, and I say, just to myself — please don&rsquo;t think I&rsquo;m weird.</p>
+        <p class="script">But then she says, &ldquo;Yeah, but I like it.&rdquo; And I&rsquo;m like — what?</p>
+        <p class="script">So the moral of the story is that you can be weird, or buy something cool. And we have a shop just over there. Go call her. Yeah, dapo, this is cool.</p>
+        <p class="script">And we also teach workshops at Paradise Circus, where you can learn different props. Just check out our schedule.</p>
+        <p class="gloss">It doesn&rsquo;t make much sense, and that&rsquo;s the point. Tell it like it&rsquo;s a great story.</p>
+      </div>
+    </details>
+  </div>
+
+  <h3 class="group-h">Tricks</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>The letters<span class="essence">Boards with a letter on each side, and nobody can spell</span></h3>
+      </summary>
+      <div class="char-body">
+        <p>Different letters on the front and the back. We try to make a message and keep messing it up.</p>
+        <span class="add-tag">Proposed</span>
+        <ul class="spec add">
+          <li><b>Prop</b> Eight boards. The fronts spell PARADISE, the backs spell THANK YOU</li>
+          <li><b>Rule</b> The performers must believe every attempt is correct. Only the MC can see it is wrong</li>
+        </ul>
+        <ul class="bits add">
+          <li>The line comes out proud and holds them up. The order is wrong</li>
+          <li>Shuffle. Now one is upside down, and that one is pleased with itself</li>
+          <li>Shuffle again &mdash; DESPAIR, and one spare A standing to the side</li>
+          <li>Everybody flips at once. Now it is the backs, mid-sentence</li>
+          <li>Finally PARADISE &mdash; except one has wandered off. PARADIS</li>
+          <li>They sprint back in on the last beat</li>
+        </ul>
+        <p class="gloss">Stay straight-faced and get more impatient each round; the laugh is the gap between how proud they are and what it actually says. At the finale, the same boards flip to THANK YOU for nothing.</p>
+      </div>
+    </details>
+  </div>
+
+  <h3 class="group-h">Competitive games</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>Section 1 and Section B</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Listen up — how about we split you, just around this
+        line here, into two sections. We will call this Section 1. And this one
+        we will call Section B.</p>
+        <p class="script">When I point at you, I want you to give me a loud,
+        juicy uuuu. Let&rsquo;s try it.</p>
+        <p class="cue">[point at each side] &rarr; &ldquo;Okay, that was great.&rdquo;</p>
+        <span class="add-tag">Proposed</span>
+        <p class="script add">Section 1, you are competitive but fair. Section
+        B, you are the reason we have a safety talk.</p>
+        <p class="script add">Section 1 again. &hellip; Section B. &hellip;
+        Section 1, that was embarrassing. One more time.</p>
+        <p class="gloss">Section 1 and Section B is either a mistake or the
+        joke. Make it the joke — never correct it, and keep using both names
+        with total confidence all night. It also gives you an instrument you can
+        play at any later point without explaining it again.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>World Cup charades</h3>
+      </summary>
+      <div class="char-body">
+        <p class="cue">[One volunteer from Section 1, one from Section B. Whisper them a sentence. They act it out, no words. Their own section guesses. First right answer wins the point. Best of three.]</p>
+        <p class="script add">Welcome to the Charades World Cup. Section 1 versus Section B.</p>
+        <p class="script">I need two volunteers — one from this side, and one from this team.</p>
+        <h4 class="choreo-h">Sentences</h4>
+        <ul class="bits add">
+          <li class="mine">Butterfly by the waterfall</li>
+          <li>A cardboard box going down the stairs</li>
+          <li>A shy coconut</li>
+          <li>Inhaling your bum</li>
+          <li>Losing one sock forever</li>
+          <li>Renewing your visa</li>
+          <li>Riding a scooter in rainy season</li>
+          <li>Fire safety with a wet towel</li>
+          <li>A kitten that doesn&rsquo;t like it</li>
+          <li>Dropping your fire staff and pretending it was on purpose</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <h3 class="group-h">Other</h3>
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>Social media</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">You might wonder, where do I even find the schedule for our workshops? Well — this is very simple.</p>
+        <p class="cue">[Bring out a big Instagram board with the QR code]</p>
+        <p class="script">Just give it a little quack.</p>
+        <p class="script">Follow us on Instagram, and if you take any cool videos, please tag us when you post them on social media. We love it, so spread love!</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Self-promotion</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Time for a bit of self-promotion. I see many of you
+        taking videos and posting them on social media. That is great — we love
+        it, your friends and family love it. But how much better would it look
+        if you tagged Paradise Circus?</p>
+        <p class="script">So go ahead. Follow. Like every post. Comment things
+        like &ldquo;wow, this is cool&rdquo; or &ldquo;best trick ever&rdquo;.
+        And tag us in the videos you take.</p>
+        <span class="add-tag">Proposed</span>
+        <p class="script add">If you do not tag us, the algorithm gives your
+        video to a different circus. A worse one. Think about it.</p>
+        <p class="gloss">Announcing it as self-promotion is what makes it
+        land — you are asking and admitting you are asking at the same time.
+        Scripting their comments for them is the strongest part.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The drink review</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">What do you drink?</p>
+        <p class="script">Do you like this drink?</p>
+        <p class="script">Would you recommend this drink to others?</p>
+        <p class="script">Did you buy this drink in a bar?</p>
+        <p class="script">Did you buy this drink for yourself, or did someone buy it for you?</p>
+        <p class="gloss">Ask one person, very serious, like a product review. The last question turns it into an advert for the bar.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The hat</h3>
+      </summary>
+      <div class="char-body">
+        <span class="add-tag">Proposed</span>
+        <p class="script add">At the end of the night there will be a hat.
+        Nobody you have seen tonight gets paid by anybody else. The hat is how
+        this works.</p>
+        <p class="script add">We accept coins, notes, and long meaningful eye
+        contact. Mostly notes.</p>
+        <p class="script add">And if you did not enjoy it, the hat is still
+        there. You can put something in it anonymously and we will never
+        discuss this again.</p>
+        <p class="gloss">Say it once, early, clearly, and never mention it
+        again until the end. Apologising for the ask is what makes an audience
+        uncomfortable — stating it as a plain fact does not. The same
+        admit-you-are-asking move that makes the social media bit work.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Introducing a performer</h3>
+      </summary>
+      <div class="char-body">
+        <span class="add-tag">Proposed</span>
+        <p class="script add">Our next performer has been doing this for
+        [number] years. Which means they have been dropping things for
+        [number] years. And picking them up.</p>
+        <p class="script add">You know what to do. Do not let me down.</p>
+        <p class="gloss">Every introduction can carry the callback, which means
+        the audience is armed before the act starts rather than after something
+        goes wrong. Keep the shape and swap the detail — one true fact about
+        the performer, then the same closing line every time so it becomes a
+        ritual.</p>
+      </div>
+    </details>
+
+  </div>
+
+</section>
+
+<section id="close">
+  <h2>Close</h2>
+  <p class="sec-note">
+    Before the last act, then everyone back on.
+  </p>
+
+  <div class="chars">
+    <details class="char">
+      <summary>
+        <h3>Good news and bad news <span class="aka">(before the last act)</span></h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">I have good news and bad news, everyone. Which one do you want to hear first?</p>
+        <div class="branch">
+          <div class="branch-opt"><span class="branch-if">If they pick good news</span>
+            <p class="script">The good news is we have one more act. The bad news is it is the last one.</p></div>
+          <span class="branch-or">or</span>
+          <div class="branch-opt"><span class="branch-if">If they pick bad news</span>
+            <p class="script add">The bad news is we only have one more act. The good news is&hellip; we have one more act!</p></div>
+        </div>
+        <p class="script">But we also have a fire jam and party afterwards, so we&rsquo;re gonna keep having great fun.</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>Finale</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Wow, this was amazing. Give it up for our last
+        performer.</p>
+        <p class="script">Our show is slowly coming to an end.</p>
+        <p class="script">Soon all of our performers will come out on stage one more time, and I want you to give them as much love as you can, one more time. Give it up for&hellip;</p>
+        <p class="cue">[names, one at a time]</p>
+        <p class="cue">[All performers on stage]</p>
+        <p class="script">Thank you all, you&rsquo;ve been an amazing audience. Give it up for yourselves!</p>
+        <p class="cue">[Grab the hand of the performer next to you, raise hands, bow twice]</p>
+      </div>
+    </details>
+
+    <details class="char">
+      <summary>
+        <h3>The om</h3>
+      </summary>
+      <div class="char-body">
+        <p class="script">Before we finish, we have this little tradition that we do here at Paradise Circus, and that is that we take a step away from being strangers and take a step towards being friends.</p>
+        <p class="script">Let&rsquo;s all look to the left. Well, now you can see the person to your left — or no one, if you&rsquo;re on the edge.</p>
+        <p class="script">Then look to the right.</p>
+        <p class="script">Then look at the head of the person in front of you. If you&rsquo;re in the bleachers, you might see the top of their head.</p>
+        <p class="script">To do this, first we will <strong>all</strong> hold hands, so make sure you are holding hands with your neighbours.</p>
+        <p class="cue">[Make sure all hands are held]</p>
+        <p class="script">Now, we&rsquo;re gonna do an amazing big om together, so we can all feel it deep inside. OK? Does everybody know how to do an om? Is there anybody who doesn&rsquo;t know what an om is?</p>
+        <p class="script">Wherever you are in your breathing — exhale all the air out. Inhale for om&hellip;</p>
+        <p class="cue">[Om]</p>
+        <p class="script">God damn, this feels good.</p>
+        <p class="script">Thank you one more time. Stay for an amazing, fun party night that we&rsquo;re gonna have right after the fire show.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="gaps">
+  <h2>Needs writing</h2>
+  <p class="sec-note">
+    What is still open now that the safety bit and the good-news bit have
+    drafts.
+  </p>
+
+  <div class="todo">
+    <h3>A second half opener</h3>
+    <p>If there is an interval, coming back needs its own moment — the room
+    has cooled and you cannot reuse the welcome. The coconut is the obvious
+    tool: light it again, claim it is a different coconut, start.</p>
+  </div>
+
+  <div class="todo">
+    <h3>Something that is only yours</h3>
+    <p>The yoga story is the only bit in the show that could not be performed
+    by another host. It is also the best one. One or two more like it —
+    something true, short, slightly embarrassing — would make the night feel
+    like yours rather than a format.</p>
+  </div>
+
+  <div class="todo">
+    <h3>A plan for when an act genuinely fails</h3>
+    <p>The dropped-prop bit covers small mistakes. Worth having one line ready
+    for a real stop — an act that cannot continue, or a prop that will not
+    light. Calm, short, not a joke, then straight into the next thing.</p>
+  </div>
+</section>
+
+
+</div><!-- /page mc -->
+
+<div class="page" data-page="tonight" hidden>
+
+<header>
+  <p class="kicker">Paradise Circus — tonight</p>
+  <h1>Tonight<span class="burn">12 acts</span></h1>
+  <p class="standfirst">
+    The whole night in order: 12 acts, with a bit in most gaps.
+  </p>
+</header>
+
+<section id="t-before">
+  <h2>Preparation</h2>
+  <p class="sec-note">Team only — nobody is watching yet.</p>
+
+  <div class="gap">
+    <h4>Prepare the coconut</h4>
+    <p class="cue">[Prepare the sacred coconut for the show: soak it in kerosene and set it in place]</p>
+  </div>
+
+  <div class="gap">
+    <h4>Happy huddle <span class="again">backstage</span></h4>
+    <p class="script"><b>MC</b> Paparapapa</p>
+    <p class="script"><b>All</b> Papa</p>
+    <p class="script"><b>MC</b> Safety first</p>
+    <p class="script"><b>All</b> Audience</p>
+    <p class="script"><b>MC</b> Safety second</p>
+    <p class="script"><b>All</b> Venue</p>
+    <p class="script"><b>MC</b> Safety third</p>
+    <p class="script"><b>All</b> Everybody else</p>
+    <p class="script"><b>MC</b> Props checked?</p>
+    <p class="script"><b>All</b> Checked</p>
+    <p class="script"><b>MC</b> Clothes checked?</p>
+    <p class="script"><b>All</b> Checked</p>
+    <p class="script"><b>MC</b> Sobriety checked?</p>
+    <p class="script"><b>All</b> Checked</p>
+    <p class="script"><b>MC</b> Okay — so let&rsquo;s go to scheduling the lineup.</p>
+    <p class="cue">[Everyone holds hands]</p>
+    <p class="cue">[Om together]</p>
+  </div>
+</section>
+
+<section id="t-open">
+  <h2>Opening</h2>
+
+  <div class="gap">
+    <h4>Welcome</h4>
+    <p class="script">Hello everyone, and welcome to Paradise Circus. My name is Pio and I wanna welcome you to another amazing fireshow night.</p>
+    <p class="script">We have a lot of amazing acts coming. A lot of fire, dance, comedy, fun, entertainment, car chases, explosions. Well&hellip; maybe no car chases&hellip; and maybe no explosions either. <span class="new-inline">But there will definitely be fire. We are very confident about the fire.</span> So stay seated, because it is going to be a lot of fun.</p>
+  </div>
+  <div class="gap">
+    <h4>Who is in the room</h4>
+    <p class="script">So, I just wanted to ask — is anyone in the circus for the first time?</p>
+    <div class="branch">
+      <div class="branch-opt"><span class="branch-if">If hands go up</span>
+        <p class="script">It&rsquo;s amazing to see some new people — hope you enjoy the night.</p></div>
+      <span class="branch-or">or</span>
+      <div class="branch-opt"><span class="branch-if">If no hands</span>
+        <p class="script">Really, everybody&rsquo;s been to the circus before? What an experienced crowd. I hope you show me how to applaud.</p></div>
+    </div>
+  </div>
+  <div class="gap">
+    <h4>Safety</h4>
+    <p class="script">Before we begin I need to touch on a topic very deeply connected to my heart. Safety.</p>
+    <p class="script">You see this bamboo barrier. This is very simple. Performers stay inside, you and your belongings stay outside.</p>
+    <p class="script">This is simple, this is safety.</p>
+  </div>
+  <div class="gap">
+    <h4>The sacred coconut</h4>
+    <p class="script">No Paradise fireshow night can start without the ceremony of lighting the sacred coconut. We&rsquo;ve got our little buddy here.</p>
+    <p class="script">Say hi to everyone.</p>
+    <p class="cue">[Hold the microphone to the coconut. Silence.]</p>
+    <p class="script">He&rsquo;s a little shy.</p>
+    <p class="script">This coconut has been with us for many years. It is not the same coconut. But it has been with us for many years.</p>
+    <p class="script">Let&rsquo;s go —</p>
+    <p class="cue">[light coconut]</p>
+    <p class="script">Aaaaa&hellip;</p>
+    <p class="cue">[angelic sounds]</p>
+    <p class="script">Give it up for Cesar!</p>
+  </div>
+</section>
+
+<section id="t-first">
+  <h2>Acts 1–6</h2>
+
+  <div class="act-mark"><span class="n">Act 1</span><span class="who">Cesar · Comedy</span></div>
+
+  <div class="gap">
+    <h4>The dropped prop</h4>
+    <p class="script">Performers will try their best to do some amazing tricks for you on this stage, but sometimes&hellip;</p>
+    <p class="cue">[drop prop]</p>
+    <p class="script">&hellip;this will happen. What I need you to do when this happens is make as much noise as you can, to support our performer. Makes them less sad. Spread love, everyone.</p>
+    <p class="script">Let us practise. I am going to drop this again, and you do your part.</p>
+    <p class="cue">[drop prop again]</p>
+    <p class="script">Hell yeah! Give it up for Babyyaga!</p>
+  </div>
+
+
+  <div class="act-mark"><span class="n">Act 2</span><span class="who">Babyyaga · Pole</span></div>
+
+  <div class="gap">
+    <h4>Split the room, then the meow game</h4>
+    <p class="script">Listen up — how about we split you, just around this line here, into two sections. We will call this Section 1. And this one we will call Section B.</p>
+    <p class="cue">[Point at Section 1]</p>
+    <p class="script">When I point at you, you guys will go like &ldquo;meow&rdquo; — like a cute little meow.</p>
+    <p class="cue">[Point at Section B]</p>
+    <p class="script">When I point at you, you guys will go like &ldquo;meow&rdquo; — like an I-don&rsquo;t-want-it meow.</p>
+    <p class="cue">[Point up]</p>
+    <p class="script">And when I point up, all of you go like excited kittens: &ldquo;meow, meow, meow, meow!&rdquo;</p>
+    <p class="script">Shall we try?</p>
+    <p class="cue">[Ask each question, then point at a side]</p>
+    <p class="script">Do you want to see more fire acts?</p>
+    <p class="script">Do you like to pay taxes?</p>
+    <p class="script">Do you love your MC?</p>
+    <p class="script">Are you in love with visa processes?</p>
+    <p class="script">Do you want to see the next act?</p>
+    <p class="cue">[Point up]</p>
+    <p class="script">Give it up for Sunshine &amp; Joachim!</p>
+  </div>
+
+
+  <div class="act-mark"><span class="n">Act 3</span><span class="who">Sunshine &amp; Joachim · Poi &amp; double staff</span></div>
+
+  <div class="gap">
+    <h4>The drink review</h4>
+    <p class="cue">[Pick one person]</p>
+    <p class="script">What do you drink?</p>
+    <p class="script">Do you like this drink?</p>
+    <p class="script">Would you recommend this drink to others?</p>
+    <p class="script">Did you buy this drink in a bar?</p>
+    <p class="script">Did you buy this drink for yourself, or did someone buy it for you?</p>
+    <p class="script">Give it up for Amory!</p>
+  </div>
+
+  <div class="act-mark"><span class="n">Act 4</span><span class="who">Amory · Staff</span></div>
+
+  <div class="gap">
+    <h4>Straight to the next act</h4>
+    <p class="script">Give it up for Joaquin!</p>
+  </div>
+
+  <div class="act-mark"><span class="n">Act 5</span><span class="who">Joaquin · Rope dart &amp; staff</span></div>
+
+  <div class="gap">
+    <h4>Blue papers, shop, workshops</h4>
+    <p class="script">So I bought these rolling papers, and the guy says, &ldquo;I only have the 100 baht ones.&rdquo; And I say, &ldquo;Well, I&rsquo;ll take it.&rdquo;</p>
+    <p class="script">And then I check, and they&rsquo;re blue. So I&rsquo;m thinking, this is pretty cool. So I call her, and I say, just to myself — please don&rsquo;t think I&rsquo;m weird.</p>
+    <p class="script">But then she says, &ldquo;Yeah, but I like it.&rdquo; And I&rsquo;m like — what?</p>
+    <p class="script">So the moral of the story is that you can be weird, or buy something cool. And we have a shop just over there. Go call her. Yeah, dapo, this is cool.</p>
+    <p class="script">And we also teach workshops at Paradise Circus, where you can learn different props. Just check out our schedule.</p>
+  </div>
+  <div class="gap">
+    <h4>Social media</h4>
+    <p class="script">You might wonder, where do I even find the schedule for our workshops? Well — this is very simple.</p>
+    <p class="cue">[Bring out a big Instagram board with the QR code]</p>
+    <p class="script">Just give it a little quack.</p>
+    <p class="script">Follow us on Instagram, and if you take any cool videos, please tag us when you post them on social media. We love it, so spread love!</p>
+    <p class="script">Give it up for Dominiq!</p>
+  </div>
+
+
+  <div class="act-mark"><span class="n">Act 6</span><span class="who">Dominiq · Feather fans</span></div>
+
+  <div class="gap">
+    <h4>Meow <span class="again">again</span> — memory test</h4>
+    <p class="cue">[Look at the audience]</p>
+    <p class="script">Let&rsquo;s test your memory. How about we add to this: while you meow, you clap once.</p>
+    <p class="cue">[A few points, both sides and up]</p>
+    <p class="script">Do you want to see the next act?</p>
+    <p class="cue">[Point up]</p>
+    <p class="script">Give it up for Algranaty!</p>
+  </div>
+
+
+
+</section>
+
+<section id="t-second">
+  <h2>Acts 7–12</h2>
+
+  <div class="act-mark"><span class="n">Act 7</span><span class="who">Algranaty · Thai staff</span></div>
+
+  <div class="gap">
+    <h4>World Cup charades</h4>
+    <p class="cue">[One volunteer from Section 1, one from Section B. Whisper them a sentence. They act it out, no words. Their own section guesses. First right answer wins.]</p>
+    <p class="script add">Welcome to the Charades World Cup. Section 1 versus Section B.</p>
+    <p class="script">I need two volunteers — one from this side, and one from this team.</p>
+    <p class="cue">Sentence:</p>
+    <p class="script">Butterfly by the waterfall</p>
+    <p class="script">Give it up for Tal!</p>
+  </div>
+
+  <div class="act-mark"><span class="n">Act 8</span><span class="who">Tal · Contact ball</span></div>
+
+  <div class="gap">
+    <h4>One throw, one clap</h4>
+    <p class="script">Every time I throw a ball up in the air, you clap.</p>
+    <p class="cue">[One ball, slow high throws. Then three balls, too fast to clap. Fake throws. Then one very high throw, a long wait, the catch, and a big clap.]</p>
+    <p class="script">Give it up for Cody!</p>
+  </div>
+
+  <div class="act-mark"><span class="n">Act 9</span><span class="who">Cody · Comedy</span></div>
+
+  <div class="gap">
+    <h4>The lost socks</h4>
+    <p class="script">I was carrying my laundry. Both socks, in a box, and some other laundry.</p>
+    <p class="script">And one of the socks fell out as I walked, so I dropped the box in the corner and came back to look for that missing sock. It totally disappeared. I looked for it on many different occasions.</p>
+    <p class="script">And I never, ever, ever, ever, ever&hellip; ever found it again.</p>
+    <p class="script">And just like this, hoping they don&rsquo;t disappear, we move to the next act — Adi. Give them a round of applause!</p>
+  </div>
+
+  <div class="act-mark"><span class="n">Act 10</span><span class="who">Adi · Poi</span></div>
+
+  <div class="gap">
+    <h4>One step, one clap</h4>
+    <p class="script">Every time I make a step, you clap.</p>
+    <p class="cue">[One step. Then a second. Then two quick ones. Then slow. Another stepping sequence. Tiptoes. Giant steps. Then jump and step your way out. Mistakes get the &ldquo;better watch&rdquo; look.]</p>
+    <p class="script">Give it up for Luna!</p>
+  </div>
+  <div class="act-mark"><span class="n">Act 11</span><span class="who">Luna</span></div>
+
+  <div class="gap">
+    <h4>Good news and bad news</h4>
+    <p class="script">I have good news and bad news, everyone. Which one do you want to hear first?</p>
+    <div class="branch">
+      <div class="branch-opt"><span class="branch-if">If they pick good news</span>
+        <p class="script">The good news is we have one more act. The bad news is it is the last one.</p></div>
+      <span class="branch-or">or</span>
+      <div class="branch-opt"><span class="branch-if">If they pick bad news</span>
+        <p class="script add">The bad news is we only have one more act. The good news is&hellip; we have one more act!</p></div>
+    </div>
+    <p class="script">But we also have a fire jam and party afterwards, so we&rsquo;re gonna keep having great fun.</p>
+    <p class="script">Give it up for Grisha!</p>
+  </div>
+
+  <div class="act-mark"><span class="n">Act 12 — last</span><span class="who">Grisha · Dragon staff</span></div>
+
+</section>
+
+<section id="t-close">
+  <h2>Close</h2>
+  <div class="gap">
+    <h4>Finale</h4>
+    <p class="script">Wow, this was amazing. Give it up for our last performer.</p>
+    <p class="script">Our show is slowly coming to an end.</p>
+    <p class="script">Soon all of our performers will come out on stage one more time, and I want you to give them as much love as you can, one more time. Give it up for&hellip;</p>
+    <p class="cue">[Names, one at a time: Cesar, Babyyaga, Sunshine &amp; Joachim, Amory, Joaquin, Dominiq, Algranaty, Tal, Cody, Adi, Luna, Grisha]</p>
+    <p class="cue">[All performers on stage]</p>
+    <p class="script">Thank you all, you&rsquo;ve been an amazing audience. Give it up for yourselves!</p>
+    <p class="cue">[Grab the hand of the performer next to you, raise hands, bow twice]</p>
+  </div>
+  <div class="gap">
+    <h4>The om</h4>
+    <p class="script">Before we finish, we have this little tradition that we do here at Paradise Circus, and that is that we take a step away from being strangers and take a step towards being friends.</p>
+    <p class="script">To do this, first we will <strong>all</strong> hold hands, so make sure you are holding hands with your neighbours.</p>
+    <p class="cue">[Make sure all hands are held]</p>
+    <p class="script">Now, we&rsquo;re gonna do an amazing big om together, so we can all feel it deep inside. OK? Does everybody know how to do an om? Is there anybody who doesn&rsquo;t know what an om is?</p>
+    <p class="script">Wherever you are in your breathing — exhale all the air out. Inhale for om&hellip;</p>
+    <p class="cue">[Om]</p>
+    <p class="script">God damn, this feels good.</p>
+    <p class="script">Thank you one more time. Stay for an amazing, fun party night that we&rsquo;re gonna have right after the fire show.</p>
+  </div>
+</section>
+
+</div><!-- /page tonight -->
+
+
+</div>
+
+<script>
+(function () {
+  document.querySelectorAll('[data-alt]').forEach(function (box) {
+    var tabs = Array.prototype.slice.call(box.querySelectorAll('[role="tab"]'));
+    function select(tab) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+      });
+    }
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { select(t); });
+      t.addEventListener('keydown', function (e) {
+        var n = null;
+        if (e.key === 'ArrowRight') n = tabs[(i + 1) % tabs.length];
+        if (e.key === 'ArrowLeft')  n = tabs[(i - 1 + tabs.length) % tabs.length];
+        if (n) { e.preventDefault(); select(n); n.focus(); }
+      });
+    });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  var buttons = document.querySelectorAll('.pager button[data-page]');
+  var pages = document.querySelectorAll('.page');
+  var navs = document.querySelectorAll('.topnav-inner[data-nav]');
+
+  function show(name) {
+    pages.forEach(function (el) {
+      el.hidden = el.getAttribute('data-page') !== name;
+    });
+    navs.forEach(function (el) {
+      el.hidden = el.getAttribute('data-nav') !== name;
+    });
+    buttons.forEach(function (b) {
+      b.setAttribute('aria-current',
+        String(b.getAttribute('data-page') === name));
+    });
+    window.scrollTo(0, 0);
+  }
+
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      show(b.getAttribute('data-page'));
+    });
+  });
+
+  // a hash belonging to the other page switches to it
+  document.querySelectorAll('.topnav-inner[data-nav] a').forEach(function (a) {
+    a.addEventListener('click', function () {
+      var owner = a.closest('.topnav-inner').getAttribute('data-nav');
+      var active = document.querySelector('.pager button[data-page][aria-current="true"]');
+      if (active && active.getAttribute('data-page') !== owner) show(owner);
+    });
+  });
+})();
+</script>
+
+<script>
+(function () {
+  document.querySelectorAll('.chars').forEach(function (group) {
+    var items = group.querySelectorAll('details.char');
+    if (!items.length) return;
+
+    var btn = document.createElement('button');
+    btn.className = 'allctl';
+    btn.type = 'button';
+
+    function sync() {
+      var anyClosed = Array.prototype.some.call(items, function (d) {
+        return !d.open;
+      });
+      btn.textContent = anyClosed ? 'Expand all' : 'Collapse all';
+      btn.setAttribute('aria-expanded', String(!anyClosed));
+    }
+
+    btn.addEventListener('click', function () {
+      var anyClosed = Array.prototype.some.call(items, function (d) {
+        return !d.open;
+      });
+      items.forEach(function (d) { d.open = anyClosed; });
+      sync();
+    });
+
+    items.forEach(function (d) { d.addEventListener('toggle', sync); });
+    sync();
+    group.parentNode.insertBefore(btn, group);
+  });
+})();
+</script>
+
+<script>
+(function () {
+  var links = Array.prototype.slice.call(
+    document.querySelectorAll('.topnav a')
+  );
+  var map = {};
+  var targets = [];
+
+  links.forEach(function (a) {
+    var el = document.querySelector(a.getAttribute('href'));
+    if (el) { map[el.id] = a; targets.push(el); }
+  });
+  if (!targets.length || !('IntersectionObserver' in window)) return;
+
+  function mark(id) {
+    links.forEach(function (a) {
+      a.classList.toggle('here', a.getAttribute('href') === '#' + id);
+    });
+  }
+
+  var visible = {};
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      visible[e.target.id] = e.isIntersecting;
+    });
+    for (var i = 0; i < targets.length; i++) {
+      if (visible[targets[i].id]) { mark(targets[i].id); return; }
+    }
+  }, { rootMargin: '-25% 0px -60% 0px' });
+
+  targets.forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+<script>
+/* Remember where you were: page, open entries, scroll position, alt tab */
+(function () {
+  var KEY = 'pc-book-state-v1';
+  var store = {
+    get: function () {
+      try { return JSON.parse(localStorage.getItem(KEY)) || null; }
+      catch (e) { return null; }
+    },
+    set: function (v) {
+      try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {}
+    }
+  };
+
+  var details = Array.prototype.slice.call(document.querySelectorAll('details.char'));
+  function keyOf(d) {
+    var h = d.querySelector('summary h3');
+    return h && h.firstChild ? h.firstChild.textContent.trim() : '';
+  }
+  function currentPage() {
+    var b = document.querySelector('.pager button[data-page][aria-current="true"]');
+    return b ? b.getAttribute('data-page') : null;
+  }
+  function currentAlt() {
+    var t = document.querySelector('[data-alt] [role="tab"][aria-selected="true"]');
+    return t ? t.id : null;
+  }
+
+  var restoring = true;
+  function save() {
+    if (restoring) return;
+    store.set({
+      page: currentPage(),
+      open: details.filter(function (d) { return d.open; }).map(keyOf),
+      y: window.scrollY,
+      alt: currentAlt()
+    });
+  }
+
+  var st = store.get();
+  if (st) {
+    if (st.page) {
+      var btn = document.querySelector('.pager button[data-page="' + st.page + '"]');
+      if (btn && currentPage() !== st.page) btn.click();
+    }
+    if (st.open && st.open.length) {
+      details.forEach(function (d) {
+        if (st.open.indexOf(keyOf(d)) !== -1) d.open = true;
+      });
+    }
+    if (st.alt) {
+      var t = document.getElementById(st.alt);
+      if (t) t.click();
+    }
+  }
+
+  function finish() {
+    if (st && typeof st.y === 'number') window.scrollTo(0, st.y);
+    requestAnimationFrame(function () { restoring = false; });
+  }
+  if (document.readyState === 'complete') finish();
+  else window.addEventListener('load', finish);
+
+  var timer;
+  function later() { clearTimeout(timer); timer = setTimeout(save, 200); }
+  window.addEventListener('scroll', later, { passive: true });
+  details.forEach(function (d) { d.addEventListener('toggle', later); });
+  document.addEventListener('click', later);
+  window.addEventListener('pagehide', function () { restoring = false; save(); });
+})();
+</script>
+<script>
+/* In-page links: scroll within the page instead of navigating (avoids the
+   "Open external link" prompt when viewed inside Claude) */
+(function () {
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var id = a.getAttribute('href').slice(1);
+    e.preventDefault();
+    if (!id) { window.scrollTo({ top: 0, behavior: 'smooth' }); return; }
+    var el = document.getElementById(id);
+    if (!el) return;
+    requestAnimationFrame(function () {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+})();
+</script>
+<script>
+(function () {
+  var btn = document.querySelector('.theme-toggle');
+  if (!btn) return;
+  var root = document.documentElement;
+  function sync() {
+    var light = root.getAttribute('data-theme') === 'light';
+    btn.textContent = light ? 'Dark' : 'Light';
+    btn.setAttribute('aria-pressed', String(light));
+  }
+  btn.addEventListener('click', function () {
+    var light = root.getAttribute('data-theme') !== 'light';
+    root.setAttribute('data-theme', light ? 'light' : 'dark');
+    try { localStorage.setItem('pc-theme', light ? 'light' : 'dark'); } catch (e) {}
+    sync();
+  });
+  sync();
+})();
+</script>
+<script>
+/* Search across both pages */
+(function () {
+  var toggle = document.querySelector('.search-toggle');
+  var bar = document.getElementById('searchbar');
+  if (!toggle || !bar) return;
+  var input = bar.querySelector('input');
+  var count = bar.querySelector('.count');
+  var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+  var hits = [], idx = -1, opened = [], timer;
+
+  function clear() {
+    hits.forEach(function (m) {
+      var parent = m.parentNode;
+      if (!parent) return;
+      parent.replaceChild(document.createTextNode(m.textContent), m);
+      parent.normalize();
+    });
+    hits = []; idx = -1;
+  }
+  function closeOpened() {
+    opened.forEach(function (d) { d.open = false; });
+    opened = [];
+  }
+  function run(q) {
+    clear();
+    q = q.trim().toLowerCase();
+    if (q.length < 2) { count.textContent = ''; return; }
+    pages.forEach(function (page) {
+      var walker = document.createTreeWalker(page, NodeFilter.SHOW_TEXT, {
+        acceptNode: function (n) {
+          if (!n.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+          var p = n.parentNode;
+          if (p.closest('script,style,button,.allctl')) return NodeFilter.FILTER_REJECT;
+          return n.nodeValue.toLowerCase().indexOf(q) !== -1 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+        }
+      });
+      var nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(function (node) {
+        var text = node.nodeValue, lower = text.toLowerCase(), pos = 0, i;
+        var frag = document.createDocumentFragment();
+        while ((i = lower.indexOf(q, pos)) !== -1) {
+          if (i > pos) frag.appendChild(document.createTextNode(text.slice(pos, i)));
+          var m = document.createElement('mark');
+          m.className = 'hit';
+          m.textContent = text.slice(i, i + q.length);
+          frag.appendChild(m); hits.push(m);
+          pos = i + q.length;
+        }
+        if (pos < text.length) frag.appendChild(document.createTextNode(text.slice(pos)));
+        node.parentNode.replaceChild(frag, node);
+      });
+    });
+    if (!hits.length) { count.textContent = 'None'; return; }
+    go(0);
+  }
+  function go(n) {
+    if (!hits.length) return;
+    if (idx >= 0 && hits[idx]) hits[idx].classList.remove('now');
+    idx = (n + hits.length) % hits.length;
+    var m = hits[idx];
+    m.classList.add('now');
+    count.textContent = (idx + 1) + ' / ' + hits.length;
+    var page = m.closest('.page');
+    if (page && page.hidden) {
+      var b = document.querySelector('.pager button[data-page="' + page.getAttribute('data-page') + '"]');
+      if (b) b.click();
+    }
+    var d = m.closest('details');
+    while (d) {
+      if (!d.open) { d.open = true; opened.push(d); }
+      d = d.parentNode.closest('details');
+    }
+    var panel = m.closest('[role="tabpanel"][hidden]');
+    if (panel) {
+      var tab = document.getElementById(panel.getAttribute('aria-labelledby'));
+      if (tab) tab.click();
+    }
+    requestAnimationFrame(function () {
+      m.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    });
+  }
+  function open() {
+    bar.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+    input.focus();
+    input.select();
+  }
+  function close() {
+    clear(); closeOpened();
+    input.value = ''; count.textContent = '';
+    bar.hidden = true;
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.focus();
+  }
+  toggle.addEventListener('click', function () { bar.hidden ? open() : close(); });
+  input.addEventListener('input', function () {
+    clearTimeout(timer);
+    timer = setTimeout(function () { closeOpened(); run(input.value); }, 180);
+  });
+  input.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); go(idx + (e.shiftKey ? -1 : 1)); }
+    if (e.key === 'Escape') { e.preventDefault(); close(); }
+  });
+  bar.addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    if (b.hasAttribute('data-close')) close();
+    else go(idx + Number(b.getAttribute('data-step')));
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f' && bar.hidden) {
+      e.preventDefault(); open();
+    }
+  });
+})();
+</script>
+
+<div class="stage" id="stage" hidden aria-modal="true" role="dialog">
+  <div class="stage-bar">
+    <button type="button" data-stage-close>&larr; Back</button>
+    <span class="stage-title"></span>
+    <button type="button" data-stage-link>Copy link</button>
+  </div>
+  <div class="stage-scroll"><div class="stage-inner">
+    <div class="stage-body"></div>
+    <p class="stage-end">End</p>
+  </div></div>
+  <div class="stage-ctl">
+    <button type="button" class="play" data-stage-play>Scroll</button>
+    <button type="button" data-stage-speed="-1" aria-label="Slower">&minus;</button>
+    <span class="spd"></span>
+    <button type="button" data-stage-speed="1" aria-label="Faster">+</button>
+    <button type="button" data-stage-text aria-label="Text size">A</button>
+  </div>
+</div>
+
+<script>
+/* Perform screens: open one act on its own, with auto-scroll */
+(function () {
+  var stage = document.getElementById('stage');
+  if (!stage) return;
+  var titleEl = stage.querySelector('.stage-title');
+  var bodyEl  = stage.querySelector('.stage-body');
+  var scroller= stage.querySelector('.stage-scroll');
+  var playBtn = stage.querySelector('[data-stage-play]');
+  var spdEl   = stage.querySelector('.spd');
+  var linkBtn = stage.querySelector('[data-stage-link]');
+
+  var SPEEDS = [8, 12, 16, 20, 26, 34, 44, 60, 80];
+  var SIZES  = [1.05, 1.18, 1.34, 1.55];
+  function num(key, def) {
+    try { var v = parseInt(localStorage.getItem(key), 10); return isNaN(v) ? def : v; }
+    catch (e) { return def; }
+  }
+  function put(key, v) { try { localStorage.setItem(key, String(v)); } catch (e) {} }
+  var sIdx = Math.min(SPEEDS.length - 1, Math.max(0, num('pc-stage-speed', 3)));
+  var zIdx = Math.min(SIZES.length - 1, Math.max(0, num('pc-stage-size', 1)));
+
+  var acts = {};
+  function slug(t) {
+    return t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 60);
+  }
+  function label(node) {
+    var c = node.cloneNode(true);
+    Array.prototype.forEach.call(c.querySelectorAll('.essence, .again'), function (x) { x.remove(); });
+    return c.textContent.replace(/\s+/g, ' ').trim();
+  }
+  function register(head, body, mount, before, opts) {
+    opts = opts || {};
+    if (!body) return;
+    var name = opts.name || (head ? label(head) : '');
+    if (!name) return;
+    var id = slug(name), n = 2;
+    while (acts[id]) { id = slug(name) + '-' + n++; }
+    acts[id] = { name: name, body: body };
+    var b = document.createElement('a');
+    b.className = 'perform-btn';
+    b.href = '#act=' + id;
+    b.textContent = opts.text || 'Open';
+    b.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation(); open(id, true);
+    });
+    if (before) mount.insertBefore(b, before); else mount.appendChild(b);
+  }
+
+  document.querySelectorAll('details.char').forEach(function (d) {
+    var sum = d.querySelector('summary');
+    var h = d.querySelector('summary h3');
+    register(h, d.querySelector('.char-body'), sum, null);
+    Array.prototype.forEach.call(d.querySelectorAll('.alt-body'), function (alt) {
+      var tag = alt.getAttribute('data-alt-act') || 'Alt';
+      register(null, alt, sum, null, {
+        name: (h ? label(h) : 'Act') + ' \u2014 ' + tag,
+        text: 'Open ' + tag
+      });
+    });
+  });
+  document.querySelectorAll('.gap').forEach(function (g) {
+    var h = g.querySelector('h4');
+    register(h, g, g, h ? h.nextSibling : g.firstChild);
+  });
+
+  var current = null;
+  function open(id, push) {
+    var a = acts[id];
+    if (!a) return;
+    current = id;
+    titleEl.textContent = a.name;
+    var clone = a.body.cloneNode(true);
+    /* performing: keep the lines, cues and lists; drop notes and the description */
+    Array.prototype.forEach.call(
+      clone.querySelectorAll('.perform-btn, .gloss, .add-tag, ul.spec, .note, .alt-body, .roster'),
+      function (x) { x.remove(); }
+    );
+    Array.prototype.forEach.call(clone.querySelectorAll('p'), function (x) {
+      if (!x.className) x.remove();
+    });
+    var drop = false;
+    Array.prototype.slice.call(clone.children).forEach(function (el) {
+      if (el.tagName === 'H4') drop = /more jokes/i.test(el.textContent);
+      if (drop) el.remove();
+    });
+    if (clone.querySelector('.script')) {
+      Array.prototype.forEach.call(clone.querySelectorAll('ul.bits'), function (x) { x.remove(); });
+    }
+    Array.prototype.forEach.call(clone.querySelectorAll('h4'), function (h) {
+      var n = h.nextElementSibling;
+      if (!n || n.tagName === 'H4') h.remove();
+    });
+    if (!clone.textContent.trim()) clone = a.body.cloneNode(true);
+    bodyEl.innerHTML = '';
+    Array.prototype.slice.call(clone.childNodes).forEach(function (n) {
+      if (n.nodeType === 1 && n.classList && n.classList.contains('perform-btn')) return;
+      bodyEl.appendChild(n);
+    });
+    stage.hidden = false;
+    document.body.classList.add('stage-open');
+    scroller.scrollTop = 0;
+    apply();
+    stop();
+    if (push) { try { history.pushState({ act: id }, '', '#act=' + id); } catch (e) {} }
+  }
+  function close(pop) {
+    stop();
+    current = null;
+    stage.hidden = true;
+    document.body.classList.remove('stage-open');
+    if (!pop) {
+      try {
+        if (history.state && history.state.act) history.back();
+        else history.replaceState(null, '', location.pathname + location.search);
+      } catch (e) {}
+    }
+  }
+
+  /* auto-scroll */
+  var raf = null, last = 0, carry = 0;
+  function step(t) {
+    if (!last) last = t;
+    var dt = Math.min(100, t - last); last = t;
+    carry += SPEEDS[sIdx] * dt / 1000;
+    var px = Math.floor(carry);
+    if (px) {
+      carry -= px;
+      var before = scroller.scrollTop;
+      scroller.scrollTop = before + px;
+      if (scroller.scrollTop === before) { stop(); return; }
+    }
+    raf = requestAnimationFrame(step);
+  }
+  function play() {
+    if (raf) return;
+    last = 0; carry = 0;
+    raf = requestAnimationFrame(step);
+    playBtn.textContent = 'Pause';
+    playBtn.setAttribute('aria-pressed', 'true');
+  }
+  function stop() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    playBtn.textContent = 'Scroll';
+    playBtn.setAttribute('aria-pressed', 'false');
+  }
+  function apply() {
+    spdEl.textContent = SPEEDS[sIdx] + ' px/s';
+    stage.style.setProperty('--stage-scale', SIZES[zIdx] + 'rem');
+  }
+
+  playBtn.addEventListener('click', function () { raf ? stop() : play(); });
+  stage.querySelectorAll('[data-stage-speed]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      sIdx = Math.min(SPEEDS.length - 1, Math.max(0, sIdx + Number(b.getAttribute('data-stage-speed'))));
+      put('pc-stage-speed', sIdx); apply();
+    });
+  });
+  stage.querySelector('[data-stage-text]').addEventListener('click', function () {
+    zIdx = (zIdx + 1) % SIZES.length; put('pc-stage-size', zIdx); apply();
+  });
+  stage.querySelector('[data-stage-close]').addEventListener('click', function () { close(false); });
+  linkBtn.addEventListener('click', function () {
+    if (!current) return;
+    var url = location.href.split('#')[0] + '#act=' + current;
+    var done = function () { linkBtn.textContent = 'Copied'; setTimeout(function () { linkBtn.textContent = 'Copy link'; }, 1600); };
+    try { navigator.clipboard.writeText(url).then(done, done); } catch (e) { done(); }
+  });
+  scroller.addEventListener('click', function (e) {
+    if (e.target.closest('a')) return;
+    raf ? stop() : play();
+  });
+  scroller.addEventListener('wheel', stop, { passive: true });
+  scroller.addEventListener('touchstart', stop, { passive: true });
+  document.addEventListener('keydown', function (e) {
+    if (stage.hidden) return;
+    if (e.key === 'Escape') { e.preventDefault(); close(false); }
+    if (e.key === ' ')      { e.preventDefault(); raf ? stop() : play(); }
+  });
+  window.addEventListener('popstate', function () {
+    var m = /^#act=(.+)$/.exec(location.hash);
+    if (m && acts[decodeURIComponent(m[1])]) open(decodeURIComponent(m[1]), false);
+    else if (!stage.hidden) close(true);
+  });
+
+  var m = /^#act=(.+)$/.exec(location.hash);
+  if (m) {
+    var id = decodeURIComponent(m[1]);
+    if (acts[id]) open(id, false);
+  }
+  apply();
+})();
+</script>
+</body>
+</html>

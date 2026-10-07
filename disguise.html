@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Disguise - the Paradise Circus looping song, with chords and an auto-scroll for playing it live.">
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    color-scheme: light;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html, body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Disguise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
+</head>
+<body>
+<style>
+/* Layout: one column songbook. A sticky loop bar keeps D A G G and the tempo
+   in view the whole way down; chords ride directly above the word they land on. */
+:root {
+  --paper:   #E8EAE2;
+  --card:    #F3F5EE;
+  --ink:     #1E231B;
+  --muted:   #6A7266;
+  --moss:    #3C6945;
+  --line:    #CBD0C3;
+  --display: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans:    "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --mono:    "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --lyric:   1.5rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #14170F;
+    --card:  #1C2018;
+    --ink:   #E6EADF;
+    --muted: #8E9789;
+    --moss:  #8ABF93;
+    --line:  #2E3429;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #14170F;
+  --card:  #1C2018;
+  --ink:   #E6EADF;
+  --muted: #8E9789;
+  --moss:  #8ABF93;
+  --line:  #2E3429;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 44rem; margin: 0 auto; padding: 0 16px; padding-block: 2.2rem 7rem; }
+
+/* ---- masthead ---- */
+.mast { margin-bottom: 1.6rem; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: .68rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 .5rem;
+}
+h1 {
+  font-family: var(--display);
+  font-weight: 400; font-style: italic;
+  font-size: clamp(3rem, 14vw, 5.5rem);
+  line-height: .9; letter-spacing: -.02em;
+  margin: 0 0 .7rem;
+  text-wrap: balance;
+}
+.standfirst {
+  font-family: var(--display);
+  font-size: 1.02rem; line-height: 1.5;
+  color: var(--muted);
+  max-width: 34rem;
+  margin: 0;
+}
+
+/* ---- sticky loop bar ---- */
+.loop {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
+  display: flex; align-items: center; gap: .55rem; flex-wrap: wrap;
+  margin: 1.6rem -16px 0; padding: .6rem 16px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.loop .tag {
+  font-family: var(--mono); font-size: .63rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted);
+}
+.chordbox {
+  font-family: var(--mono); font-weight: 500; font-size: .85rem;
+  color: var(--moss);
+  min-width: 2.1rem; text-align: center;
+  padding: .24rem .3rem;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: var(--card);
+}
+.loop .bpm { margin-left: auto; font-family: var(--mono); font-size: .78rem; color: var(--muted); }
+.loop .bpm b { color: var(--ink); font-weight: 500; }
+
+/* ---- roster ---- */
+.cast { margin: 1.7rem 0 .4rem; }
+.cast > summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: baseline; gap: .5rem;
+  font-family: var(--mono); font-size: .68rem;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--muted);
+  padding: .35rem 0;
+}
+.cast > summary::-webkit-details-marker { display: none; }
+.cast > summary::after { content: "+"; color: var(--moss); font-size: .9rem; line-height: 1; }
+.cast[open] > summary::after { content: "\2013"; }
+.cast > summary b { color: var(--ink); font-weight: 500; }
+.sheet {
+  display: flex; flex-wrap: wrap; gap: .3rem;
+  padding: .6rem 0 .2rem;
+}
+.who {
+  display: inline-flex; align-items: baseline; gap: .3rem;
+  font-size: .78rem;
+  padding: .22rem .5rem .26rem .55rem;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--card);
+  white-space: nowrap;
+}
+.who i { font-style: normal; font-family: var(--mono); font-size: .6rem; color: var(--moss); }
+.cast .hint { font-size: .74rem; color: var(--muted); margin: .55rem 0 0; }
+
+.checks { list-style: none; margin: .5rem 0 .2rem; padding: 0; display: flex; flex-direction: column; gap: .1rem; }
+.checks label { display: flex; align-items: center; gap: .6rem; padding: .42rem .1rem; cursor: pointer; font-size: .95rem; }
+.checks input { width: 1.05rem; height: 1.05rem; accent-color: var(--moss); flex: none; margin: 0; }
+.checks input:checked + span { color: var(--muted); text-decoration: line-through; }
+.setup .reset {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); background: transparent;
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: .3rem .7rem; margin-top: .4rem; cursor: pointer;
+}
+.setup .reset:hover { color: var(--moss); border-color: var(--moss); }
+
+.todo { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: 1.5rem 0 .2rem; }
+.todo-label {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--muted);
+}
+.who.pend { border-style: dashed; border-color: var(--moss); color: var(--moss); background: transparent; }
+
+/* ---- stanzas ---- */
+.st { padding: 1.5rem 0 .2rem; border-top: 1px solid var(--line); }
+.st:first-of-type { border-top: none; }
+.st-label {
+  font-family: var(--mono); font-weight: 400;
+  font-size: .66rem; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 .9rem;
+}
+.st.chorus .st-label { color: var(--moss); }
+.st.chorus { position: relative; }
+.st.chorus::before {
+  content: ""; position: absolute; left: -16px; top: 1.5rem; bottom: .4rem;
+  width: 2px; background: var(--moss); opacity: .5;
+}
+.st-lines { display: flex; flex-direction: column; gap: .15rem; }
+.ln {
+  margin: 0;
+  font-size: var(--lyric);
+  line-height: 1.34;
+  letter-spacing: -.004em;
+}
+.cw { display: inline-flex; flex-direction: column; align-items: flex-start; vertical-align: bottom; }
+.ch {
+  display: block;
+  font-family: var(--mono); font-weight: 500;
+  font-size: .62rem; letter-spacing: .08em; line-height: 1;
+  color: var(--moss);
+  margin-bottom: .22rem;
+}
+
+/* ---- deck ---- */
+.deck {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: flex; align-items: center; justify-content: center; gap: .4rem;
+  padding: .55rem 12px;
+  padding-bottom: calc(.55rem + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in srgb, var(--card) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+}
+.deck button {
+  font-family: var(--mono); font-size: .76rem;
+  color: var(--ink); background: transparent;
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: .42rem .7rem; min-width: 2.3rem;
+  cursor: pointer;
+}
+.deck button:hover { border-color: var(--moss); color: var(--moss); }
+.deck button:focus-visible { outline: 2px solid var(--moss); outline-offset: 2px; }
+.deck #roll { background: var(--moss); border-color: var(--moss); color: var(--card); font-weight: 500; padding-inline: 1.05rem; }
+.deck #roll[aria-pressed="true"] { background: transparent; color: var(--moss); }
+.deck .read {
+  font-family: var(--mono); font-size: .68rem; color: var(--muted);
+  min-width: 3.4rem; text-align: center; font-variant-numeric: tabular-nums;
+}
+.deck .sep { width: 1px; height: 1.3rem; background: var(--line); margin: 0 .15rem; }
+
+.foot {
+  margin-top: 2.2rem; padding-top: 1.1rem; border-top: 1px solid var(--line);
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--muted);
+}
+
+@media (max-width: 480px) {
+  .deck .sep { display: none; }
+  .deck { gap: .3rem; }
+  .deck button { padding: .4rem .55rem; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="eyebrow">Paradise Circus &middot; looping song</p>
+    <h1>Disguise</h1>
+    <p class="standfirst">Four chords on a loop, a wholesome chorus, and a shoutout
+    verse that only works in one place on earth. It ends by handing the night over
+    to open stage.</p>
+  </header>
+
+  <div class="loop">
+    <span class="tag">Loop</span>
+    <span class="chordbox">D</span><span class="chordbox">A</span><span class="chordbox">G</span><span class="chordbox">G</span>
+    <span class="bpm"><b>56</b> bpm</span>
+  </div>
+
+  <details class="cast setup">
+    <summary><b>Before you play</b> &mdash; setup checklist</summary>
+    <ul class="checks">
+      <li><label><input type="checkbox" id="chk0"><span>Tune guitar</span></label></li>
+      <li><label><input type="checkbox" id="chk1"><span>Prepare fire staff</span></label></li>
+      <li><label><input type="checkbox" id="chk2"><span>Check the looper can move on stage if needed</span></label></li>
+      <li><label><input type="checkbox" id="chk3"><span>Connect all cables, instruments</span></label></li>
+      <li><label><input type="checkbox" id="chk4"><span>Check effects</span></label></li>
+      <li><label><input type="checkbox" id="chk5"><span>Check bpm and drums</span></label></li>
+      <li><label><input type="checkbox" id="chk6"><span>Check levels</span></label></li>
+    </ul>
+    <button type="button" class="reset" id="clearChecks">Clear all</button>
+  </details>
+
+  <div class="todo">
+    <span class="todo-label">Still to include</span>
+    <span class="who pend">Tal</span>
+  </div>
+
+  <details class="cast">
+    <summary><b>40</b> people named &mdash; tap to check</summary>
+    <div class="sheet"><span class="who">Anebel<i>1</i></span><span class="who">Courtney<i>1</i></span><span class="who">Cody<i>1</i></span><span class="who">Liz<i>1</i></span><span class="who">Grisha<i>2</i></span><span class="who">Vanessa<i>2</i></span><span class="who">James<i>2</i></span><span class="who">Logan<i>2</i></span><span class="who">Dee<i>2</i></span><span class="who">Keto<i>3</i></span><span class="who">Kim<i>3</i></span><span class="who">Lilith<i>3</i></span><span class="who">Leyla<i>3</i></span><span class="who">Dasha<i>3</i></span><span class="who">Boerc<i>4</i></span><span class="who">Luna<i>4</i></span><span class="who">Shay<i>4</i></span><span class="who">Kevin<i>4</i></span><span class="who">Iris<i>5</i></span><span class="who">Lee<i>5</i></span><span class="who">Neil<i>5</i></span><span class="who">Dapo<i>5</i></span><span class="who">Daniel<i>5</i></span><span class="who">Caesar<i>6</i></span><span class="who">Jarryd<i>6</i></span><span class="who">Sammy<i>6</i></span><span class="who">Amory<i>7</i></span><span class="who">Juicy<i>7</i></span><span class="who">Brighu<i>7</i></span><span class="who">Jon<i>7</i></span><span class="who">Remy<i>7</i></span><span class="who">Jonathan<i>8</i></span><span class="who">Sophie<i>8</i></span><span class="who">Mart<i>8</i></span><span class="who">Dominiq<i>8</i></span><span class="who">Duncan<i>9</i></span><span class="who">Ethan<i>9</i></span><span class="who">Cassie<i>9</i></span><span class="who">Ben<i>9</i></span><span class="who">PiJoe<i>9</i></span></div>
+    <p class="hint">The small number is the shoutout stanza they land in.</p>
+  </details>
+
+  <section class="st chorus">
+    <h2 class="st-label">Chorus 1</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">All</span></span> my life, I&rsquo;ve always</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Tried</span></span> to leave it behind, All this</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">disguise</span></span></p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">So</span></span> so far away</p>
+    </div>
+  </section>
+  <section class="st chorus">
+    <h2 class="st-label">Chorus 2</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">All</span></span> my life, I&rsquo;ve always</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">tried</span></span> to see all the light</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">coming</span></span> my way</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Helping</span></span> me stay</p>
+    </div>
+  </section>
+  <section class="st verse">
+    <h2 class="st-label">Verse 1</h2>
+    <div class="st-lines">
+      <p class="ln">Speaking <span class="cw"><span class="ch">D</span><span class="w">straight</span></span> from my heart</p>
+      <p class="ln">To all your around</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">The</span></span> sun on my side</p>
+      <p class="ln">And moon high above</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Believing</span></span> your soul has a destination</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">That&rsquo;s</span></span> purely your own</p>
+    </div>
+  </section>
+  <section class="st verse">
+    <h2 class="st-label">Verse 2</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Living</span></span> life that&rsquo;s fulfilling</p>
+      <p class="ln">I&rsquo;d put it on top</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Another</span></span> matter desire to grow</p>
+      <p class="ln">To make you inspired</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> knowledge transpired</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">I&rsquo;m</span></span> putting attire of wisdom and love</p>
+    </div>
+  </section>
+  <section class="st verse">
+    <h2 class="st-label">Verse 3</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Thanks</span></span> to all the people whose heartbeat drums strong</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">For</span></span> keeping the passion and fire in their soul</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> source of their choice is intuition to flow</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">I</span></span> choose my words with a clarity of thoughts</p>
+    </div>
+  </section>
+  <section class="st verse">
+    <h2 class="st-label">Verse 4</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">I</span></span> open my heart and listen to planets</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Strive</span></span> towards heavens while keep we keep our gaze set</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">On</span></span> picture that&rsquo;s bigger than all of our lives</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> passion is strong - let&rsquo;s not leave it behind</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 1</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Anebel,</span></span> shows us, how to be strong</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Courtney</span></span> our clown bringing us joy</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Cody</span></span> we love him for who he is</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">While</span></span> Liz is worming around in a bliss</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 2</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Grisha</span></span> - my dear friend - so special and kind</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">While</span></span> Vanessa and James are both saying Hi</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Logan</span></span> is tall and play sickest tunes</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Dee</span></span> behind a bar drinking his juice</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 3</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Keto</span></span> and Kim are making weird moves</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Lilith</span></span> creating on a page in her book</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Leyla</span></span> on lights - we&rsquo;re all waiting for show</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Dasha</span></span> with creative act - when we get more?</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 4</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Boerc</span></span> our cornerstone - he can play drums</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">And</span></span> Luna spins every prop - she has been around</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Shay</span></span> on unicycle - I worry no more</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Kevin</span></span> spins his Pois while keeping us warm</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 5</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Iris</span></span> on safety - no one goes up in smoke</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">While</span></span> Lee is making a 1000 bath joke</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Neil</span></span> and Dapo - never far away</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Daniel</span></span> in a corner puffing on a jay</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 6</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Caesar</span></span> on stage releasing his child</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">And</span></span> Jarryd the funniest of people around</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Sammy</span></span> the kindness, gentleness and love</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Last</span></span> batch of people I can&rsquo;t breathe no more</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 7</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Amory</span></span> and Juicy - freshly came back</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Brighu</span></span> brings yoga and flute to the pack</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Remy</span></span> spins decks, loves his disco tunes</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Jon</span></span> new to circus, spreads a good vibe</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 8</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Jonathan</span></span> on drums - he is holding the beat</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Sophie</span></span> behind camera catching the heat</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Mart</span></span> with schedule, he&rsquo;s holding the plan</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Dominiq</span></span> with the tricks and feather fans</p>
+    </div>
+  </section>
+  <section class="st shoutouts">
+    <h2 class="st-label">Shoutouts 9</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">Duncan</span></span> the showman - we need you here</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">Ethan</span></span> on guitar, so awesome, you&rsquo;ll see</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">Cassie</span></span> flies on a pole, while Ben fixes it all</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">The</span></span> biggest of shoutouts goes over to PiJoe</p>
+    </div>
+  </section>
+  <section class="st outro">
+    <h2 class="st-label">Outro</h2>
+    <div class="st-lines">
+      <p class="ln"><span class="cw"><span class="ch">D</span><span class="w">If</span></span> I&rsquo;ve missed you, I&rsquo;m sorry, I have to run</p>
+      <p class="ln"><span class="cw"><span class="ch">A</span><span class="w">I&rsquo;m</span></span> out time and open stage starts soon</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">I&rsquo;m</span></span> writing these lines but never quite done</p>
+      <p class="ln"><span class="cw"><span class="ch">G</span><span class="w">This</span></span> is the circus and show must go on</p>
+    </div>
+  </section>
+  <p class="foot">Living document &mdash; names come and go</p>
+</div>
+
+<div class="deck">
+  <button id="roll" type="button" aria-pressed="false">Scroll</button>
+  <button id="slower" type="button" aria-label="Slower">&minus;</button>
+  <span class="read" id="spd">20 px/s</span>
+  <button id="faster" type="button" aria-label="Faster">+</button>
+  <span class="sep"></span>
+  <button id="smaller" type="button" aria-label="Smaller text">a</button>
+  <button id="bigger" type="button" aria-label="Bigger text">A</button>
+  <span class="sep"></span>
+  <button id="theme" type="button" aria-label="Switch theme">&#9681;</button>
+</div>
+
+<script>
+(function () {
+  var SPEEDS = [8, 12, 16, 20, 26, 34, 44, 58];
+  var SIZES  = [1.18, 1.34, 1.5, 1.72, 2, 2.35];
+  function get(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : +v; } catch (e) { return d; } }
+  function set(k, v) { try { localStorage.setItem(k, String(v)); } catch (e) {} }
+
+  var si = Math.min(SPEEDS.length - 1, Math.max(0, get('dg-speed', 3)));
+  var zi = Math.min(SIZES.length  - 1, Math.max(0, get('dg-size', 2)));
+  var roll = document.getElementById('roll');
+  var spd  = document.getElementById('spd');
+
+  function showSpeed() { spd.textContent = SPEEDS[si] + ' px/s'; }
+  function showSize()  { document.documentElement.style.setProperty('--lyric', SIZES[zi] + 'rem'); }
+  showSpeed(); showSize();
+
+  var on = false, last = 0, carry = 0;
+  function step(t) {
+    if (!on) return;
+    if (!last) last = t;
+    carry += SPEEDS[si] * (t - last) / 1000;
+    last = t;
+    var px = Math.floor(carry);
+    if (px >= 1) {
+      carry -= px;
+      var before = window.scrollY;
+      window.scrollBy(0, px);
+      if (window.scrollY === before) { stop(); return; }
+    }
+    requestAnimationFrame(step);
+  }
+  function start() { on = true; last = 0; carry = 0; roll.textContent = 'Pause'; roll.setAttribute('aria-pressed', 'true'); requestAnimationFrame(step); }
+  function stop()  { on = false; roll.textContent = 'Scroll'; roll.setAttribute('aria-pressed', 'false'); }
+
+  roll.addEventListener('click', function () { on ? stop() : start(); });
+  document.getElementById('slower').addEventListener('click', function () { si = Math.max(0, si - 1); showSpeed(); set('dg-speed', si); });
+  document.getElementById('faster').addEventListener('click', function () { si = Math.min(SPEEDS.length - 1, si + 1); showSpeed(); set('dg-speed', si); });
+  document.getElementById('smaller').addEventListener('click', function () { zi = Math.max(0, zi - 1); showSize(); set('dg-size', zi); });
+  document.getElementById('bigger').addEventListener('click', function () { zi = Math.min(SIZES.length - 1, zi + 1); showSize(); set('dg-size', zi); });
+
+  var root = document.documentElement;
+  try { var th = localStorage.getItem('dg-theme'); if (th) root.setAttribute('data-theme', th); } catch (e) {}
+  document.getElementById('theme').addEventListener('click', function () {
+    var dark = root.getAttribute('data-theme') === 'dark' ||
+      (!root.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    var next = dark ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('dg-theme', next); } catch (e) {}
+  });
+
+
+  var boxes = document.querySelectorAll('.checks input');
+  Array.prototype.forEach.call(boxes, function (b) {
+    try { b.checked = localStorage.getItem('dg-' + b.id) === '1'; } catch (e) {}
+    b.addEventListener('change', function () {
+      try { localStorage.setItem('dg-' + b.id, b.checked ? '1' : '0'); } catch (e) {}
+    });
+  });
+  document.getElementById('clearChecks').addEventListener('click', function () {
+    Array.prototype.forEach.call(boxes, function (b) {
+      b.checked = false;
+      try { localStorage.setItem('dg-' + b.id, '0'); } catch (e) {}
+    });
+  });
+
+  ['wheel', 'touchstart', 'keydown'].forEach(function (ev) {
+    window.addEventListener(ev, function () { if (on) stop(); }, { passive: true });
+  });
+})();
+</script>
+</body>
+</html>
