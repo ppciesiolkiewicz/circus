@@ -11,16 +11,18 @@ Character book, MC script and songs for the fire show at Paradise Circus, Pai.
 ## The password
 
 `book.html` sits behind HTTP basic auth, enforced by [`middleware.js`](middleware.js).
-Set these in Vercel under **Project Settings → Environment Variables**:
+
+**Default: `pio` / `coconut`.** A speed bump, not a secret — it stops anyone
+who stumbles on the link from reading the book, and that's all it's for. The
+default is in this repo, so treat it as public.
+
+To use something only you know, set these in Vercel under **Project Settings →
+Environment Variables**, then redeploy:
 
 | Variable | |
 | --- | --- |
-| `BOOK_PASSWORD` | required — the password |
-| `BOOK_USER` | optional — defaults to `pio` |
-
-Without `BOOK_PASSWORD` the book returns 503 rather than serving, so a missing
-variable can't accidentally leave it open. Changing either variable needs a
-redeploy to take effect.
+| `BOOK_PASSWORD` | overrides `coconut` |
+| `BOOK_USER` | overrides `pio` |
 
 Both are single self-contained HTML files. No build, no install — open one in a
 browser, or push to `main` and Vercel serves it.

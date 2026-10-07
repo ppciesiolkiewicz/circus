@@ -1,12 +1,13 @@
 /**
  * Basic auth on the circus ideas book.
  *
- * The password comes from the BOOK_PASSWORD environment variable, set in
- * Vercel under Project Settings -> Environment Variables. BOOK_USER is
- * optional and defaults to "pio".
+ * Defaults: pio / coconut. This is a speed bump, not a secret — it keeps the
+ * book from being read by anyone who stumbles on the link, and that's all it
+ * is meant to do. The default sits in a public repo, so treat it as public.
  *
- * If BOOK_PASSWORD is not set the book is refused rather than served, so a
- * missing variable can never leave it open.
+ * To use something only you know, set BOOK_PASSWORD (and optionally
+ * BOOK_USER) in Vercel under Project Settings -> Environment Variables, then
+ * redeploy. Those override the defaults below.
  *
  * The landing page and the song page are untouched — the matcher below only
  * covers the book.
@@ -17,6 +18,8 @@ export const config = {
 };
 
 const REALM = 'Paradise Circus';
+const DEFAULT_USER = 'pio';
+const DEFAULT_PASS = 'coconut';
 
 function unauthorized() {
   return new Response('Authentication required.\n', {
@@ -39,15 +42,8 @@ function same(a, b) {
 }
 
 export default function middleware(request) {
-  const expectedPass = process.env.BOOK_PASSWORD;
-  const expectedUser = process.env.BOOK_USER || 'pio';
-
-  if (!expectedPass) {
-    return new Response(
-      'The book is not configured yet. Set BOOK_PASSWORD in the Vercel project settings.\n',
-      { status: 503, headers: { 'Content-Type': 'text/plain; charset=utf-8' } },
-    );
-  }
+  const expectedUser = process.env.BOOK_USER || DEFAULT_USER;
+  const expectedPass = process.env.BOOK_PASSWORD || DEFAULT_PASS;
 
   const header = request.headers.get('authorization');
   if (!header) return unauthorized();
