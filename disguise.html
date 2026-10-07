@@ -91,6 +91,9 @@ h1 {
   margin: 0;
 }
 
+.eyebrow .home-link { color: var(--moss); text-decoration: none; }
+.eyebrow .home-link:hover { text-decoration: underline; }
+
 /* ---- sticky loop bar ---- */
 .loop {
   position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30;
@@ -237,7 +240,7 @@ h1 {
 
 <div class="wrap">
   <header class="mast">
-    <p class="eyebrow">Paradise Circus &middot; looping song</p>
+    <p class="eyebrow"><a class="home-link" href="/">&larr; Menu</a> &middot; looping song</p>
     <h1>Disguise</h1>
     <p class="standfirst">Four chords on a loop, a wholesome chorus, and a shoutout
     verse that only works in one place on earth. It ends by handing the night over

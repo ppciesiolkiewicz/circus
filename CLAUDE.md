@@ -7,8 +7,14 @@ He performs fire, plays the looping song, and MCs the whole night.
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The book. Three pages in one file: **Characters**, **MC script**, **Tonight**. |
-| `disguise.html` | Standalone page for the song *Disguise* — chords, roster, setup checklist, auto-scroll. |
+| `index.html` | The menu. A small landing page linking to the others. Public. |
+| `book.html` | The book. Three pages in one file: **Characters**, **MC script**, **Tonight**. Behind basic auth. |
+| `disguise.html` | Standalone page for the song *Disguise* — chords, roster, setup checklist, auto-scroll. Public. |
+| `middleware.js` | Basic auth on `book.html`, from `BOOK_PASSWORD` / `BOOK_USER`. Fails closed. |
+
+All three pages share the same three faces (Newsreader, Archivo, DM Mono) so
+they read as one site, but each has its own accent: ember on the menu, ember
+on the book, moss green on the song.
 
 No build step. No dependencies. Open either file in a browser and it works.
 Fonts come from Google Fonts; everything else is inline.
@@ -61,12 +67,12 @@ After any edit to a `<script>` block, extract and syntax-check it:
 
 ```bash
 python3 -c "
-import re; s=open('index.html',encoding='utf-8').read()
+import re; s=open('book.html',encoding='utf-8').read()
 open('/tmp/chk.js','w').write('\n;\n'.join(re.findall(r'<script>(.*?)</script>', s, re.S)))"
 node --check /tmp/chk.js
 ```
 
-## index.html — structure
+## book.html — structure
 
 Three pages, switched by the `.pager` buttons; each is a `.page[data-page]`.
 
@@ -109,4 +115,7 @@ Rules Pio has set:
 ## Deploy
 
 Pushing to `main` deploys. Nothing to build — Vercel serves the files as they
-are.
+are, and runs `middleware.js` on the book.
+
+Both the book and the song carry `noindex`: the deploy URL is reachable by
+anyone holding it, and the book names 40 real performers.
