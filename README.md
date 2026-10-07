@@ -4,7 +4,7 @@ Character book, MC script and songs for the fire show at Paradise Circus, Pai.
 
 | Page | What it holds |
 | --- | --- |
-| [`index.html`](index.html) | **The menu.** Landing page linking to everything else. Public. |
+| [`index.html`](index.html) | **The menu.** Landing page. Links to the song only — the book is reachable at `/book.html` but not listed. Public. |
 | [`disguise.html`](disguise.html) | **Disguise** — the looping song, with chords over the words and an auto-scroll for playing it live. Public. |
 | [`book.html`](book.html) | **Circus ideas.** Characters and acts, the full MC script, and tonight's running order. **Password protected.** |
 

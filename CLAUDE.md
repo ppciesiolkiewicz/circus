@@ -7,7 +7,7 @@ He performs fire, plays the looping song, and MCs the whole night.
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The menu. A small landing page linking to the others. Public. |
+| `index.html` | The menu. A small landing page. Links to the song only — the book is deliberately unlisted. Public. |
 | `book.html` | The book. Three pages in one file: **Characters**, **MC script**, **Tonight**. Behind basic auth. |
 | `disguise.html` | Standalone page for the song *Disguise* — chords, roster, setup checklist, auto-scroll. Public. |
 | `middleware.js` | Basic auth on `book.html`. Defaults to `pio` / `coconut`; `BOOK_USER` / `BOOK_PASSWORD` override. A speed bump, not a secret. |
