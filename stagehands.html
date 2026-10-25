@@ -111,22 +111,24 @@ h1 {
 }
 .add { color: var(--gold); }
 
-/* What Pio says around each cue, so the crew hears it coming.
-   The bold line is the one they move on. */
-.lines {
+/* Each cue is a short dialog: what Box says just before, then what
+   Safety does. The speaker name says whose turn it is. */
+.dlg {
   grid-column: 2;
-  margin: 0 0 .7rem; padding: .7rem .9rem;
+  margin: 0; padding: .7rem .9rem;
   background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+  display: grid; grid-template-columns: 4.2rem 1fr; gap: .35rem .6rem;
 }
-.steps .lines p {
-  font-family: var(--display); font-style: italic;
-  font-size: 1.02rem; line-height: 1.45; color: var(--muted);
-  margin: 0 0 .25rem;
+.dlg dt {
+  font-family: var(--mono); font-size: .66rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--muted);
+  padding-top: .3rem;
 }
-.steps .lines p:last-child { margin-bottom: 0; }
-.steps .lines .go { color: var(--ink); font-style: normal; font-weight: 500; }
-.steps .lines .go::before { content: "\25B8  "; color: var(--ember); }
-.steps .lines .gap { font-family: var(--mono); font-style: normal; font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; }
+.dlg dd { margin: 0; font-size: 1.05rem; line-height: 1.45; }
+.dlg .box + dd { font-family: var(--display); font-style: italic; color: var(--muted); }
+.dlg .safety { color: var(--ember); font-weight: 500; }
+.dlg .safety + dd { font-weight: 500; }
+.dlg .gap { grid-column: 1 / -1; padding: 0; font-family: var(--mono); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 
 .foot {
   margin-top: 1rem; padding-top: 1.1rem; border-top: 1px solid var(--line);
@@ -140,57 +142,52 @@ h1 {
   <header class="mast">
     <p class="eyebrow"><a href="/">&larr; Menu</a> &middot; Mr Box &middot; crew</p>
     <h1>Stagehands</h1>
-    <p class="standfirst">Mr Box, Episode 2. Pio is inside the box. Listen for these lines. The bold line is when you move.</p>
+    <p class="standfirst">Mr Box, Episode 2. Pio is inside the box. Listen for what Box says. When it&rsquo;s your turn, it says Safety.</p>
   </header>
 
   <ol class="steps">
     <li>
       <h2>Before</h2>
-      <div class="lines">
-        <p class="go">[Box comes out of the door, singing]</p>
-        <p>I&rsquo;m a little box, in a box world, life in cardboard, it&rsquo;s fantastic&hellip;</p>
-      </div>
-      <p class="add">Box waits behind the door with the microphone inside. Staircase clear.</p>
+      <dl class="dlg">
+        <dt class="safety">Safety</dt><dd class="add">Box waits behind the door with the microphone inside. Staircase clear.</dd>
+      </dl>
     </li>
     <li>
       <h2>Forklift</h2>
-      <div class="lines">
-        <p>O-oh &mdash; staircase.</p>
-        <p class="go">But this time we are prepared, is that right safety? Forklift please. Foooorkliiift</p>
-        <p>Oww, no forklift. We boxes like forklifts.</p>
-      </div>
-      <p>Shrug, and shake head. <span class="add">Nobody comes.</span></p>
+      <dl class="dlg">
+        <dt class="box">Box</dt><dd>O-oh &mdash; staircase.</dd>
+        <dt class="box">Box</dt><dd>But this time we are prepared, is that right safety? Forklift please. Foooorkliiift</dd>
+        <dt class="safety">Safety</dt><dd>Shrug, and shake head. <span class="add">Nobody comes.</span></dd>
+      </dl>
     </li>
     <li>
       <h2>Carry the box down</h2>
-      <div class="lines">
-        <p class="go">But I like if you carry me too. Just be gentle.</p>
-        <p>I might not be insured up to the value of contents.</p>
-        <p class="gap">&hellip; going down &hellip;</p>
-        <p>Uuu, this feels so good. Soft touch, golden heart.</p>
-        <p>Are you married?</p>
-        <p class="go">TAA-Daa</p>
-      </div>
-      <p class="add">Come up and carry the box down the stairs. Slowly, gently. Put it down at the bottom on &ldquo;TAA-Daa&rdquo; and step away.</p>
+      <dl class="dlg">
+        <dt class="box">Box</dt><dd>Oww, no forklift. We boxes like forklifts.</dd>
+        <dt class="box">Box</dt><dd>But I like if you carry me too. Just be gentle.</dd>
+        <dt class="safety">Safety</dt><dd class="add">Carry the box down the stairs. Slowly, gently.</dd>
+        <dt class="box">Box</dt><dd>Are you married?</dd>
+        <dt class="box">Box</dt><dd>TAA-Daa</dd>
+        <dt class="safety">Safety</dt><dd class="add">Put it down at the bottom and step away.</dd>
+      </dl>
     </li>
     <li>
       <h2>Box talks to the crowd</h2>
-      <div class="lines">
-        <p>Okeeey, Hell yeah, fire circus!</p>
-        <p class="gap">&hellip; a few minutes of talking &hellip;</p>
-        <p>When I was a little box I wanted to be a pizza box</p>
-        <p class="go">But you&rsquo;re probably like &mdash; is he fireproof and all?</p>
-      </div>
-      <p class="add">Stay off stage. Fire staff is coming soon.</p>
+      <dl class="dlg">
+        <dt class="box">Box</dt><dd>Okeeey, Hell yeah, fire circus!</dd>
+        <dt class="gap">&hellip; a few minutes of talking &hellip;</dt>
+        <dt class="box">Box</dt><dd>But you&rsquo;re probably like &mdash; is he fireproof and all?</dd>
+        <dt class="safety">Safety</dt><dd class="add">Stay off stage. Fire staff is coming soon.</dd>
+      </dl>
     </li>
     <li>
       <h2>Bring the fire</h2>
-      <div class="lines">
-        <p>Do you guys think that a little box like me can spin fire in a circus on a stage?</p>
-        <p>[Crowd &mdash; Yeaaaaa]</p>
-        <p class="go">Safety, you know what to do &mdash; take back the microphone and bring me the fire staff!</p>
-      </div>
-      <p class="add">Take the microphone from the box. Bring the lit fire staff and put it in front of the box.</p>
+      <dl class="dlg">
+        <dt class="box">Box</dt><dd>Do you guys think that a little box like me can spin fire in a circus on a stage?</dd>
+        <dt class="box">Crowd</dt><dd>Yeaaaaa</dd>
+        <dt class="box">Box</dt><dd>Safety, you know what to do &mdash; take back the microphone and bring me the fire staff!</dd>
+        <dt class="safety">Safety</dt><dd class="add">Take the microphone from the box. Bring the lit fire staff and put it in front of the box.</dd>
+      </dl>
     </li>
   </ol>
 
