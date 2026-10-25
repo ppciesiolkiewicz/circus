@@ -111,6 +111,23 @@ h1 {
 }
 .add { color: var(--gold); }
 
+/* What Pio says around each cue, so the crew hears it coming.
+   The bold line is the one they move on. */
+.lines {
+  grid-column: 2;
+  margin: 0 0 .7rem; padding: .7rem .9rem;
+  background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+}
+.steps .lines p {
+  font-family: var(--display); font-style: italic;
+  font-size: 1.02rem; line-height: 1.45; color: var(--muted);
+  margin: 0 0 .25rem;
+}
+.steps .lines p:last-child { margin-bottom: 0; }
+.steps .lines .go { color: var(--ink); font-style: normal; font-weight: 500; }
+.steps .lines .go::before { content: "\25B8  "; color: var(--ember); }
+.steps .lines .gap { font-family: var(--mono); font-style: normal; font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; }
+
 .foot {
   margin-top: 1rem; padding-top: 1.1rem; border-top: 1px solid var(--line);
   font-family: var(--mono); font-size: .66rem; letter-spacing: .1em;
@@ -123,29 +140,57 @@ h1 {
   <header class="mast">
     <p class="eyebrow"><a href="/">&larr; Menu</a> &middot; Mr Box &middot; crew</p>
     <h1>Stagehands</h1>
-    <p class="standfirst">Mr Box, Episode 2. Pio is inside the box. Listen for these lines.</p>
+    <p class="standfirst">Mr Box, Episode 2. Pio is inside the box. Listen for these lines. The bold line is when you move.</p>
   </header>
 
   <ol class="steps">
     <li>
       <h2>Before</h2>
+      <div class="lines">
+        <p class="go">[Box comes out of the door, singing]</p>
+        <p>I&rsquo;m a little box, in a box world, life in cardboard, it&rsquo;s fantastic&hellip;</p>
+      </div>
       <p class="add">Box waits behind the door with the microphone inside. Staircase clear. Fire staff ready off stage, wet towel next to it.</p>
     </li>
     <li>
-      <h2>&ldquo;Forklift please. Foooorkliiift&rdquo;</h2>
+      <h2>Forklift</h2>
+      <div class="lines">
+        <p>O-oh &mdash; staircase.</p>
+        <p class="go">But this time we are prepared, is that right safety? Forklift please. Foooorkliiift</p>
+        <p>Oww, no forklift. We boxes like forklifts.</p>
+      </div>
       <p>Shrug, and shake head. <span class="add">Nobody comes.</span></p>
     </li>
     <li>
-      <h2>&ldquo;Just be gentle&rdquo;</h2>
-      <p class="add">Come up and carry the box down the stairs. Slowly, gently. Put it down at the bottom.</p>
+      <h2>Carry the box down</h2>
+      <div class="lines">
+        <p class="go">But I like if you carry me too. Just be gentle.</p>
+        <p>I might not be insured up to the value of contents.</p>
+        <p class="gap">&hellip; going down &hellip;</p>
+        <p>Uuu, this feels so good. Soft touch, golden heart.</p>
+        <p>Are you married?</p>
+        <p class="go">TAA-Daa</p>
+      </div>
+      <p class="add">Come up and carry the box down the stairs. Slowly, gently. Put it down at the bottom on &ldquo;TAA-Daa&rdquo; and step away.</p>
     </li>
     <li>
-      <h2>&ldquo;Safety, you know what to do&rdquo;</h2>
+      <h2>Box talks to the crowd</h2>
+      <div class="lines">
+        <p>Okeeey, Hell yeah, fire circus!</p>
+        <p class="gap">&hellip; a few minutes of talking &hellip;</p>
+        <p>When I was a little box I wanted to be a pizza box</p>
+        <p class="go">But you&rsquo;re probably like &mdash; is he fireproof and all?</p>
+      </div>
+      <p class="add">Stay off stage. On &ldquo;fireproof&rdquo;, light the staff and wait at the edge.</p>
+    </li>
+    <li>
+      <h2>Bring the fire</h2>
+      <div class="lines">
+        <p>Do you guys think that a little box like me can spin fire in a circus on a stage?</p>
+        <p>[Crowd &mdash; Yeaaaaa]</p>
+        <p class="go">Safety, you know what to do &mdash; take back the microphone and bring me the fire staff!</p>
+      </div>
       <p class="add">Take the microphone from the box. Bring the lit fire staff and put it in front of the box.</p>
-    </li>
-    <li>
-      <h2>&ldquo;DJ, spin up some tunes&rdquo;</h2>
-      <p class="add">DJ starts the music. Safety stays close with the towel while the box spins.</p>
     </li>
     <li>
       <h2>After</h2>
