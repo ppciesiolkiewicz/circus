@@ -159,6 +159,15 @@ h1 {
 }
 .setup .reset:hover { color: var(--moss); border-color: var(--moss); }
 
+/* Gold = proposed by Claude, waiting for Pio. Same rule as the book. */
+.crew { list-style: none; margin: .5rem 0 .2rem; padding: 0; display: flex; flex-direction: column; gap: .55rem; }
+.crew li { font-size: .95rem; line-height: 1.45; padding-left: .9rem; border-left: 2px solid var(--line); }
+.crew b { font-family: var(--mono); font-weight: 500; font-size: .66rem; letter-spacing: .14em; text-transform: uppercase; display: block; color: var(--muted); }
+.add { color: #A8801F; }
+.add .crew li { border-left-color: #A8801F; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .add { color: #D9B45A; } }
+:root[data-theme="dark"] .add { color: #D9B45A; }
+
 .todo { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: 1.5rem 0 .2rem; }
 .todo-label {
   font-family: var(--mono); font-size: .66rem; letter-spacing: .16em;
@@ -266,6 +275,20 @@ h1 {
       <li><label><input type="checkbox" id="chk6"><span>Check levels</span></label></li>
     </ul>
     <button type="button" class="reset" id="clearChecks">Clear all</button>
+  </details>
+
+  <details class="cast">
+    <summary><b>For stagehands</b> &mdash; what to do during the song</summary>
+    <div class="add">
+    <ul class="crew">
+      <li><b>Before</b>Mic stand in the middle. Guitar, looper and cables ready. Tape the cables down &mdash; people walk here, and there is fire.</li>
+      <li><b>Looper</b>Pio might need it moved during the song. Stay close, move it only when he points.</li>
+      <li><b>Fire staff</b>Prepared and waiting off stage, with a wet towel next to it. Do not light it until Pio gives the sign.</li>
+      <li><b>During</b>Stay off the stage. Never walk between Pio and the looper. Keep the front edge clear.</li>
+      <li><b>After</b>When he sings &ldquo;open stage starts soon&rdquo;, the song is ending. Take guitar and looper off, leave the mic for open stage.</li>
+    </ul>
+    <p class="hint">Draft &mdash; Pio to confirm.</p>
+    </div>
   </details>
 
   <div class="todo">
