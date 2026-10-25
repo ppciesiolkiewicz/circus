@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Stagehand notes for Disguise - what the crew does before, during and after the song.">
+<meta name="description" content="Stagehand cues for the Mr Box act at Paradise Circus.">
 <meta name="robots" content="noindex, nofollow">
 <title>Stagehands</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,16 +11,16 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap">
 <style>
 /* Layout: one column of numbered steps, read on a phone in the dark at the
-   side of the stage. Moss accent because it belongs to the Disguise song.
+   side of the stage. Ember accent, like the book Mr Box lives in.
    Gold = proposed by Claude, waiting for Pio. Same rule as the book. */
 :root {
-  --paper:   #E8EAE2;
-  --card:    #F3F5EE;
-  --ink:     #1E231B;
-  --muted:   #6A7266;
-  --moss:    #3C6945;
+  --paper:   #F2EEE9;
+  --card:    #FBF8F4;
+  --ink:     #1C1917;
+  --muted:   #6D6561;
+  --ember:   #B14A1E;
   --gold:    #8F6B12;
-  --line:    #CBD0C3;
+  --line:    #DDD5CC;
   --display: "Newsreader", Georgia, "Times New Roman", serif;
   --sans:    "Archivo", "Helvetica Neue", Arial, sans-serif;
   --mono:    "DM Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -30,24 +30,24 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #14170F;
-    --card:  #1C2018;
-    --ink:   #E6EADF;
-    --muted: #8E9789;
-    --moss:  #8ABF93;
+    --paper: #131011;
+    --card:  #1C1819;
+    --ink:   #EFE9E4;
+    --muted: #938885;
+    --ember: #E2703A;
     --gold:  #D9B45A;
-    --line:  #2E3429;
+    --line:  #2E2829;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #14170F;
-  --card:  #1C2018;
-  --ink:   #E6EADF;
-  --muted: #8E9789;
-  --moss:  #8ABF93;
+  --paper: #131011;
+  --card:  #1C1819;
+  --ink:   #EFE9E4;
+  --muted: #938885;
+  --ember: #E2703A;
   --gold:  #D9B45A;
-  --line:  #2E3429;
+  --line:  #2E2829;
   color-scheme: dark;
 }
 
@@ -68,7 +68,7 @@ body {
   color: var(--muted);
   margin: 0 0 .5rem;
 }
-.eyebrow a { color: var(--moss); text-decoration: none; }
+.eyebrow a { color: var(--ember); text-decoration: none; }
 .eyebrow a:hover { text-decoration: underline; }
 h1 {
   font-family: var(--display);
@@ -94,7 +94,7 @@ h1 {
 }
 .steps li::before {
   content: counter(step, decimal-leading-zero);
-  font-family: var(--mono); font-size: .8rem; color: var(--moss);
+  font-family: var(--mono); font-size: .8rem; color: var(--ember);
   padding-top: .3rem;
 }
 .steps h2 {
@@ -121,31 +121,35 @@ h1 {
 <body>
 <div class="wrap">
   <header class="mast">
-    <p class="eyebrow"><a href="/">&larr; Menu</a> &middot; <a href="/disguise.html">Disguise</a> &middot; crew</p>
+    <p class="eyebrow"><a href="/">&larr; Menu</a> &middot; Mr Box &middot; crew</p>
     <h1>Stagehands</h1>
-    <p class="standfirst">What to do around the stage while Pio plays Disguise.</p>
+    <p class="standfirst">Mr Box, Episode 2. Pio is inside the box. Listen for these lines.</p>
   </header>
 
   <ol class="steps">
     <li>
       <h2>Before</h2>
-      <p class="add">Mic stand in the middle. Guitar, looper and cables ready. Tape the cables down &mdash; people walk here, and there is fire.</p>
+      <p class="add">Box waits behind the door with the microphone inside. Staircase clear. Fire staff ready off stage, wet towel next to it.</p>
     </li>
     <li>
-      <h2>Looper</h2>
-      <p class="add">Pio might need it moved during the song. Stay close, move it only when he points.</p>
+      <h2>&ldquo;Forklift please. Foooorkliiift&rdquo;</h2>
+      <p class="add">Do nothing. Nobody comes. The joke is the silence.</p>
     </li>
     <li>
-      <h2>Fire staff</h2>
-      <p class="add">Prepared and waiting off stage, with a wet towel next to it. Do not light it until Pio gives the sign.</p>
+      <h2>&ldquo;Just be gentle&rdquo;</h2>
+      <p class="add">Come up and carry the box down the stairs. Slowly, gently. Put it down at the bottom.</p>
     </li>
     <li>
-      <h2>During</h2>
-      <p class="add">Stay off the stage. Never walk between Pio and the looper. Keep the front edge clear.</p>
+      <h2>&ldquo;Safety, you know what to do&rdquo;</h2>
+      <p class="add">Take the microphone from the box. Bring the lit fire staff and put it in front of the box.</p>
+    </li>
+    <li>
+      <h2>&ldquo;DJ, spin up some tunes&rdquo;</h2>
+      <p class="add">DJ starts the music. Safety stays close with the towel while the box spins.</p>
     </li>
     <li>
       <h2>After</h2>
-      <p class="add">When he sings &ldquo;open stage starts soon&rdquo;, the song is ending. Take guitar and looper off, leave the mic for open stage.</p>
+      <p class="add">When the box drops the staff, safety takes it and puts it out.</p>
     </li>
   </ol>
 
