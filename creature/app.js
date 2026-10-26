@@ -256,28 +256,41 @@ function linesFig(){
 // before Play it demos on its own clock.
 let beatRefs=null;
 function beatFig(){
-  const W=400,H=96,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
-  f.setAttribute("role","img");f.setAttribute("aria-label","A Duncan dot and a Luna dot moving towards each other in bursts on the beat, and crossing");
-  el("line",{x1:W/2,y1:8,x2:W/2,y2:H-22,stroke:"var(--floor-edge)","stroke-dasharray":"2 6"},f);
-  const mk=(y,col,name)=>{const g=el("g",{},f);el("circle",{r:13,fill:col,stroke:col,"stroke-width":2.5},g);
-    el("text",{"text-anchor":"middle",y:3.5,"font-size":9,fill:"var(--floor)","font-family":"Archivo, sans-serif","font-weight":700},g).textContent=name;return {g,y};};
-  const dun=mk(28,"var(--right)","Dun"), lun=mk(58,"var(--left)","Lun");
-  const cnt=el("text",{x:W/2,y:H-6,"text-anchor":"middle",class:"lb"},f);
+  const W=420,H=108,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
+  f.setAttribute("role","img");f.setAttribute("aria-label","Two Duncan dots and two Luna dots moving towards each other in hits on the beat, and crossing");
+  el("line",{x1:W/2,y1:8,x2:W/2,y2:H-26,stroke:"var(--floor-edge)","stroke-dasharray":"2 6"},f);
+  const mk=(y,col,d)=>{const g=el("g",{},f);el("circle",{r:13,fill:col,stroke:col,"stroke-width":2.5},g);
+    el("text",{"text-anchor":"middle",y:3.5,"font-size":9,fill:"var(--floor)","font-family":"Archivo, sans-serif","font-weight":700},g).textContent=d.name.slice(0,3);return {g,y};};
+  const hiR=dancers.filter(d=>d.lane==="R-H0"), hiL=dancers.filter(d=>d.lane==="L-H0");
+  const dun=[mk(30,"var(--right)",hiR[0]),mk(30,"var(--right)",hiR[1])], lun=[mk(62,"var(--left)",hiL[0]),mk(62,"var(--left)",hiL[1])];
+  const cnt=el("text",{x:W/2,y:H-8,"text-anchor":"middle",class:"lb"},f);
   beatRefs={W,dun,lun,cnt};return f;
+}
+// x for a dot that has travelled `u` units from its wing (negative = still queued further out)
+function beatX(u,W,E,span,fromRight){
+  let k;
+  if(u<0)k=u/span; else {const p=u%(2*span);k=p<=span?p/span:2-p/span;}
+  return fromRight?W/2+E-2*E*k:W/2-E+2*E*k;
 }
 function drawBeatFig(tt){
   if(!beatRefs)return;
-  const {W,dun,lun,cnt}=beatRefs, E=W/2-34, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]-RUN_LEAD);
-  const step=b=>((b%n)+n)%n===0?2:1, per=n+1;   // units per bar: 2 on count 1, 1 on the others
-  let units=0;
-  if(rel>0){const b=Math.floor(rel),u=rel-b;units=Math.floor(b/n)*per;for(let i=b-b%n;i<b;i++)units+=step(i);units+=step(b)*(1-Math.pow(1-u,3));}
-  const span=per*state.cross/n, p=units%(2*span), k=p<=span?p/span:2-p/span;
-  dun.g.setAttribute("transform",`translate(${(W/2+E-2*E*k).toFixed(1)},${dun.y})`);
-  lun.g.setAttribute("transform",`translate(${(W/2-E+2*E*k).toFixed(1)},${lun.y})`);
+  const {W,dun,lun,cnt}=beatRefs, E=W/2-40, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]-RUN_LEAD);
+  const step=b=>((b%n)+n)%n===0?2:1, per=n+1, span=per*state.cross/n;   // units per bar: 2 on count 1, 1 on the others
+  // each step is a hit: done in the first quarter of the beat, then hold
+  const unitsAt=r=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,h=Math.min(1,u/.25);let x=Math.floor(b/n)*per;for(let i=b-b%n;i<b;i++)x+=step(i);return x+step(b)*(1-(1-h)*(1-h));};
+  const u=unitsAt(rel), gapU=span*34/(2*E);   // follower one dot-gap behind
+  const pulse=rel>=0?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
+  [[dun,true],[lun,false]].forEach(([pair,fr])=>pair.forEach((d,i)=>{
+    d.g.setAttribute("transform",`translate(${beatX(u-i*gapU,W,E,span,fr).toFixed(1)},${d.y}) scale(${pulse.toFixed(3)})`);}));
   cnt.textContent=rel<0?"":"COUNT "+(((Math.floor(rel)%n)+n)%n+1);
 }
 NOTES.forEach(x=>{
-  if(x.fig==="beat"){const w=document.createElement("div");w.className="figwrap";w.appendChild(beatFig());notesEl.lastElementChild.appendChild(w);return;}
+  if(x.fig==="beat"){const w=document.createElement("div");w.className="figwrap";w.appendChild(beatFig());
+    const b=document.createElement("button");b.className="primary beatplay";b.textContent="Play";b.addEventListener("click",()=>{
+      // start the song a bar before the lines leave, so the dots move almost straight away
+      if(!playing){t=state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb;started=true;}
+      playBtn.click();});
+    w.appendChild(b);beatRefs.btn=b;notesEl.lastElementChild.appendChild(w);return;}
   if(x.fig==="lines"){const w=document.createElement("div");w.className="figwrap";w.appendChild(linesFig());notesEl.lastElementChild.appendChild(w);return;}
   if(x.length===3&&/^\P{L}/u.test(x[0])){   // [icon, title, text]; sub-points start with a letter
     const [ic,ti,tx]=x,li=document.createElement("li"),i=document.createElement("span"),h=document.createElement("b");
@@ -393,5 +406,6 @@ renderTable();
  (function beatTick(now){
    // demo clock: from 1 bar before the lines leave, looping every 4 bars
    const demo=(state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb)+((now-t0)/1000/beatSec())%(4*state.bpb+state.bpb);
-   drawBeatFig(started?t:demo);requestAnimationFrame(beatTick);})(t0);}
+   drawBeatFig(started?t:demo);if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playBtn.textContent;
+   requestAnimationFrame(beatTick);})(t0);}
 })();

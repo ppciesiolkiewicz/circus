@@ -37,6 +37,7 @@ h1{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.05;le
 .loops figcaption{font:700 .8rem var(--display);text-transform:uppercase;letter-spacing:.06em;text-align:center;margin-top:4px}
 .figwrap{margin-top:8px;background:var(--floor);border-radius:8px;padding:6px;max-width:600px}
 .linesfig{display:block;width:100%;height:auto}
+.beatplay{margin:6px 0 2px 6px}
 .linesfig .lb{font:600 9px Archivo,sans-serif;letter-spacing:2px;fill:var(--onfloor-dim)}
 .linesfig .ln{font:700 12px Archivo,sans-serif;letter-spacing:.5px}
 .notes ul{margin:4px 0 0;padding-left:1.2em}
