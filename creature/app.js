@@ -254,7 +254,7 @@ function linesFig(){
 // "beat to beat": a Duncan and a Luna dot leave their wings when the lines do and move in bursts,
 // a big step on count 1 and small ones on 2-4, crossing in the middle. Follows the playhead;
 // before Play it demos on its own clock.
-let beatRefs=null;
+let beatRefs=null, beatEnd=null;   // beatEnd: the beat-to-beat Play stops at the end of the run & cross
 function beatFig(){
   const W=520,H=108,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
   f.setAttribute("role","img");f.setAttribute("aria-label","Two Duncan dots and two Luna dots moving towards each other in hits on the beat, and crossing");
@@ -293,9 +293,10 @@ NOTES.forEach(x=>{
     // start the song a bar before the lines leave, so the dots move almost straight away
     const from=()=>state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb;
     const b=document.createElement("button");b.className="primary beatplay";b.textContent="Play";
-    b.addEventListener("click",()=>{if(!playing){t=from();started=true;}playBtn.click();});
+    const runEnd=()=>bounds()[2][1];
+    b.addEventListener("click",()=>{const go=!playing;if(go){t=from();started=true;}playBtn.click();beatEnd=go?runEnd():null;});
     const rs=document.createElement("button");rs.className="beatplay";rs.textContent="Restart";
-    rs.addEventListener("click",()=>{if(playing)stop();t=from();started=true;playBtn.click();});
+    rs.addEventListener("click",()=>{if(playing)stop();t=from();started=true;playBtn.click();beatEnd=runEnd();});
     w.append(b,rs);beatRefs.btn=b;notesEl.lastElementChild.appendChild(w);return;}
   if(x.fig==="lines"){const w=document.createElement("div");w.className="figwrap";w.appendChild(linesFig());notesEl.lastElementChild.appendChild(w);return;}
   if(x.length===3&&/^\P{L}/u.test(x[0])){   // [icon, title, text]; sub-points start with a letter
@@ -391,6 +392,7 @@ function loop(now){
 const playBtn=document.getElementById("play");
 const startT=()=>0;
 playBtn.addEventListener("click",()=>{
+  beatEnd=null;
   if(playing){stop();return;}
   started=true;
   if(t>=total())t=startT();
@@ -412,6 +414,7 @@ renderTable();
  (function beatTick(now){
    // demo clock: from 1 bar before the lines leave, looping every 4 bars
    const demo=(state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb)+((now-t0)/1000/beatSec())%(4*state.bpb+state.bpb);
+   if(beatEnd!==null&&playing&&t>=beatEnd){stop();beatEnd=null;}
    drawBeatFig(started?t:demo);if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playing?"Stop":"Play";
    requestAnimationFrame(beatTick);})(t0);}
 })();
