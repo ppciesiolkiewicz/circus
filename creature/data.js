@@ -49,7 +49,7 @@ const ORDER=[
 
 // Things to keep in mind, shown under the timeline. An array right after a point is its sub-points.
 const NOTES=[
- "First shape (high or low) happens in the middle: run towards centre, and the first person strikes their shape just behind the middle. Dont start with a shape - but rather move towards centre first (especially if you’re at the beginning of your line). After that, free flow side to side.",
+ "First shape (high or low) happens in the middle: run towards centre, and the first person strikes their shape just behind the middle and we all try to strike the shape on the beat. Dont start with a shape - but rather move towards centre first (especially if you’re at the beginning of your line). After that, free flow side to side.",
   ["On next beats we can move more free form"],
  "Move on the beat - Adjust your pace to the beat. Keep the beat in your head the whole time.",
  "We move in a circular movement - clockwise (see animation) - turning back on the left side of the stage but not doing 180deg turn but going slightly towards the stage"
