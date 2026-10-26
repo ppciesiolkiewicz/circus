@@ -4,7 +4,6 @@
 const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
 const ROWS={"R-H0":.11,"L-H0":.20,"R-L0":.29,"L-L0":.38};
 const PIOD=.62, PIO_RUN=.47, PIO_FROM=-.13;
-const VBX=232, ARM=254, QK=.85;   // plot widened by VBX each side for the wing arms; queue spacing factor
 const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
 const AMP=.3, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
@@ -35,18 +34,15 @@ function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.set
 const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
 // stage drawing
-el("rect",{x:-VBX,y:0,width:1120+2*VBX,height:560,fill:"var(--floor)"});
+el("rect",{x:0,y:0,width:1120,height:560,fill:"var(--floor)"});
 el("rect",{x:CX-300,y:BACK-104,width:600,height:50,rx:3,fill:"color-mix(in srgb,var(--onfloor) 12%,transparent)",stroke:"var(--floor-edge)","stroke-width":2});
 el("rect",{x:CX-300,y:BACK-50,width:600,height:46,rx:3,fill:"color-mix(in srgb,var(--onfloor) 7%,transparent)",stroke:"var(--floor-edge)","stroke-width":2});
-// wings: an L each - the side strip plus an arm reaching outwards where the line waits, parallel to the stage
-for(const sg of [-1,1]){
-  const xi=CX+sg*(START-34), xo=CX+sg*(START+34), xe=CX+sg*(START+ARM), ya=BACK+ENTRY*RY-22, yb=ya+44, y0=BACK-8, y1=BACK+390;
-  el("path",{d:`M${xi},${y0} V${y1} H${xo} V${yb} H${xe} V${ya} H${xo} V${y0} Z`,fill:"none",stroke:"var(--floor-edge)","stroke-dasharray":"5 5","stroke-linejoin":"round"});
-}
+el("rect",{x:CX-START-34,y:BACK-8,width:68,height:398,rx:8,fill:"none",stroke:"var(--floor-edge)","stroke-dasharray":"5 5"});
+el("rect",{x:CX+START-34,y:BACK-8,width:68,height:398,rx:8,fill:"none",stroke:"var(--floor-edge)","stroke-dasharray":"5 5"});
 el("path",{d:`M${CX-RX},${BACK} A${RX},${RY} 0 0 0 ${CX+RX},${BACK} Z`,fill:"color-mix(in srgb,var(--onfloor) 6%,transparent)",stroke:"var(--floor-edge)","stroke-width":2});
 el("line",{x1:CX,y1:BACK,x2:CX,y2:BACK+RY,stroke:"var(--floor-edge)","stroke-dasharray":"2 8"});
 const lbl=(x,y,t,anchor)=>{const e=el("text",{x,y,"text-anchor":anchor||"middle",fill:"var(--onfloor-dim)","font-family":"Archivo, sans-serif","font-size":15,"letter-spacing":"2"});e.textContent=t;return e;};
-lbl(CX-START-ARM,BACK+ENTRY*RY-32,"LUNA'S WING","start");lbl(CX+START+ARM,BACK+ENTRY*RY-32,"DUNCAN'S WING","end");
+lbl(6,BACK-20,"LUNA'S WING","start");lbl(1114,BACK-20,"DUNCAN'S WING","end");
 lbl(CX,BACK-22,"STAGE");lbl(CX,BACK+RY+34,"AUDIENCE");
 lbl(CX-RX+6,BACK+RY*.16,"HIGH","start");lbl(CX-RX+30,BACK+RY*.35,"LOW","start");
 const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--freeze)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":28,"letter-spacing":"5",opacity:0});
@@ -150,10 +146,13 @@ function travelPos(d,tAbs){
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
   const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(-lead(),tb),(laneCount[d.lane]-1)/2-d.order);
-  const x=r.x, q=Math.abs(x)-START;   // still waiting: the line queues outwards along the wing arm, parallel to the stage
-  if(q>0) return {x:Math.sign(x)*(START+q*QK),depth:ENTRY};
+  // still waiting: an L in the wing - the first two side by side at the top, the rest down the wing under the second
+  const x=r.x, q=Math.abs(x)-START;
+  // (shifted 15 inwards so both columns sit inside the wing; the shift fades out over the first steps of the run)
+  if(q>0) return q<=FILEGAP?{x:Math.sign(x)*(START-15+q*.75),depth:ENTRY}:{x:Math.sign(x)*(START+15),depth:ENTRY+(q-FILEGAP)/RY};
+  const xs=q>-30?x-Math.sign(x)*15*(1+q/30):x;
   const inside=ease(clamp((START-Math.abs(x))/150,0,1));
-  return {x,depth:lerp(ENTRY,ROWS[d.lane],inside)+r.dy/RY*inside};
+  return {x:xs,depth:lerp(ENTRY,ROWS[d.lane],inside)+r.dy/RY*inside};
 }
 function positions(tb){
   const bd=bounds(), bowStart=bd[BOW][0], TBow=state.beats[BOW];
@@ -251,7 +250,7 @@ function linesFig(){
   el("text",{x:W/2,y:top+lanes.length*RH+16,"text-anchor":"middle",class:"lb"},f).textContent="AUDIENCE";
   return f;
 }
-// "beat to beat": a Duncan and a Luna dot leave their wings when the lines do and move in bursts,
+// "beat to beat": Duncan and Luna dots start on the first strike (count 1 of the run-in) and move in bursts,
 // a big step on count 1 and small ones on 2-4, crossing in the middle. Follows the playhead;
 // before Play it demos on its own clock.
 let beatRefs=null, beatEnd=null;   // beatEnd: the beat-to-beat Play stops at the end of the run & cross
@@ -280,7 +279,7 @@ function beatPt(u,W,E,span,fr,y0,y1){
 }
 function drawBeatFig(tt){
   if(!beatRefs)return;
-  const {W,dun,lun,cnt}=beatRefs, E=W/2-100, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]-RUN_LEAD);
+  const {W,dun,lun,cnt}=beatRefs, E=W/2-100, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]);   // starts on the first strike (count 1 of the run-in)
   const per=n+1, span=per*state.cross/n;   // units per bar (count 1 weighs double); one crossing = state.cross beats
   // Each dot covers the same distance per bar, but splits it differently between the beats (a bigger leap
   // here, a smaller one there). Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
@@ -297,8 +296,8 @@ function drawBeatFig(tt){
 }
 NOTES.forEach(x=>{
   if(x.fig==="beat"){const w=document.createElement("div");w.className="figwrap";w.appendChild(beatFig());
-    // start the song a bar before the lines leave, so the dots move almost straight away
-    const from=()=>state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb;
+    // start the song a bar before the first strike, so the dots move almost straight away
+    const from=()=>state.beats[0]+state.beats[1]-state.bpb;
     const b=document.createElement("button");b.className="primary beatplay";b.textContent="Play";
     const runEnd=()=>bounds()[2][1];
     b.addEventListener("click",()=>{const go=!playing;if(go){t=from();started=true;}playBtn.click();beatEnd=go?runEnd():null;});
@@ -420,7 +419,7 @@ renderTable();
 {const t0=performance.now();
  (function beatTick(now){
    // demo clock: from 1 bar before the lines leave, looping every 4 bars
-   const demo=(state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb)+((now-t0)/1000/beatSec())%(4*state.bpb+state.bpb);
+   const demo=(state.beats[0]+state.beats[1]-state.bpb)+((now-t0)/1000/beatSec())%(4*state.bpb+state.bpb);
    if(beatEnd!==null&&playing&&t>=beatEnd){stop();beatEnd=null;}
    drawBeatFig(started?t:demo);if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playing?"Stop":"Play";
    requestAnimationFrame(beatTick);})(t0);}
