@@ -260,7 +260,7 @@ showPickup();
 {const dlg=document.getElementById("pickup-dlg");document.getElementById("pickup-info").addEventListener("click",()=>dlg.showModal());
  dlg.addEventListener("click",e=>{const r=dlg.getBoundingClientRect();   // tap outside the box closes
    if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dlg.close();});}
-const offset=191;   // song time (3:11) of count 1 of the run-in
+const offset=191.12;   // song time (3:11.12) of count 1 of the run-in: the onset of that beat, measured
 const beatSec=()=>60/state.bpm;
 const preRun=()=>state.beats[0]+state.beats[1];
 const songAt=tt=>offset+(tt-preRun())*beatSec();
