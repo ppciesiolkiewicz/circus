@@ -42,17 +42,11 @@ h1{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.05;le
 .plot{overflow-x:auto;border-radius:10px;background:var(--floor)}
 .plot svg{display:block;width:100%;height:auto;max-height:78vh}
 @media (orientation:portrait){.plot svg{min-width:680px}}
-.cue{padding:10px 16px 14px;text-align:center;color:var(--onfloor);font-family:var(--display);font-weight:600;font-size:1.5rem;letter-spacing:.02em;min-height:3.6em;position:sticky;left:0}
-.cue small{display:block;font:500 .9rem var(--body);color:var(--onfloor-dim);margin-top:2px;min-height:1.3em}
 .tagin{width:100%;min-width:150px;font:500 .9rem var(--body);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
-.cuerow input[type=text]{width:100%;min-width:180px;font:500 .95rem var(--body);padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
-.cuerow button{padding:5px 10px;font-size:.85rem}
-.cuerow.on td{background:color-mix(in srgb,var(--accent) 10%,transparent)}
 @media (orientation:landscape) and (max-height:540px){
   .wrap{padding-block:6px 24px;gap:8px}
   header .sub{display:none} h1{font-size:1.3rem}
   .plot svg{max-height:calc(100vh - 190px);min-height:180px}
-  .cue{padding:4px 12px 6px;font-size:1.15rem;min-height:2.8em}
   .hud{padding:6px 10px;gap:6px 14px} .count b{font-size:1.6rem}
   button{padding:6px 11px}
 }

@@ -224,38 +224,6 @@ const songAt=tt=>offset+(tt-preRun())*beatSec();
 function syncAudio(){audio.playbackRate=+speedSel.value;const at=songAt(t);if(at>=0)audio.currentTime=at;}
 speedSel.addEventListener("change",()=>{audio.playbackRate=+speedSel.value;});
 
-let cues=[{at:0,text:"[Run-in line: type it here]"},{at:36,text:"[Mid slowdown / freeze line]"},{at:48,text:"[Moving-to-line line]"}];
-try{const c=JSON.parse(localStorage.getItem("blocking-cues")||"null");if(Array.isArray(c))cues=c;}catch(e){}
-function saveCues(){try{localStorage.setItem("blocking-cues",JSON.stringify(cues));}catch(e){}}
-const relT=()=>t-preRun();
-const cueRows=document.getElementById("cuerows");
-function renderCues(){
-  cues.sort((a,b)=>a.at-b.at);cueRows.innerHTML="";
-  cues.forEach((c,i)=>{
-    const tr=document.createElement("tr");tr.className="cuerow";
-    const tdA=document.createElement("td"),tdT=document.createElement("td"),tdB=document.createElement("td");
-    const a=document.createElement("input");a.type="number";a.step="0.5";a.id="cue-at-"+i;a.value=c.at;a.setAttribute("aria-label","Beat");
-    a.addEventListener("change",()=>{c.at=+a.value||0;saveCues();renderCues();draw();});
-    const tx=document.createElement("input");tx.type="text";tx.id="cue-text-"+i;tx.value=c.text;tx.setAttribute("aria-label","Line");
-    tx.addEventListener("input",()=>{c.text=tx.value;saveCues();draw();});
-    const now=document.createElement("button");now.textContent="Now";
-    now.addEventListener("click",()=>{c.at=Math.round(relT()*2)/2;saveCues();renderCues();draw();});
-    const del=document.createElement("button");del.textContent="Remove";del.setAttribute("aria-label","Remove line");
-    del.addEventListener("click",()=>{cues.splice(cues.indexOf(c),1);saveCues();renderCues();draw();});
-    tdA.appendChild(a);tdT.appendChild(tx);tdB.style.whiteSpace="nowrap";tdB.append(now," ",del);
-    tr.append(tdA,tdT,tdB);cueRows.appendChild(tr);
-  });
-}
-document.getElementById("addcue").addEventListener("click",()=>{cues.push({at:Math.round(relT()*2)/2,text:""});saveCues();renderCues();const last=cueRows.querySelector("tr:last-child input[type=text]");});
-function drawCue(){
-  const rt=relT();let cur=-1;
-  cues.forEach((c,i)=>{if(c.at<=rt+1e-6)cur=i;});
-  const nx=cues[cur+1];
-  document.getElementById("cueNow").textContent=cur>=0?cues[cur].text:"";
-  document.getElementById("cueNext").textContent=nx&&nx.text?"next: "+nx.text:"";
-  cueRows.querySelectorAll("tr").forEach((r,i)=>r.classList.toggle("on",i===cur));
-}
-
 let ticks={};try{ticks=JSON.parse(localStorage.getItem("blocking-check")||"{}")||{};}catch(e){}
 const checkEl=document.getElementById("check");
 CHECKLIST.forEach((txt,i)=>{
@@ -326,7 +294,6 @@ function draw(){
   const S=startT(), tl=Math.max(S,t);
   ph.style.left=`${((tl-S)/((total()-S)||1))*100}%`;
   scrub.value=tl;
-  drawCue();
   drawOrder();
 }
 function stop(){playing=false;playBtn.textContent="Play";audio.pause();}
@@ -364,6 +331,5 @@ document.getElementById("click").addEventListener("click",e=>{
 });
 scrub.addEventListener("input",()=>{t=+scrub.value;started=true;lastBeat=Math.floor(t);if(hasSong)syncAudio();draw();});
 
-renderCues();
 renderTable();
 })();

@@ -10,7 +10,7 @@ He performs fire, plays the looping song, and MCs the whole night.
 | `index.html` | The menu. A small landing page. Links to the song only — the book is deliberately unlisted. Public. |
 | `book.html` | The book. Three pages in one file: **Characters**, **MC script**, **Tonight**. Behind basic auth. |
 | `disguise.html` | Standalone page for the song *Disguise* — chords, roster, setup checklist, auto-scroll. Public. |
-| `creature/` | *Scientist & Creature – The Dope Show* finale blocking, served at `/creature/`. `index.html` markup, `data.js` sections/cast/running order (edit here), `app.js` animation, `style.css`. Song: `audio/dope-show.mp3`, auto-loaded. Animated stage plot, beat sheet, running order. Song lyrics are never written into it: lyric cues are typed by the viewer and saved in their browser only. Public. |
+| `creature/` | *Scientist & Creature – The Dope Show* finale blocking, served at `/creature/`. `index.html` markup, `data.js` sections/cast/running order (edit here), `app.js` animation, `style.css`. Song: `audio/dope-show.mp3`, auto-loaded. Animated stage plot, beat sheet, running order. Song lyrics are never written into it: there is no lyric section. Public. |
 | `dev.js` | Local server: `node dev.js` → http://localhost:4321/creature/. Supports Range requests so the mp3 can seek. No basic auth locally. |
 | `middleware.js` | Basic auth on `book.html`. Defaults to `pio` / `coconut`; `BOOK_USER` / `BOOK_PASSWORD` override. A speed bump, not a secret. |
 
