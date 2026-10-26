@@ -10,6 +10,7 @@ const AMP=.65, DC2=90;
 let state={bpm:91,bpb:4,cross:8,pioJoin:16,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
 try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null)state.pioJoin=16;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
+if(!state.pioDies2){if(state.beats[0]===4)state.beats[0]=2;state.pioDies2=1;}   // Pio dies went 4 → 2 beats
 state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
 const BOW=SECTIONS.length-1;
