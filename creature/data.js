@@ -34,3 +34,9 @@ const ORDER=[
  [210,"Chorus",["continue Kick jumping, sliding, dancing from edge of stage to stage or something like Vanessa said that we can burn in a pile which I love too"]],
  [237,"End",[]]
 ];
+
+// Finale checklist: ticks are remembered on this device
+const CHECKLIST=[
+ "strike first high / low shape in the middle, i.e. start by running towards centre, first person should strike a shape a little bit behind the centre (later free flow side to side)",
+ "time it to the beat, think about the beat"
+];

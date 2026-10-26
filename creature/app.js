@@ -249,6 +249,14 @@ function drawCue(){
   cueRows.querySelectorAll("tr").forEach((r,i)=>r.classList.toggle("on",i===cur));
 }
 
+let ticks={};try{ticks=JSON.parse(localStorage.getItem("blocking-check")||"{}")||{};}catch(e){}
+const checkEl=document.getElementById("check");
+CHECKLIST.forEach((txt,i)=>{
+  const li=document.createElement("li"),lb=document.createElement("label"),cb=document.createElement("input"),sp=document.createElement("span");
+  cb.type="checkbox";cb.id="check-"+i;cb.checked=!!ticks[txt];sp.textContent=txt;
+  cb.addEventListener("change",()=>{ticks[txt]=cb.checked;try{localStorage.setItem("blocking-check",JSON.stringify(ticks));}catch(e){}});
+  lb.append(cb,sp);li.appendChild(lb);checkEl.appendChild(li);
+});
 const orderEl=document.getElementById("order");
 const mmss=x=>Math.floor(x/60)+":"+String(Math.round(x%60)).padStart(2,"0");
 ORDER.forEach(([sec,label,lines])=>{
