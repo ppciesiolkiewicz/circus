@@ -49,6 +49,11 @@ const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--fr
 banner.textContent="FREEZE";
 
 const layer=el("g",{});
+// comic "STRIKE!" burst at centre on the first beat of each strike-shape moment (drawn above the dancers)
+const POW_Y=BACK+RY*.24, pow=el("g",{opacity:0});
+{const pts=[];for(let i=0;i<28;i++){const a=i/28*2*Math.PI, r=i%2?44:70+(i%4?0:8);pts.push((r*1.45*Math.cos(a)).toFixed(1)+","+(r*Math.sin(a)).toFixed(1));}
+ el("polygon",{points:pts.join(" "),fill:"#ffd23f",stroke:"#1b1b1f","stroke-width":3,"stroke-linejoin":"round"},pow);
+ const tx=el("text",{"text-anchor":"middle",y:10,fill:"#d7261e",stroke:"#1b1b1f","stroke-width":1.5,"font-family":"Archivo, sans-serif","font-weight":900,"font-size":30,"letter-spacing":"1"},pow);tx.textContent="STRIKE!";}
 dancers.forEach(d=>{
   const g=el("g",{},layer);
   const col=d.pio?"var(--pio)":d.side==="R"?"var(--right)":"var(--left)";
@@ -270,6 +275,11 @@ function draw(){
     let name=SECTIONS[si].name;
     document.getElementById("sec").textContent=name;
   }
+  {const m=started&&t>=0?midBeats().find(m=>t>=m&&t<m+1):undefined;
+  if(m===undefined)pow.setAttribute("opacity",0);
+  else{const k=t-m, sc=k<.15?.3+k/.15*.9:1.2-(k-.15)*.2;
+    pow.setAttribute("opacity",k<.7?1:Math.max(0,1-(k-.7)/.3));
+    pow.setAttribute("transform",`translate(${CX},${POW_Y}) rotate(-8) scale(${sc.toFixed(3)})`);}}
   {let tag=t>=0?(state.tags[si]||""):"";
   const md=SECTIONS[si].mid, lst=SECTIONS[si].last;
   if(t>=0&&md&&midBeats().some(m=>t>=m&&t<m+md.beats))tag=md.tag;
