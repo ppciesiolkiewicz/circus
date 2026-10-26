@@ -11,6 +11,7 @@ let state={bpm:91,bpb:4,cross:8,pioJoin:16,beats:SECTIONS.map(s=>s.beats),tags:S
 try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null)state.pioJoin=16;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
+if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
 state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
 const BOW=SECTIONS.length-1;
@@ -151,12 +152,6 @@ const rowsEl=document.getElementById("rows"), strip=document.getElementById("str
 const scrub=document.getElementById("scrub");
 function renderTable(){
   rowsEl.innerHTML="";strip.querySelectorAll(".seg").forEach(n=>n.remove());
-  {
-    const seg=document.createElement("div");seg.className="seg";seg.id="seg-ci";
-    seg.style.flex=`${state.bpb} 0 0`;seg.textContent="Count-in";
-    seg.addEventListener("click",()=>{t=-state.bpb;started=true;draw();});
-    strip.insertBefore(seg,ph);
-  }
   const T=total()||1;
   SECTIONS.forEach((s,i)=>{
     const tr=document.createElement("tr");tr.id="row-"+i;
@@ -185,7 +180,9 @@ const cast=document.getElementById("cast");
   cast.appendChild(d);
 });
 
-let t=-state.bpb, started=false, playing=false, last=0, clickOn=false, actx=null, lastBeat=-1;
+// Counts follow the song's bars: count 1 of the run-in is a 1.
+const countAt=b=>{const n=state.bpb,r=b-(state.beats[0]+state.beats[1]);return ((r%n)+n)%n+1;};
+let t=0, started=false, playing=false, last=0, clickOn=false, actx=null, lastBeat=-1;
 const bpmIn=document.getElementById("bpm"), bpbIn=document.getElementById("bpb");
 bpmIn.value=state.bpm;bpbIn.value=state.bpb;
 bpmIn.addEventListener("change",()=>{state.bpm=clamp(+bpmIn.value||91,40,240);bpmIn.value=state.bpm;save();updateBars();});
@@ -250,23 +247,19 @@ function draw(){
   });
   const bd=bounds();let si=bd.findIndex(([a,b])=>tp>=a&&tp<b);if(si<0)si=SECTIONS.length-1;
   const n=state.bpb;
-  if(t<-state.bpb){
+  if(t<0){
     document.getElementById("bar").textContent="–";
     document.getElementById("cnt").textContent="–";
     document.getElementById("sec").textContent="Before the blocking";
-  }else if(t<0){
-    const b=Math.floor(t);
-    document.getElementById("bar").textContent="–";
-    document.getElementById("cnt").textContent=((b%n)+n)%n+1;
-    document.getElementById("sec").textContent="Count-in";
   }else{
     const beat=Math.floor(Math.min(t,total()-1e-6));
-    document.getElementById("bar").textContent=Math.floor(beat/n)+1;
-    document.getElementById("cnt").textContent=beat%n+1;
+    const rb=beat-(state.beats[0]+state.beats[1]);   // bar 1 = the run-in
+    document.getElementById("bar").textContent=rb<0?"–":Math.floor(rb/n)+1;
+    document.getElementById("cnt").textContent=countAt(beat);
     let name=SECTIONS[si].name;
     document.getElementById("sec").textContent=name;
   }
-  {let tag=t>=0?(state.tags[si]||""):(t>=-state.bpb?"Count-in":"");
+  {let tag=t>=0?(state.tags[si]||""):"";
   const fst=SECTIONS[si].first; if(t>=0&&fst&&t-bd[si][0]<fst.beats)tag=fst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   banner.textContent=tag.toUpperCase();
@@ -276,7 +269,6 @@ function draw(){
   {const c=document.getElementById("cnt").textContent;
   stCount.textContent=started?c:"";}
   SECTIONS.forEach((s,i)=>document.getElementById("seg-"+i).classList.toggle("on",started&&t>=0&&i===si));
-  const ci=document.getElementById("seg-ci"); if(ci)ci.classList.toggle("on",started&&t<0&&t>=-state.bpb);
   document.querySelectorAll("#rows tr").forEach((el,i)=>el.classList.toggle("on",started&&t>=0&&i===si));
   const S=startT(), tl=Math.max(S,t);
   ph.style.left=`${((tl-S)/((total()-S)||1))*100}%`;
@@ -294,13 +286,13 @@ function loop(now){
     if(hasSong&&audio.paused&&songAt(t)>=0){syncAudio();audio.play().catch(()=>{});}
   }
   const b=Math.floor(t);
-  if(b!==lastBeat&&clickOn&&t<total()){const n=state.bpb;tick(((b%n)+n)%n===0);}
+  if(b!==lastBeat&&clickOn&&t<total())tick(countAt(b)===1);
   lastBeat=b;
   if(t>=total()){t=total();stop();}
   draw();if(playing)requestAnimationFrame(loop);
 }
 const playBtn=document.getElementById("play");
-const startT=()=>-state.bpb;   // the count-in is the first section of the timeline
+const startT=()=>0;
 playBtn.addEventListener("click",()=>{
   if(playing){stop();return;}
   started=true;

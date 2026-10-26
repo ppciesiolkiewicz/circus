@@ -29,12 +29,11 @@ h1{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.05;le
 .check input{margin-top:.2em;width:18px;height:18px;flex:none;accent-color:var(--accent)}
 .check input:checked+span{color:var(--muted);text-decoration:line-through}
 .order{list-style:none;margin:0;padding:0;display:grid}
-.order li{display:grid;grid-template-columns:4.6rem 6.5rem minmax(0,1fr);align-items:baseline;gap:6px 14px;padding:10px 8px;border-bottom:1px solid var(--line)}
-.order li:last-child{border-bottom:0}
-.order li>div{display:contents}
-.order li.on{background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:6px}
-@media (max-width:600px){.order li{grid-template-columns:4.2rem minmax(0,1fr)}.order li ul{grid-column:2}}
-.order li.on{background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.order>li{display:grid;grid-template-columns:4.6rem 6.5rem minmax(0,1fr);align-items:baseline;gap:6px 14px;padding:10px 8px;border-bottom:1px solid var(--line)}
+.order>li:last-child{border-bottom:0}
+.order>li>div{display:contents}
+.order>li.on{background:color-mix(in srgb,var(--accent) 12%,transparent);border-radius:6px}
+@media (max-width:600px){.order>li{grid-template-columns:4.2rem minmax(0,1fr)}.order>li ul{grid-column:2}}
 .order button.tm{font:500 .9rem var(--mono);padding:3px 6px;align-self:start;color:var(--accent);background:none;border:1px solid var(--line)}
 .order b{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
 .order ul{margin:0;padding-left:1.1em;display:grid;gap:3px;font-size:.93rem}

@@ -3,7 +3,7 @@
 
 // first: a tag shown only for the section's opening beats, before the main tag
 const SECTIONS=[
-  {id:"pio",name:"Pio dies",desc:"Pio is already at front centre, dies and doesn’t move",beats:2,tag:"Pio dies"},
+  {id:"pio",name:"Count in - Pio dies",desc:"One bar count-in; Pio is already at front centre, dies and doesn’t move",beats:4,tag:"Count in - Pio dies"},
   {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,tag:"Cue to prepare – guitar picks up"},
   {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,tag:"Move edge to edge",first:{beats:1,tag:"Shape - low / high"}},
   {id:"slow1",name:"Slow down",desc:"Keep travelling, slowing to a stop",beats:4,tag:"Slow down"},
