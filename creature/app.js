@@ -2,10 +2,10 @@
 
 // geometry (viewBox units)
 const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
-const ROWS={"R-H0":.08,"L-H0":.19,"R-L0":.30,"L-L0":.41};   // lines a little apart, so the two groups don't brush past each other mid-stage
-const PIOD=.62, PIO_RUN=.47, PIO_FROM=-.13;
+const ROWS={"R-H0":.14,"L-H0":.29,"R-L0":.44,"L-L0":.59};   // lines a little apart, so the two groups don't brush past each other mid-stage
+const PIOD=.62, PIO_RUN=.72, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08+.064*2*RX/RY,   // bow line a further 6.4% of the floor width away from the stage
-      FILEGAP=40, LANEGAP=62;
+      FILEGAP=40, LANEGAP=74, FREEZE_OUT=.2;   // LANEGAP: space between people in a line at the freezes
 const BOW_HW=330;   // bow line half-width: a bit wider than the stage (300), dots close together
 const AMP=.15, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
@@ -175,7 +175,9 @@ function follow(cross,tb,slot){
 }
 function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
-  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(tau=>pioCrossing(beatWarp(tau)),tAbs-P0,0);return {x:r.x,depth:PIOD+r.dy/RY};}
+  // from the first slow-down on, everyone drifts FREEZE_OUT further from the stage, ready for the freezes
+  const fo=1+FREEZE_OUT*ease(clamp((tAbs-P0-state.beats[2])/(state.beats[3]||1),0,1));
+  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(tau=>pioCrossing(beatWarp(tau)),tAbs-P0,0);return {x:r.x,depth:(PIOD+r.dy/RY)*fo};}
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
   const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-pickupT(),tb),(laneCount[d.lane]-1)/2-d.order);
@@ -185,7 +187,7 @@ function travelPos(d,tAbs){
   if(q>0) return q<=FILEGAP?{x:Math.sign(x)*(START-20+q),depth:ENTRY}:{x:Math.sign(x)*(START+20),depth:ENTRY+(q-FILEGAP)/RY};
   const xs=q>-30?x-Math.sign(x)*20*(1+q/30):x;
   const inside=ease(clamp((START-Math.abs(x))/150,0,1));
-  return {x:xs,depth:lerp(ENTRY,ROWS[d.lane],inside)+r.dy/RY*inside};
+  return {x:xs,depth:(lerp(ENTRY,ROWS[d.lane],inside)+r.dy/RY*inside)*fo};
 }
 function positions(tb){
   const bd=bounds(), bowStart=bd[BOW][0], TBow=state.beats[BOW];
