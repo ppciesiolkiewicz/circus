@@ -227,15 +227,18 @@ speedSel.addEventListener("change",()=>{audio.playbackRate=+speedSel.value;});
 const notesEl=document.getElementById("notes");
 // the 4 running lines, back (stage) to front (audience), drawn with the same dots as the stage plot
 function linesFig(){
-  const lanes=Object.keys(ROWS).sort((a,b)=>ROWS[a]-ROWS[b]), W=560, RH=38, top=26;
+  const lanes=Object.keys(ROWS).sort((a,b)=>ROWS[a]-ROWS[b]), W=560, RH=46, top=30;
   const f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${top+lanes.length*RH+22}`);f.setAttribute("class","linesfig");
   f.setAttribute("role","img");f.setAttribute("aria-label","Line order from the stage: Duncan high, Luna high, Duncan low, Luna low");
   el("text",{x:W/2,y:14,"text-anchor":"middle",class:"lb"},f).textContent="STAGE";
   lanes.forEach((ln,r)=>{
     const y=top+r*RH+RH/2, R=ln[0]==="R", col=R?"var(--right)":"var(--left)", hi=ln[2]==="H";
     el("text",{x:8,y:y+4,fill:col,class:"ln"},f).textContent=(R?"Duncan":"Luna")+" · "+(hi?"high":"low");
-    dancers.filter(d=>d.lane===ln).forEach((d,k)=>{
-      const g=el("g",{transform:`translate(${170+k*42},${y})`},f);
+    const ms=dancers.filter(d=>d.lane===ln), n=ms.length;
+    ms.forEach((d,k)=>{
+      // 1 = front of the line: the dot furthest in the running direction
+      const pos=R?k:n-1-k, g=el("g",{transform:`translate(${170+pos*42},${y})`},f);
+      el("text",{"text-anchor":"middle",y:-17,"font-size":10,fill:col,"font-family":"DM Mono, monospace","font-weight":500},g).textContent=k+1;
       el("circle",{r:13,fill:hi?col:"var(--floor)",stroke:col,"stroke-width":2.5},g);
       el("text",{"text-anchor":"middle",y:3.5,"font-size":9,fill:hi?"var(--floor)":col,"font-family":"Archivo, sans-serif","font-weight":700},g).textContent=d.name.slice(0,3);
     });

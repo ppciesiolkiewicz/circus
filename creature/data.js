@@ -49,7 +49,7 @@ const ORDER=[
 // Things to keep in mind: [icon, short red title, text]; a plain array of strings after a point is its sub-points;
 // {fig:"lines"} draws the line order (back to front) under the point above it.
 const NOTES=[
- ["😬","Be creepy","Slowing down and posing: be a bit scary / creepy, show teeth."],
+ ["😬","Be creepy","When slowing down and posing: be a bit scary / creepy, show teeth."],
  ["🧭","Know yourself","Know which side you’re on and which shape you strike. If you’re planning shapes that need more space, like cartwheels, talk to the people around you so we don’t collide."],
  ["🏃","Run first","Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line."],
  ["↔️","Form lines","We run towards each other and we should form lines as per animation - Duncan Group → Luna Group → Duncan Group → Luna group"],
