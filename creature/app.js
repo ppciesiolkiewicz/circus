@@ -3,12 +3,12 @@
 // geometry (viewBox units)
 const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
 const ROWS={"R-H0":.11,"L-H0":.20,"R-L0":.29,"L-L0":.38};
-const PIOD=.62, PIO_FROM=-.13;
+const PIOD=.62, PIO_RUN=.47, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
 const AMP=.3, DC2=90;
 
-let state={bpm:91,bpb:4,cross:8,pioJoin:24,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
-try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null||state.pioJoin===16)state.pioJoin=24;}
+let state={bpm:91,bpb:4,cross:8,pioJoin:8,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
+try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null||state.pioJoin===16||state.pioJoin===24)state.pioJoin=8;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
 if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
@@ -103,11 +103,12 @@ function pioJoinAt(){
 }
 function pioCrossing(tau){
   tau+=lead();
-  const C=Math.max(.5,state.cross), E=hw(PIOD)*EDGE_K, tj=tau-pioJoinAt();
+  const C=Math.max(.5,state.cross), E=hw(PIO_RUN)*EDGE_K, tj=tau-pioJoinAt();
   if(tj<0) return {x:0,dy:0,dir:PIO_D0,v:0,E,still:1};
   const r=loopAt(tau/C,E,PIO_D0,false);
-  // fade Pio's loop offset in over the first beat so Pio doesn't jump sideways off the mark
-  r.dy*=clamp(tj,0,1); return r;
+  // fade Pio's loop offset in over the first beat so Pio doesn't jump sideways off the mark,
+  // and over two beats move him up from his mark to run just in front of the low lines
+  r.dy=r.dy*clamp(tj,0,1)+(PIO_RUN-PIOD)*RY*ease(clamp(tj/2,0,1)); return r;
 }
 // slot: place in the lane at the first freeze, in LANEGAPs from centre, leader furthest ahead
 // Beats (from 0) when the run's leaders cross centre, snapped to the nearest count 1; cached per setting
