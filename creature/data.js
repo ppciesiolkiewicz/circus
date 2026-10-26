@@ -1,8 +1,8 @@
 // Everything Pio changes: sections of the blocking, the cast and the running order.
 // Loaded before app.js; these globals are read there.
 
-// Beats before the run-in that the lines leave the wings (3 = on count 2 of the last guitar bar)
-const RUN_LEAD=3;
+// Beats before the run-in that the lines leave the wings (4 = on count 1 of the last guitar bar)
+const RUN_LEAD=4;
 
 // first: a caption shown under the main tag for the section's opening beats
 // last: a tag shown instead of the main tag for the section's closing beats
