@@ -54,6 +54,6 @@ const NOTES=[
   ["After that, move more free form, but stay on the beat."],
  "Move on the beat. Adjust your pace to it, and keep it in your head the whole time.",
  "Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience.",
-  ["This stops us bumping into each other."],
+  ["This is just to prevent us bumping into each other."],
  "Slowing down and posing: be a bit scary / creepy, show teeth."
 ];
