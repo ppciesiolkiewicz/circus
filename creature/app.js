@@ -110,15 +110,6 @@ function pioCrossing(tau){
   r.dy=r.dy*clamp(tj,0,1)+(PIO_RUN-PIOD)*RY*ease(clamp(tj/2,0,1)); return r;
 }
 // slot: place in the lane at the first freeze, in LANEGAPs from centre, leader furthest ahead
-// Beats (from 0) when the run's leaders cross centre, snapped to the nearest count 1; cached per setting
-let midCache={};
-function midBeats(){
-  const P0=state.beats[0]+state.beats[1], end=state.beats[2], key=[state.cross,P0,end,lead()].join();
-  if(midCache.key===key)return midCache.v;
-  const v=[];let prev=crossing("R-H0",-1,-lead()).x;
-  for(let tb=-lead()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(!v.includes(b))v.push(b);}prev=x;}
-  midCache={key,v};return v;
-}
 function follow(cross,tb,slot){
   const B=state.beats.slice(2);
   if(tb<=B[0]){const r=cross(tb);return {x:r.x,dy:r.dy};}
@@ -271,8 +262,8 @@ function draw(){
     document.getElementById("sec").textContent=name;
   }
   {let tag=t>=0?(state.tags[si]||""):"";
-  const md=SECTIONS[si].mid, lst=SECTIONS[si].last;
-  if(t>=0&&md&&midBeats().some(m=>t>=m&&t<m+md.beats))tag=md.tag;
+  const fst=SECTIONS[si].first, lst=SECTIONS[si].last;
+  if(t>=0&&fst&&t-bd[si][0]<fst.beats)tag=fst.tag;
   if(t>=0&&lst&&bd[si][1]-t<=lst.beats)tag=lst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   banner.textContent=tag.toUpperCase();
