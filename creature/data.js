@@ -46,15 +46,15 @@ const ORDER=[
  [237,"End",[]]
 ];
 
-// Things to keep in mind, shown under the timeline. An array right after a point is its sub-points.
+// Things to keep in mind: [icon, short red title, text]; a plain array of strings after a point is its sub-points.
 const NOTES=[
- "Slowing down and posing: be a bit scary / creepy, show teeth.",
- "Know which side you’re on and which shape you strike. If you’re planning shapes that need more space, like cartwheels, talk to the people around you so we don’t collide.",
- "Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line.",
- "We run towards each other and we should form lines as per animation.",
- "First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat.",
+ ["😬","Be creepy","Slowing down and posing: be a bit scary / creepy, show teeth."],
+ ["🧭","Know yourself","Know which side you’re on and which shape you strike. If you’re planning shapes that need more space, like cartwheels, talk to the people around you so we don’t collide."],
+ ["🏃","Run first","Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line."],
+ ["↔️","Form lines","We run towards each other and we should form lines as per animation."],
+ ["💥","First shape","First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat."],
   ["After that, move more free form, but stay on the beat."],
- "Move on the beat. Adjust your pace to it, and keep it in your head the whole time.",
- "Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience.",
+ ["🥁","On beat","Move on the beat. Adjust your pace to it, and keep it in your head the whole time."],
+ ["🔄","Loop around","Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience."],
   ["This is just to prevent us bumping into each other."]
 ];

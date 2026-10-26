@@ -226,6 +226,9 @@ speedSel.addEventListener("change",()=>{audio.playbackRate=+speedSel.value;});
 
 const notesEl=document.getElementById("notes");
 NOTES.forEach(x=>{
+  if(x.length===3&&/^\P{L}/u.test(x[0])){   // [icon, title, text]; sub-points start with a letter
+    const [ic,ti,tx]=x,li=document.createElement("li"),i=document.createElement("span"),h=document.createElement("b");
+    i.className="ic";i.textContent=ic;h.textContent=ti;li.append(i,h," ",tx);notesEl.appendChild(li);return;}
   if(Array.isArray(x)){const ul=document.createElement("ul");x.forEach(y=>{const li=document.createElement("li");li.textContent=y;ul.appendChild(li);});notesEl.lastElementChild.appendChild(ul);return;}
   const li=document.createElement("li");li.textContent=x;notesEl.appendChild(li);});
 const orderEl=document.getElementById("order");
