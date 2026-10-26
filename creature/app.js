@@ -3,7 +3,7 @@
 // geometry (viewBox units)
 const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
 const ROWS={"R-H0":.14,"L-H0":.29,"R-L0":.44,"L-L0":.59};   // lines a little apart, so the two groups don't brush past each other mid-stage
-const PIOD=.62, PIO_RUN=.72, PIO_FROM=-.13;
+const PIOD=.62, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08+.064*2*RX/RY,   // bow line a further 6.4% of the floor width away from the stage
       FILEGAP=40, LANEGAP=74, FREEZE_OUT=.2;   // LANEGAP: space between people in a line at the freezes
 const BOW_HW=330;   // bow line half-width: a bit wider than the stage (300), dots close together
@@ -28,7 +28,7 @@ function build(list,side){
   });
 }
 build(RIGHT,"R");build(LEFT,"L");
-dancers.push({name:"Pio",type:"P",pio:true,side:"P"});
+dancers.push({name:"Pio",type:"P",pio:true,side:"P",lane:"L-L0",file:LEFT.length,order:LEFT.filter(x=>x[1]==="L").length});   // tail of the front line
 
 const NS="http://www.w3.org/2000/svg";
 const svg=document.getElementById("stage");
@@ -80,7 +80,7 @@ const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const ease=u=>u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;
 const lerp=(a,b,u)=>a+(b-a)*u;
 
-const laneCount={};dancers.filter(d=>!d.pio).forEach(d=>laneCount[d.lane]=(laneCount[d.lane]||0)+1);
+const laneCount={};dancers.forEach(d=>laneCount[d.lane]=(laneCount[d.lane]||0)+1);
 const hw=d=>RX*Math.sqrt(1-d*d);
 const laneEdge=l=>hw(ROWS[l])-(laneCount[l]-1)*LANEGAP/2-22;
 const prof=u=>u+AMP*Math.sin(2*Math.PI*u)/(2*Math.PI);   // speed = 1+AMP·cos → fast at edges, slowest mid-stage
@@ -132,21 +132,16 @@ function beatWarp(r){
   const b=Math.floor(r),u=r-b,h=Math.min(1,u/.35),p=((b%2)+2)%2;
   return Math.floor(b/2)*2+(p?BEAT_STEPS[0]:0)+BEAT_STEPS[p]*(.5*(1-(1-h)*(1-h))+.5*u);
 }
-// Pio: holds centre, then runs in step with the smaller side's lines. He joins the first time
-// their leaders pass mid-stage after pioJoin beats, so he steps off his mark at x=0 with them.
-const PIO_D0=LEFT.length<=RIGHT.length?1:-1;
-function pioJoinAt(){
-  const C=Math.max(.5,state.cross);
-  return Math.max(1,Math.ceil(state.pioJoin/C-STRAIGHT/2))*C+STRAIGHT/2*C;
-}
-function pioCrossing(tau){
-  tau+=lead();
-  const C=Math.max(.5,state.cross), E=RUN_E, tj=tau-pioJoinAt();
-  if(tj<0) return {x:0,dy:0,dir:PIO_D0,v:0,E,still:1};
-  const r=loopAt(tau/C,E,PIO_D0);
-  // fade Pio's loop offset in over the first beat so Pio doesn't jump sideways off the mark,
-  // and over two beats move him up from his mark to run just in front of the low lines
-  r.dy=r.dy*clamp(tj,0,1)+(PIO_RUN-PIOD)*RY*ease(clamp(tj/2,0,1)); return r;
+// Pio: holds centre, then joins the front line (Luna low) at its tail. He steps in the first time
+// the tail passes mid-stage after pioJoin beats, so he steps off his mark at x=0 into the gap behind Kim.
+let pioCache={};
+function pioJoinBeat(d){
+  const end=state.beats[2], key=[state.cross,state.pioJoin,end,lead(),pickupT()].join();
+  if(pioCache.key===key)return pioCache.v;
+  const xa=tb=>crossing(d.lane,1,beatWarp(tb)-d.file*FILE_DELAY).x;
+  let v=Infinity, prev=xa(-pickupT());
+  for(let tb=-pickupT()+.05;tb<end;tb+=.05){const x=xa(tb);if(prev<0!==x<0&&(tb>=state.pioJoin||v===Infinity))v=tb;if(prev<0!==x<0&&tb>=state.pioJoin)break;prev=x;}
+  pioCache={key,v};return v;
 }
 // slot: place in the lane at the first freeze, in LANEGAPs from centre, leader furthest ahead
 // Beats (from 0) when the run's leaders cross centre, snapped to the nearest count 1, only inside Run in & cross; cached per setting
@@ -178,7 +173,9 @@ function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
   // from the first slow-down on, everyone drifts FREEZE_OUT further from the stage, ready for the freezes
   const fo=1+FREEZE_OUT*ease(clamp((tAbs-P0-state.beats[2])/(state.beats[3]||1),0,1));
-  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(tau=>pioCrossing(beatWarp(tau)),tAbs-P0,0);return {x:r.x,depth:(PIOD+r.dy/RY)*fo};}
+  if(d.pio){const tb=tAbs-P0, jn=pioJoinBeat(d);if(tb<jn)return {x:0,depth:PIOD*fo};
+    const r=follow(tau=>crossing(d.lane,1,beatWarp(tau)-d.file*FILE_DELAY),tb,(laneCount[d.lane]-1)/2-d.order);
+    return {x:r.x,depth:lerp(PIOD,ROWS[d.lane]+r.dy/RY,ease(clamp((tb-jn)/2,0,1)))*fo};}   // two beats from his mark into the line
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
   const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-pickupT(),tb),(laneCount[d.lane]-1)/2-d.order);
@@ -284,9 +281,10 @@ function linesFig(){
     const ms=dancers.filter(d=>d.lane===ln), n=ms.length;
     ms.forEach((d,k)=>{
       // 1 = front of the line: the dot furthest in the running direction
-      const pos=R?k:n-1-k, g=el("g",{transform:`translate(${DX+pos*GAP},${y})`},f);
-      el("circle",{r:13,fill:hi?col:"var(--floor)",stroke:col,"stroke-width":2.5},g);
+      const pos=R?k:n-1-k, g=el("g",{transform:`translate(${DX+pos*GAP},${y})`},f), c=d.pio?"var(--pio)":col;
+      el("circle",{r:13,fill:hi||d.pio?c:"var(--floor)",stroke:c,"stroke-width":2.5},g);
       el("text",{"text-anchor":"middle",y:3.5,"font-size":9,fill:hi?"var(--floor)":col,"font-family":"Archivo, sans-serif","font-weight":700},g).textContent=d.name.slice(0,3);
+      if(d.pio)g.lastChild.setAttribute("fill","var(--floor)");
     });
     for(const x of [DX-32,DX+(maxN-1)*GAP+32])el("text",{x,y:y+6,"text-anchor":"middle",fill:col,"font-size":20},f).textContent=R?"←":"→";
   });
