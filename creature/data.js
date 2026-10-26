@@ -49,6 +49,7 @@ const ORDER=[
 // Things to keep in mind, shown under the timeline. An array right after a point is its sub-points.
 const NOTES=[
  "Slowing down and posing: be a bit scary / creepy, show teeth.",
+ "Know which side you’re on and which shape you strike. If you’re planning shapes that need more space, like cartwheels, talk to the people around you so we don’t collide.",
  "Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line.",
  "We run towards each other and we should form lines as per animation.",
  "First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat.",
