@@ -4,11 +4,12 @@
 // Beats before the run-in that the lines leave the wings (3 = on count 2 of the last guitar bar)
 const RUN_LEAD=3;
 
-// first / last: a tag shown only for the section's opening / closing beats instead of the main tag
+// first: a caption shown under the main tag for the section's opening beats
+// last: a tag shown instead of the main tag for the section's closing beats
 const SECTIONS=[
   {id:"pio",name:"Count in - Pio dies",desc:"One bar count-in; Pio is already at front centre, dies and doesn’t move",beats:4,tag:"Count in - Pio dies"},
   {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,last:{beats:RUN_LEAD,tag:"Start moving towards centre"},tag:"Cue to prepare – guitar picks up"},
-  {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,tag:"Move edge to edge",first:{beats:1,tag:"Shape - low / high"}},
+  {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,tag:"Move edge to edge",first:{beats:1,tag:"Strike shape low/high close to the middle"}},
   {id:"slow1",name:"Slow down",desc:"Keep travelling, slowing to a stop",beats:4,tag:"Slow down"},
   {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze"},
   {id:"slow2",name:"Slow down, look",desc:"Move again, slowing to a stop, looking out at the audience",beats:4,tag:"Slow down, look at audience"},

@@ -47,6 +47,7 @@ lbl(CX,BACK-22,"STAGE");lbl(CX,BACK+RY+34,"AUDIENCE");
 lbl(CX-RX+6,BACK+RY*.16,"HIGH","start");lbl(CX-RX+30,BACK+RY*.35,"LOW","start");
 const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--freeze)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":28,"letter-spacing":"5",opacity:0});
 banner.textContent="FREEZE";
+const subBanner=el("text",{x:CX,y:BACK+RY*.84+30,"text-anchor":"middle",fill:"var(--onfloor)","font-family":"Archivo, sans-serif","font-weight":600,"font-size":18,"letter-spacing":"1"});
 
 const layer=el("g",{});
 dancers.forEach(d=>{
@@ -260,12 +261,13 @@ function draw(){
   }
   {let tag=t>=0?(state.tags[si]||""):"";
   const fst=SECTIONS[si].first, lst=SECTIONS[si].last;
-  if(t>=0&&fst&&t-bd[si][0]<fst.beats)tag=fst.tag;
+  const sub=t>=0&&fst&&t-bd[si][0]<fst.beats?fst.tag:"";
   if(t>=0&&lst&&bd[si][1]-t<=lst.beats)tag=lst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   banner.textContent=tag.toUpperCase();
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
-  banner.setAttribute("opacity",tag&&started?1:0);}
+  banner.setAttribute("opacity",tag&&started?1:0);
+  subBanner.textContent=started?sub:"";}
   if(!started)document.getElementById("sec").textContent="Ready";
   SECTIONS.forEach((s,i)=>document.getElementById("seg-"+i).classList.toggle("on",started&&t>=0&&i===si));
   document.querySelectorAll("#rows tr").forEach((el,i)=>el.classList.toggle("on",started&&t>=0&&i===si));
