@@ -1,10 +1,10 @@
 // Everything Pio changes: sections of the blocking, the cast and the running order.
 // Loaded before app.js; these globals are read there.
 
-// first: a tag shown only for the section's opening beats, before the main tag
+// first / last: a tag shown only for the section's opening / closing beats instead of the main tag
 const SECTIONS=[
   {id:"pio",name:"Count in - Pio dies",desc:"One bar count-in; Pio is already at front centre, dies and doesn’t move",beats:4,tag:"Count in - Pio dies"},
-  {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,tag:"Cue to prepare – guitar picks up"},
+  {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,last:{beats:2,tag:"Start moving towards centre"},tag:"Cue to prepare – guitar picks up"},
   {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,tag:"Move edge to edge",first:{beats:1,tag:"Shape - low / high"}},
   {id:"slow1",name:"Slow down",desc:"Keep travelling, slowing to a stop",beats:4,tag:"Slow down"},
   {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze"},
@@ -36,8 +36,8 @@ const ORDER=[
  [237,"End",[]]
 ];
 
-// Finale checklist: ticks are remembered on this device
-const CHECKLIST=[
- "strike first high / low shape in the middle, i.e. start by running towards centre, first person should strike a shape a little bit behind the centre (later free flow side to side)",
- "time it to the beat, think about the beat"
+// Things to keep in mind, shown under the timeline
+const NOTES=[
+ "First shape (high or low) happens in the middle: run towards centre, and the first person strikes their shape just behind it. After that, free flow side to side.",
+ "Move on the beat. Keep the beat in your head the whole time."
 ];

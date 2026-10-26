@@ -211,14 +211,8 @@ const songAt=tt=>offset+(tt-preRun())*beatSec();
 function syncAudio(){audio.playbackRate=+speedSel.value;const at=songAt(t);if(at>=0)audio.currentTime=at;}
 speedSel.addEventListener("change",()=>{audio.playbackRate=+speedSel.value;});
 
-let ticks={};try{ticks=JSON.parse(localStorage.getItem("blocking-check")||"{}")||{};}catch(e){}
-const checkEl=document.getElementById("check");
-CHECKLIST.forEach((txt,i)=>{
-  const li=document.createElement("li"),lb=document.createElement("label"),cb=document.createElement("input"),sp=document.createElement("span");
-  cb.type="checkbox";cb.id="check-"+i;cb.checked=!!ticks[txt];sp.textContent=txt;
-  cb.addEventListener("change",()=>{ticks[txt]=cb.checked;try{localStorage.setItem("blocking-check",JSON.stringify(ticks));}catch(e){}});
-  lb.append(cb,sp);li.appendChild(lb);checkEl.appendChild(li);
-});
+const notesEl=document.getElementById("notes");
+NOTES.forEach(txt=>{const li=document.createElement("li");li.textContent=txt;notesEl.appendChild(li);});
 const orderEl=document.getElementById("order");
 const mmss=x=>Math.floor(x/60)+":"+String(Math.round(x%60)).padStart(2,"0");
 ORDER.forEach(([sec,label,lines])=>{
@@ -263,7 +257,9 @@ function draw(){
     document.getElementById("sec").textContent=name;
   }
   {let tag=t>=0?(state.tags[si]||""):"";
-  const fst=SECTIONS[si].first; if(t>=0&&fst&&t-bd[si][0]<fst.beats)tag=fst.tag;
+  const fst=SECTIONS[si].first, lst=SECTIONS[si].last;
+  if(t>=0&&fst&&t-bd[si][0]<fst.beats)tag=fst.tag;
+  if(t>=0&&lst&&bd[si][1]-t<=lst.beats)tag=lst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   banner.textContent=tag.toUpperCase();
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
