@@ -13,7 +13,7 @@ try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.b
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
 if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
-state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"?SECTIONS[i].tag:x);}catch(e){}
+state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"||x==="Freeze"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
 
 // build dancers

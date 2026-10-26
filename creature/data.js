@@ -11,9 +11,9 @@ const SECTIONS=[
   {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,last:{beats:RUN_LEAD,tag:"Start moving towards centre"},tag:"Cue to prepare – guitar picks up"},
   {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,tag:"Move edge to edge",mid:{beats:4,tag:"Strike shape low/high on 1st beat"}},
   {id:"slow1",name:"Slow down",desc:"Keep travelling, slowing to a stop",beats:4,tag:"Slow down"},
-  {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze"},
+  {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze striking a pose"},
   {id:"slow2",name:"Slow down, look",desc:"Move again, slowing to a stop, looking out at the audience",beats:4,tag:"Slow down, look at audience"},
-  {id:"freeze2",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze"},
+  {id:"freeze2",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze striking a pose"},
   {id:"bow",name:"Line",desc:"Form one line at the back, by the stage",beats:17,tag:"Form the line"},
   {id:"pose",name:"Pose",desc:"Strike a pose on count 2 of the last bar, just as the song is finishing",beats:4,fz:1,tag:"Strike a pose"}
 ];
