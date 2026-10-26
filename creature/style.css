@@ -24,12 +24,14 @@ header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-be
 h1{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.05;letter-spacing:-.01em;margin:0;text-wrap:balance}
 .back{font-family:var(--mono);font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;display:inline-block;margin-bottom:.5rem}
 .back:hover,.back:focus-visible{color:var(--accent)}
-.order{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-.order li{display:grid;grid-template-columns:4.2rem minmax(0,1fr);gap:4px 12px;padding:8px 6px;border-radius:6px}
+.order{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+.order li{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;align-content:start;gap:6px 10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.order li>div{display:contents}
+.order li.on{border-color:var(--accent)}
 .order li.on{background:color-mix(in srgb,var(--accent) 12%,transparent)}
 .order button.tm{font:500 .9rem var(--mono);padding:3px 6px;align-self:start;color:var(--accent);background:none;border:1px solid var(--line)}
 .order b{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
-.order ul{margin:3px 0 0;padding-left:1.1em;display:grid;gap:3px;font-size:.93rem}
+.order ul{grid-column:1/-1;margin:0;padding-left:1.1em;display:grid;gap:3px;font-size:.93rem}
 .sub{color:var(--muted);margin:0}
 .plot{overflow-x:auto;border-radius:10px;background:var(--floor)}
 .plot svg{display:block;width:100%;height:auto;max-height:78vh}

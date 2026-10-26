@@ -88,12 +88,17 @@ function crossing(lane,d0,tau){
   if(tau<0) return {x:-d0*(START-tau*QSPEED),dy:-LOOP_A,dir:d0,v:0,E};
   return loopAt(tau/C,E,d0,true);
 }
-// Pio: holds centre, then joins half a straight out of phase (centre → edge first)
-const PIO_DIR=-1;
+// Pio: holds centre, then runs in step with the smaller side's lines. He joins the first time
+// their leaders pass mid-stage after pioJoin beats, so he steps off his mark at x=0 with them.
+const PIO_D0=LEFT.length<=RIGHT.length?-1:1;
+function pioJoinAt(){
+  const C=Math.max(.5,state.cross);
+  return Math.max(1,Math.ceil(state.pioJoin/C-STRAIGHT/2))*C+STRAIGHT/2*C;
+}
 function pioCrossing(tau){
-  const C=Math.max(.5,state.cross), E=hw(PIOD)*EDGE_K, tj=tau-state.pioJoin;
-  if(tj<0) return {x:0,dy:0,dir:PIO_DIR,v:0,E,still:1};
-  const r=loopAt(tj/C+STRAIGHT/2,E,-PIO_DIR,false);
+  const C=Math.max(.5,state.cross), E=hw(PIOD)*EDGE_K, tj=tau-pioJoinAt();
+  if(tj<0) return {x:0,dy:0,dir:PIO_D0,v:0,E,still:1};
+  const r=loopAt(tau/C,E,PIO_D0,false);
   // fade Pio's loop offset in over the first beat so Pio doesn't jump sideways off the mark
   r.dy*=clamp(tj,0,1); return r;
 }
