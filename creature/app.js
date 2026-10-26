@@ -10,11 +10,12 @@ const BOW_HW=330;   // bow line half-width: a bit wider than the stage (300), do
 const AMP=.15, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
 const BOW=SECTIONS.findIndex(s=>s.id==="bow");
-let state={bpm:91,bpb:4,cross:8,pioJoin:8,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
+let state={bpm:89.92,bpb:4,cross:8,pioJoin:8,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
 try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){if(sv.beats[BOW]===20)sv.beats[BOW]=17;state=sv;if(state.pioJoin==null||state.pioJoin===16||state.pioJoin===24)state.pioJoin=8;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
 if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
+if(state.bpm===91)state.bpm=89.92;   // measured tempo (beat tracking), was a round guess
 state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"||x==="Freeze"||x==="Move edge to edge"||x==="Freeze striking a pose"||x==="Strike a scary pose"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
 
@@ -237,7 +238,7 @@ const countAt=b=>{const n=state.bpb,r=b-(state.beats[0]+state.beats[1]);return (
 let t=0, started=false, playing=false, last=0, clickOn=false, actx=null, lastBeat=-1;
 const bpmIn=document.getElementById("bpm"), bpbIn=document.getElementById("bpb");
 bpmIn.value=state.bpm;bpbIn.value=state.bpb;
-bpmIn.addEventListener("change",()=>{state.bpm=clamp(+bpmIn.value||91,40,240);bpmIn.value=state.bpm;save();updateBars();});
+bpmIn.addEventListener("change",()=>{state.bpm=clamp(+bpmIn.value||89.92,40,240);bpmIn.value=state.bpm;save();updateBars();});
 const pjIn=document.getElementById("piojoin");pjIn.value=state.pioJoin;
 pjIn.addEventListener("change",()=>{state.pioJoin=clamp(Math.round(+pjIn.value)||0,0,128);pjIn.value=state.pioJoin;save();draw();});
 const crossIn=document.getElementById("cross");crossIn.value=state.cross;
@@ -260,7 +261,7 @@ showPickup();
 {const dlg=document.getElementById("pickup-dlg");document.getElementById("pickup-info").addEventListener("click",()=>dlg.showModal());
  dlg.addEventListener("click",e=>{const r=dlg.getBoundingClientRect();   // tap outside the box closes
    if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dlg.close();});}
-const offset=191.12;   // song time (3:11.12) of count 1 of the run-in: the onset of that beat, measured
+const offset=190.69;   // song time (3:10.69) of count 1 of the run-in, from beat tracking the song (89.92 bpm, beats within 21 ms of the grid)
 const beatSec=()=>60/state.bpm;
 const preRun=()=>state.beats[0]+state.beats[1];
 const songAt=tt=>offset+(tt-preRun())*beatSec();
