@@ -14,7 +14,7 @@ if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state
 if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
 state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
-const BOW=SECTIONS.length-1;
+const BOW=SECTIONS.findIndex(s=>s.id==="bow");
 
 // build dancers
 const dancers=[];
