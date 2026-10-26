@@ -185,7 +185,7 @@ function updateBars(){
   document.getElementById("total").textContent=`Total ${T} beats · ${+(T/state.bpb).toFixed(2)} bars · ${Math.floor(sec/60)}:${String(Math.round(sec%60)).padStart(2,"0")} at ${state.bpm} BPM`;
 }
 const cast=document.getElementById("cast");
-[["Right side",RIGHT,"var(--right)"],["Left side",LEFT,"var(--left)"],["Centre",[["Pio","C"]],"var(--pio)"]].forEach(([h,list,c])=>{
+[["Left side",LEFT,"var(--left)"],["Right side",RIGHT,"var(--right)"],["Centre",[["Pio","C"]],"var(--pio)"]].forEach(([h,list,c])=>{
   const d=document.createElement("div");
   d.innerHTML=`<h3 style="color:${c}">${h}</h3><ul>${list.map(([n,ty,r])=>`<li><span class="sw" style="background:${ty!=="L"?c:"transparent"};border:2px solid ${c}"></span>${n}<span class="tag">${ty==="H"?"high":ty==="L"?"low":"centre"}</span>${r?'<span class="tag">responsible for forming line</span>':""}</li>`).join("")}</ul>`;
   cast.appendChild(d);
