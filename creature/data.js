@@ -55,7 +55,7 @@ const NOTES=[
  ["🏃","Run first","Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line."],
  ["↔️","Form lines","We run towards each other and we should form lines as per animation -> Starting from stage: Duncan Group → Luna Group → Duncan Group → Luna group"],
   {fig:"lines"},
- ["💥","First shape","First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat."],
+ ["💥","First shape","First shape (high or low) is in the middle: the first person strikes it behind the middle (a meter from the middle let's say), and we all strike on the beat."],
   ["Syncing the shapes is mostly for the beginning. Later we can go into more free formg"],
  ["🥁","On beat","Move on the beat. Adjust your pace to it, and keep it in your head the whole time."],
  ["🔄","Loop around","Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience."],
