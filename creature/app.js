@@ -5,7 +5,7 @@ const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
 const ROWS={"R-H0":.14,"L-H0":.29,"R-L0":.44,"L-L0":.59};   // lines a little apart, so the two groups don't brush past each other mid-stage
 const PIOD=.62, PIO_RUN=.72, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08+.064*2*RX/RY,   // bow line a further 6.4% of the floor width away from the stage
-      FILEGAP=40, LANEGAP=74, FREEZE_OUT=.2, PIO_OUT=.26;   // PIO_OUT: Pio drifts further, so at the freezes he stands below the banner text; LANEGAP: space between people in a line at the freezes
+      FILEGAP=40, LANEGAP=74, FREEZE_OUT=.2;   // LANEGAP: space between people in a line at the freezes
 const BOW_HW=330;   // bow line half-width: a bit wider than the stage (300), dots close together
 const AMP=.15, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
@@ -52,6 +52,7 @@ banner.textContent="FREEZE";
 const caption=el("text",{x:CX,y:BACK+RY*.84+30,"text-anchor":"middle",fill:"var(--onfloor-dim)","font-family":"Archivo, sans-serif","font-size":16,opacity:0});
 
 const layer=el("g",{});
+svg.append(banner,caption);   // tag text drawn above the dancers
 // comic "STRIKE SHAPE" burst at centre on the first beat of each strike-shape moment (drawn above the dancers)
 // big count 1 2 3 4 1 2 3 4 through "Guitar picks up", with GO on the beat they leave (drawn above the dancers)
 const POW_Y=BACK+RY*.24, pow=el("g",{opacity:0});
@@ -176,8 +177,8 @@ function follow(cross,tb,slot){
 function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
   // from the first slow-down on, everyone drifts FREEZE_OUT further from the stage, ready for the freezes
-  const ko=ease(clamp((tAbs-P0-state.beats[2])/(state.beats[3]||1),0,1)), fo=1+FREEZE_OUT*ko;
-  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(tau=>pioCrossing(beatWarp(tau)),tAbs-P0,0);return {x:r.x,depth:(PIOD+r.dy/RY)*(1+PIO_OUT*ko)};}
+  const fo=1+FREEZE_OUT*ease(clamp((tAbs-P0-state.beats[2])/(state.beats[3]||1),0,1));
+  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(tau=>pioCrossing(beatWarp(tau)),tAbs-P0,0);return {x:r.x,depth:(PIOD+r.dy/RY)*fo};}
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
   const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-pickupT(),tb),(laneCount[d.lane]-1)/2-d.order);
