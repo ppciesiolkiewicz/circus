@@ -187,7 +187,7 @@ function updateBars(){
 const cast=document.getElementById("cast");
 [["Right side",RIGHT,"var(--right)"],["Left side",LEFT,"var(--left)"],["Centre",[["Pio","C"]],"var(--pio)"]].forEach(([h,list,c])=>{
   const d=document.createElement("div");
-  d.innerHTML=`<h3 style="color:${c}">${h}</h3><ul>${list.map(([n,ty,r])=>`<li><span class="sw" style="background:${ty!=="L"?c:"transparent"};border:2px solid ${c}"></span>${n}<span class="tag">${ty==="H"?"high":ty==="L"?"low":"centre"}</span>${r?'<span class="tag">responsible</span>':""}</li>`).join("")}</ul>`;
+  d.innerHTML=`<h3 style="color:${c}">${h}</h3><ul>${list.map(([n,ty,r])=>`<li><span class="sw" style="background:${ty!=="L"?c:"transparent"};border:2px solid ${c}"></span>${n}<span class="tag">${ty==="H"?"high":ty==="L"?"low":"centre"}</span>${r?'<span class="tag">responsible for forming line</span>':""}</li>`).join("")}</ul>`;
   cast.appendChild(d);
 });
 
