@@ -9,7 +9,8 @@ const AMP=.65, DC2=90;
 
 let state={bpm:91,bpb:4,cross:8,pioJoin:16,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
 try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null)state.pioJoin=16;}
-if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);}catch(e){}
+if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
+state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
 const BOW=SECTIONS.length-1;
 
@@ -306,6 +307,7 @@ function draw(){
     document.getElementById("sec").textContent=name;
   }
   {let tag=t>=0?(state.tags[si]||""):(t>=-state.bpb?"Count-in":"");
+  const fst=SECTIONS[si].first; if(t>=0&&fst&&t-bd[si][0]<fst.beats)tag=fst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   if(si===BOW&&t>=bd[BOW][0]+state.beats[BOW]*.75&&tag)tag="Bow";
   banner.textContent=tag.toUpperCase();
