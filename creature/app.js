@@ -7,8 +7,8 @@ const PIOD=.62, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
 const AMP=.3, DC2=90;
 
-let state={bpm:91,bpb:4,cross:8,pioJoin:16,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
-try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null)state.pioJoin=16;}
+let state={bpm:91,bpb:4,cross:8,pioJoin:24,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
+try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null||state.pioJoin===16)state.pioJoin=24;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
 if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
@@ -110,6 +110,15 @@ function pioCrossing(tau){
   r.dy*=clamp(tj,0,1); return r;
 }
 // slot: place in the lane at the first freeze, in LANEGAPs from centre, leader furthest ahead
+// Beats (from 0) when the run's leaders cross centre, snapped to the beat; cached per setting
+let midCache={};
+function midBeats(){
+  const P0=state.beats[0]+state.beats[1], end=state.beats[2], key=[state.cross,P0,end,lead()].join();
+  if(midCache.key===key)return midCache.v;
+  const v=[];let prev=crossing("R-H0",-1,-lead()).x;
+  for(let tb=-lead()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0)v.push(P0+Math.max(0,Math.round(tb)));prev=x;}
+  midCache={key,v};return v;
+}
 function follow(cross,tb,slot){
   const B=state.beats.slice(2);
   if(tb<=B[0]){const r=cross(tb);return {x:r.x,dy:r.dy};}
@@ -260,8 +269,8 @@ function draw(){
     document.getElementById("sec").textContent=name;
   }
   {let tag=t>=0?(state.tags[si]||""):"";
-  const fst=SECTIONS[si].first, lst=SECTIONS[si].last;
-  const sub=t>=0&&fst&&t-bd[si][0]<fst.beats?fst.tag:"";
+  const md=SECTIONS[si].mid, lst=SECTIONS[si].last;
+  const sub=t>=0&&md&&midBeats().some(m=>t>=m&&t<m+md.beats)?md.tag:"";
   if(t>=0&&lst&&bd[si][1]-t<=lst.beats)tag=lst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   banner.textContent=tag.toUpperCase();
