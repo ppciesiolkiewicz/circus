@@ -136,14 +136,13 @@ function travelPos(d,tAbs){
 }
 function positions(tb){
   const bd=bounds(), bowStart=bd[BOW][0], TBow=state.beats[BOW];
-  if(tb<bowStart) return dancers.map(d=>({...travelPos(d,tb),bow:0}));
+  if(tb<bowStart) return dancers.map(d=>travelPos(d,tb));
   const frozen=dancers.map(d=>travelPos(d,bowStart));
   const idx=frozen.map((p,i)=>i).sort((a,b)=>frozen[a].x-frozen[b].x);
   const n=dancers.length, hw=RX*Math.sqrt(1-BOWD*BOWD)-20, sp=2*hw/(n-1);
   const out=new Array(n);
   const tau=tb-bowStart, u=TBow>0?ease(clamp(tau/(TBow*.7),0,1)):1;
-  const bowU=TBow>0?clamp((tau-TBow*.75)/(TBow*.25),0,1):0;
-  idx.forEach((di,k)=>{const f=frozen[di];out[di]={x:lerp(f.x,-hw+k*sp,u),depth:lerp(f.depth,BOWD,u),bow:Math.sin(bowU*Math.PI)};});
+  idx.forEach((di,k)=>{const f=frozen[di];out[di]={x:lerp(f.x,-hw+k*sp,u),depth:lerp(f.depth,BOWD,u)};});
   return out;
 }
 
@@ -284,8 +283,8 @@ function drawOrder(){
 function draw(){
   const tp=Math.max(0,t), P=positions(tp);
   dancers.forEach((d,i)=>{
-    const p=P[i], x=CX+p.x, y=BACK+p.depth*RY, s=1-.25*p.bow;
-    d.g.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${s.toFixed(3)})`);
+    const p=P[i], x=CX+p.x, y=BACK+p.depth*RY;
+    d.g.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)})`);
   });
   const bd=bounds();let si=bd.findIndex(([a,b])=>tp>=a&&tp<b);if(si<0)si=SECTIONS.length-1;
   const n=state.bpb;
@@ -303,13 +302,11 @@ function draw(){
     document.getElementById("bar").textContent=Math.floor(beat/n)+1;
     document.getElementById("cnt").textContent=beat%n+1;
     let name=SECTIONS[si].name;
-    if(si===BOW&&t>=bd[BOW][0]+state.beats[BOW]*.75)name="Bow";
     document.getElementById("sec").textContent=name;
   }
   {let tag=t>=0?(state.tags[si]||""):(t>=-state.bpb?"Count-in":"");
   const fst=SECTIONS[si].first; if(t>=0&&fst&&t-bd[si][0]<fst.beats)tag=fst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
-  if(si===BOW&&t>=bd[BOW][0]+state.beats[BOW]*.75&&tag)tag="Bow";
   banner.textContent=tag.toUpperCase();
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
   banner.setAttribute("opacity",tag&&started?1:0);}

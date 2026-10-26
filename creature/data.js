@@ -10,7 +10,7 @@ const SECTIONS=[
   {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze"},
   {id:"slow2",name:"Slow down, look",desc:"Move again, slowing to a stop, looking out at the audience",beats:4,tag:"Slow down, look at audience"},
   {id:"freeze2",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze"},
-  {id:"bow",name:"Line & bow",desc:"Form one line at the back, by the stage, and bow",beats:16,tag:"Form the line"}
+  {id:"bow",name:"Line",desc:"Form one line at the back, by the stage",beats:16,tag:"Form the line"}
 ];
 
 const RIGHT=[["Duncan","H",1],["Jaska","L"],["Dasha","H"],["Cesar","L"],["Iris","H"],["Lilith","L"],["Dawid","H"],["Sammi","L"]];
