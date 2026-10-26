@@ -251,7 +251,7 @@ function linesFig(){
   return f;
 }
 // "beat to beat": Duncan and Luna dots start on the first strike (count 1 of the run-in) and move in bursts,
-// a big step on count 1 and small ones on 2-4, crossing in the middle. Follows the playhead;
+// a long leap then a short one, crossing in the middle. Follows the playhead;
 // before Play it demos on its own clock.
 let beatRefs=null, beatEnd=null;   // beatEnd: the beat-to-beat Play stops at the end of the run & cross
 function beatFig(){
@@ -280,17 +280,16 @@ function beatPt(u,W,E,span,fr,y0,y1){
 function drawBeatFig(tt){
   if(!beatRefs)return;
   const {W,dun,lun,cnt}=beatRefs, E=W/2-100, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]);   // starts on the first strike (count 1 of the run-in)
-  const per=n+1, span=per*state.cross/n;   // units per bar (count 1 weighs double); one crossing = state.cross beats
-  // Each dot covers the same distance per bar in near-equal steps (count 1 a little bigger, small
-  // per-person differences). Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
-  const rnd=(sd,bar,i)=>{const x=Math.sin(sd*91.7+bar*12.9898+i*78.233)*43758.5453;return x-Math.floor(x);};
-  const steps=(sd,bar)=>{const w=[...Array(n)].map((_,i)=>(i===0?1.3:1)*(.8+.4*rnd(sd,bar,i)));const k=per/w.reduce((p,q)=>p+q,0);return w.map(x=>x*k);};
-  const unitsAt=(r,sd)=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,bar=Math.floor(b/n),st=steps(sd,bar),h=Math.min(1,u/.25);
-    let x=bar*per;for(let i=0;i<b-bar*n;i++)x+=st[i];return x+st[b-bar*n]*(.75*(1-(1-h)*(1-h))+.25*u);};
+  const span=state.cross;   // units per crossing: one unit per beat on average
+  // Everyone makes the same steps: a long leap then a short one, 65% / 35% of each two-beat stretch.
+  // Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
+  const st=[1.3,.7];
+  const unitsAt=r=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,h=Math.min(1,u/.25);
+    return Math.floor(b/2)*2+(b%2?st[0]:0)+st[b%2]*(.75*(1-(1-h)*(1-h))+.25*u);};
   const gapU=span*110/(2*E);   // followers keep a good gap behind
   const pulse=rel>=0?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
-  [[dun,true,1],[lun,false,5]].forEach(([pair,fr,sd])=>pair.forEach((d,i)=>{
-    const [x,y]=beatPt(unitsAt(rel,sd+i)-i*gapU,W,E,span,fr,d.y,d.y1);
+  [[dun,true],[lun,false]].forEach(([pair,fr])=>pair.forEach((d,i)=>{
+    const [x,y]=beatPt(unitsAt(rel)-i*gapU,W,E,span,fr,d.y,d.y1);
     d.g.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${pulse.toFixed(3)})`);}));
   cnt.textContent=rel<0?"":"COUNT "+(((Math.floor(rel)%n)+n)%n+1);
 }
