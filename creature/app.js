@@ -105,16 +105,18 @@ function pioCrossing(tau){
   // fade Pio's loop offset in over the first beat so Pio doesn't jump sideways off the mark
   r.dy*=clamp(tj,0,1); return r;
 }
-function follow(cross,tb){
+// slot: place in the lane at the first freeze, in LANEGAPs from centre, leader furthest ahead
+function follow(cross,tb,slot){
   const B=state.beats.slice(2);
   if(tb<=B[0]){const r=cross(tb);return {x:r.x,dy:r.dy};}
   const st=cross(B[0]); let x=st.x, t=tb-B[0];
   const lim=st.E+TURN_R;
   const room=dx=>Math.max(0,(st.dir>0?lim-dx:dx+lim)*.9);
-  const d1=Math.min(st.v*B[1]/2,room(x));
+  // first slow-down: everyone drifts in to the middle of the stage instead of on to the edges
+  const xt=st.dir*slot*LANEGAP;
   const out=xx=>({x:xx,dy:st.dy});
-  if(t<B[1]){const u=t/B[1];return out(x+st.dir*d1*(1-(1-u)*(1-u)));}
-  x+=st.dir*d1;t-=B[1];
+  if(t<B[1]){const u=t/B[1];return out(lerp(x,xt,1-(1-u)*(1-u)));}
+  x=xt;t-=B[1];
   if(t<B[2])return out(x); t-=B[2];
   const d2=st.v>0?Math.min(DC2,room(x)):0;
   if(t<B[3]){const u=t/B[3];return out(x+st.dir*d2*(1-(1-u)*(1-u)));}
@@ -122,10 +124,10 @@ function follow(cross,tb){
 }
 function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
-  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(pioCrossing,tAbs-P0);return {x:r.x,depth:PIOD+r.dy/RY};}
+  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(pioCrossing,tAbs-P0,0);return {x:r.x,depth:PIOD+r.dy/RY};}
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
-  const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(0,tb));
+  const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(0,tb),(laneCount[d.lane]-1)/2-d.order);
   const x=r.x, q=Math.abs(x)-START;   // still waiting in the wing: queue runs down the wing in entrance order
   if(q>0) return {x:Math.sign(x)*START,depth:ENTRY+q/RY};
   const inside=ease(clamp((START-Math.abs(x))/150,0,1));
