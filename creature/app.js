@@ -195,9 +195,9 @@ audio.addEventListener("error",()=>{if(audio.src.endsWith("/audio/dope-show.mp3"
 const offIn=document.getElementById("offset"), countIn=document.getElementById("countin"), speedSel=document.getElementById("speed");
 function parseOff(v){const m=String(v).trim().match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);return m?(+(m[1]||0))*60+(+m[2]):null;}
 function fmtOff(x){x=Math.max(0,x);const m=Math.floor(x/60);return m+":"+(x-m*60).toFixed(2).padStart(5,"0");}
-let offset=176; try{const o=localStorage.getItem("blocking-offset");if(o!==null&&!isNaN(+o))offset=+o;}catch(e){}
+let offset=191; try{const o=localStorage.getItem("blocking-offset-311");if(o!==null&&!isNaN(+o))offset=+o;}catch(e){}
 offIn.value=fmtOff(offset);
-function setOff(x){offset=Math.max(0,x);offIn.value=fmtOff(offset);try{localStorage.setItem("blocking-offset",offset);}catch(e){}if(playing&&hasSong)syncAudio();}
+function setOff(x){offset=Math.max(0,x);offIn.value=fmtOff(offset);try{localStorage.setItem("blocking-offset-311",offset);}catch(e){}if(playing&&hasSong)syncAudio();}
 offIn.addEventListener("change",()=>{const v=parseOff(offIn.value);if(v===null){offIn.value=fmtOff(offset);}else setOff(v);});
 document.getElementById("nm").addEventListener("click",()=>setOff(offset-.05));
 document.getElementById("np").addEventListener("click",()=>setOff(offset+.05));
