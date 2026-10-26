@@ -59,6 +59,7 @@ const NOTES=[
   ["Syncing the shapes is mostly for the beginning. Later we can go into more free form, but stay on the beat."],
  ["🥁","On beat","Move on the beat. Adjust your pace to it, and keep it in your head the whole time."],
  ["🎶","Beat to beat","I’m thinking it would be nice to move “beat to beat” (see animation)."],
+  ["You can leap forward on each beat as much as you want, but that’s mainly on the beat when you give yourself the acceleration."],
   {fig:"beat"},
  ["🔄","Loop around","Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience."],
   ["This is just to prevent us bumping into each other."]

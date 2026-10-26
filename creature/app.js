@@ -256,7 +256,7 @@ function linesFig(){
 // before Play it demos on its own clock.
 let beatRefs=null;
 function beatFig(){
-  const W=420,H=108,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
+  const W=520,H=108,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
   f.setAttribute("role","img");f.setAttribute("aria-label","Two Duncan dots and two Luna dots moving towards each other in hits on the beat, and crossing");
   el("line",{x1:W/2,y1:8,x2:W/2,y2:H-26,stroke:"var(--floor-edge)","stroke-dasharray":"2 6"},f);
   const mk=(y,col,d)=>{const g=el("g",{},f);el("circle",{r:13,fill:col,stroke:col,"stroke-width":2.5},g);
@@ -274,23 +274,29 @@ function beatX(u,W,E,span,fromRight){
 }
 function drawBeatFig(tt){
   if(!beatRefs)return;
-  const {W,dun,lun,cnt}=beatRefs, E=W/2-40, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]-RUN_LEAD);
-  const step=b=>((b%n)+n)%n===0?2:1, per=n+1, span=per*state.cross/n;   // units per bar: 2 on count 1, 1 on the others
-  // each step is a hit: done in the first quarter of the beat, then hold
-  const unitsAt=r=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,h=Math.min(1,u/.25);let x=Math.floor(b/n)*per;for(let i=b-b%n;i<b;i++)x+=step(i);return x+step(b)*(1-(1-h)*(1-h));};
-  const u=unitsAt(rel), gapU=span*34/(2*E);   // follower one dot-gap behind
+  const {W,dun,lun,cnt}=beatRefs, E=W/2-100, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]-RUN_LEAD);
+  const per=n+1, span=per*state.cross/n;   // units per bar (count 1 weighs double); one crossing = state.cross beats
+  // Each dot covers the same distance per bar, but splits it differently between the beats (a bigger leap
+  // here, a smaller one there). Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
+  const rnd=(sd,bar,i)=>{const x=Math.sin(sd*91.7+bar*12.9898+i*78.233)*43758.5453;return x-Math.floor(x);};
+  const steps=(sd,bar)=>{const w=[...Array(n)].map((_,i)=>(i===0?2:1)*(.5+rnd(sd,bar,i)));const k=per/w.reduce((p,q)=>p+q,0);return w.map(x=>x*k);};
+  const unitsAt=(r,sd)=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,bar=Math.floor(b/n),st=steps(sd,bar),h=Math.min(1,u/.25);
+    let x=bar*per;for(let i=0;i<b-bar*n;i++)x+=st[i];return x+st[b-bar*n]*(.75*(1-(1-h)*(1-h))+.25*u);};
+  const gapU=span*80/(2*E);   // followers keep a good gap behind
   const pulse=rel>=0?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
-  [[dun,true],[lun,false]].forEach(([pair,fr])=>pair.forEach((d,i)=>{
-    d.g.setAttribute("transform",`translate(${beatX(u-i*gapU,W,E,span,fr).toFixed(1)},${d.y}) scale(${pulse.toFixed(3)})`);}));
+  [[dun,true,1],[lun,false,5]].forEach(([pair,fr,sd])=>pair.forEach((d,i)=>{
+    d.g.setAttribute("transform",`translate(${beatX(unitsAt(rel,sd+i)-i*gapU,W,E,span,fr).toFixed(1)},${d.y}) scale(${pulse.toFixed(3)})`);}));
   cnt.textContent=rel<0?"":"COUNT "+(((Math.floor(rel)%n)+n)%n+1);
 }
 NOTES.forEach(x=>{
   if(x.fig==="beat"){const w=document.createElement("div");w.className="figwrap";w.appendChild(beatFig());
-    const b=document.createElement("button");b.className="primary beatplay";b.textContent="Play";b.addEventListener("click",()=>{
-      // start the song a bar before the lines leave, so the dots move almost straight away
-      if(!playing){t=state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb;started=true;}
-      playBtn.click();});
-    w.appendChild(b);beatRefs.btn=b;notesEl.lastElementChild.appendChild(w);return;}
+    // start the song a bar before the lines leave, so the dots move almost straight away
+    const from=()=>state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb;
+    const b=document.createElement("button");b.className="primary beatplay";b.textContent="Play";
+    b.addEventListener("click",()=>{if(!playing){t=from();started=true;}playBtn.click();});
+    const rs=document.createElement("button");rs.className="beatplay";rs.textContent="Restart";
+    rs.addEventListener("click",()=>{if(playing)stop();t=from();started=true;playBtn.click();});
+    w.append(b,rs);beatRefs.btn=b;notesEl.lastElementChild.appendChild(w);return;}
   if(x.fig==="lines"){const w=document.createElement("div");w.className="figwrap";w.appendChild(linesFig());notesEl.lastElementChild.appendChild(w);return;}
   if(x.length===3&&/^\P{L}/u.test(x[0])){   // [icon, title, text]; sub-points start with a letter
     const [ic,ti,tx]=x,li=document.createElement("li"),i=document.createElement("span"),h=document.createElement("b");
@@ -406,6 +412,6 @@ renderTable();
  (function beatTick(now){
    // demo clock: from 1 bar before the lines leave, looping every 4 bars
    const demo=(state.beats[0]+state.beats[1]-RUN_LEAD-state.bpb)+((now-t0)/1000/beatSec())%(4*state.bpb+state.bpb);
-   drawBeatFig(started?t:demo);if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playBtn.textContent;
+   drawBeatFig(started?t:demo);if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playing?"Stop":"Play";
    requestAnimationFrame(beatTick);})(t0);}
 })();
