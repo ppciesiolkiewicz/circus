@@ -5,7 +5,7 @@ const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
 const ROWS={"R-H0":.11,"L-H0":.20,"R-L0":.29,"L-L0":.38};
 const PIOD=.62, PIO_RUN=.47, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
-const AMP=.3, DC2=90;
+const AMP=.3, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
 const BOW=SECTIONS.findIndex(s=>s.id==="bow");
 let state={bpm:91,bpb:4,cross:8,pioJoin:8,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
@@ -131,9 +131,9 @@ function follow(cross,tb,slot){
   if(t<B[1]){const u=t/B[1];return out(lerp(x,xt,1-(1-u)*(1-u)));}
   x=xt;t-=B[1];
   if(t<B[2])return out(x); t-=B[2];
-  const d2=st.v>0?Math.min(DC2,room(x)):0;
-  if(t<B[3]){const u=t/B[3];return out(x+st.dir*d2*(1-(1-u)*(1-u)));}
-  return out(x+st.dir*d2);
+  const d2=st.v>0?Math.min(DC2,room(x)):0, out2=(xx,k)=>({x:xx,dy:st.dy+DZ2*k});
+  if(t<B[3]){const u=t/B[3], k=1-(1-u)*(1-u);return out2(x+st.dir*d2*k,k);}
+  return out2(x+st.dir*d2,1);
 }
 function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
