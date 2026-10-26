@@ -16,14 +16,20 @@ const SECTIONS=[
 const RIGHT=[["Duncan","H",1],["Jaska","L"],["Dasha","H"],["Cesar","L"],["Iris","H"],["Lilith","L"],["Dawid","H"],["Sammi","L"]];
 const LEFT=[["Luna","H",1],["Cody","L"],["Keto","H"],["Tal","L"],["Sunshine","H"],["Kim","L"],["Cassie","H"]];
 
-// Running order: [song time in seconds, section, lines]
+// Running order: [song time in seconds, section, lines]. A line can be {cue, do:[...]}:
+// cue is the first few words of the lyric only (never full lyric lines), do is what happens on it.
 const ORDER=[
  [0,"Intro",["go in"]],
  [6,"Drums",["go in"]],
- [16,"Verse",["Hot-Dog man teases me with fire stick for fun to entertain the audience","We always jitter on a 1st bot bit of the line","Changing the who is winning and who is scared and crawling back"]],
+ [16,"Verse",["Scientist teases me with fire stick for fun to entertain the audience","We always jitter on a 1st bot bit of the line","Changing the who is winning and who is scared and crawling back",
+   {cue:"The, the, the",do:["scientists hits the stage and yells to wakeup the creature"]},
+   {cue:"Drugs, they say",do:["creature jumps out","the scientist backs up"]},
+   {cue:"We love in vain",do:["the roles turn now the scientist leaps at creature with stick and creature backs down"]},
+   {cue:"The cops and queers",do:["creature goes around and role change - scientist is scared and backs down"]},
+   {cue:"Hate today",do:["scientist leaps fast at creature and creature falls on the back and crawls in a crab"]}]],
  [32,"Verse",[]],
  [37,"Chorus",["We both turn towards audience and slow down, show teeth, bit creepy, movement more fluid but out of alignment"]],
- [48,"Chorus",["I stand up - release the chain or something","Hot-Dog man looks at me scared screaming and drops the stuff, does 180deg turn, runs into the wall, bounces off, collects himself and keeps running in panic","I grab a staff put it in my neck crawl a bit aiming at audience and leapt at them"]],
+ [48,"Chorus",["I stand up - release the chain or something","Scientist looks at me scared screaming and drops the stuff, does 180deg turn, runs into the wall, bounces off, collects himself and keeps running in panic","I grab a staff put it in my neck crawl a bit aiming at audience and leapt at them"]],
  [69,"Chorus",["Animal crawl with staff possible in a hand across audience line"]],
  [80,"Verse",["Contemporary with a spin and jump and bit of creature landing and feel","drop"]],
  [102,"Verse",["back to crawling"]],

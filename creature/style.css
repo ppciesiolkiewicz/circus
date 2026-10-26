@@ -33,6 +33,9 @@ h1{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.05;le
 @media (max-width:600px){.order>li{grid-template-columns:4.2rem minmax(0,1fr)}.order>li ul{grid-column:2}}
 .order button.tm{font:500 .9rem var(--mono);padding:3px 6px;align-self:start;color:var(--accent);background:none;border:1px solid var(--line)}
 .order b{font-family:var(--display);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.order li.cueline{list-style:none;margin-left:-1.1em;margin-top:4px}
+.order q.lyr{font-style:italic;color:var(--accent);quotes:"“" "”"}
+.order li.cueline ul{margin-top:2px}
 .order ul{margin:0;padding-left:1.1em;display:grid;gap:3px;font-size:.93rem}
 .sub{color:var(--muted);margin:0}
 .plot{overflow-x:auto;border-radius:10px;background:var(--floor)}

@@ -47,8 +47,6 @@ lbl(CX,BACK-22,"STAGE");lbl(CX,BACK+RY+34,"AUDIENCE");
 lbl(CX-RX+6,BACK+RY*.16,"HIGH","start");lbl(CX-RX+30,BACK+RY*.35,"LOW","start");
 const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--freeze)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":28,"letter-spacing":"5",opacity:0});
 banner.textContent="FREEZE";
-// running count, top-left corner of the plot
-const stCount=el("text",{x:24,y:78,fill:"var(--onfloor)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":64});
 
 const layer=el("g",{});
 dancers.forEach(d=>{
@@ -221,7 +219,11 @@ ORDER.forEach(([sec,label,lines])=>{
   b.addEventListener("click",()=>seekSong(sec));
   const body=document.createElement("div");
   const h=document.createElement("b");h.textContent=label;body.appendChild(h);
-  if(lines.length){const ul=document.createElement("ul");lines.forEach(x=>{const l=document.createElement("li");l.textContent=x;ul.appendChild(l);});body.appendChild(ul);}
+  if(lines.length){const ul=document.createElement("ul");lines.forEach(x=>{const l=document.createElement("li");
+    if(typeof x==="string")l.textContent=x;
+    else{const q=document.createElement("q");q.className="lyr";q.textContent=x.cue+"…";const sub=document.createElement("ul");
+      x.do.forEach(y=>{const s=document.createElement("li");s.textContent=y;sub.appendChild(s);});l.classList.add("cueline");l.append(q,sub);}
+    ul.appendChild(l);});body.appendChild(ul);}
   li.append(b,body);orderEl.appendChild(li);
 });
 function seekSong(sec){
@@ -265,8 +267,6 @@ function draw(){
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
   banner.setAttribute("opacity",tag&&started?1:0);}
   if(!started)document.getElementById("sec").textContent="Ready";
-  {const c=document.getElementById("cnt").textContent;
-  stCount.textContent=started?c:"";}
   SECTIONS.forEach((s,i)=>document.getElementById("seg-"+i).classList.toggle("on",started&&t>=0&&i===si));
   document.querySelectorAll("#rows tr").forEach((el,i)=>el.classList.toggle("on",started&&t>=0&&i===si));
   const S=startT(), tl=Math.max(S,t);
