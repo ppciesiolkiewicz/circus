@@ -7,14 +7,14 @@ const PIOD=.62, PIO_RUN=.47, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
 const AMP=.3, DC2=90;
 
+const BOW=SECTIONS.findIndex(s=>s.id==="bow");
 let state={bpm:91,bpb:4,cross:8,pioJoin:8,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
-try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null||state.pioJoin===16||state.pioJoin===24)state.pioJoin=8;}
+try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){if(sv.beats[BOW]===20)sv.beats[BOW]=17;state=sv;if(state.pioJoin==null||state.pioJoin===16||state.pioJoin===24)state.pioJoin=8;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
 if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
 state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
-const BOW=SECTIONS.findIndex(s=>s.id==="bow");
 
 // build dancers
 const dancers=[];
