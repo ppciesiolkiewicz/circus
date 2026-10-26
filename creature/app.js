@@ -88,8 +88,10 @@ function loopAt(c,E,d0,offstageStart){
   const al=(u-STRAIGHT)/(1-STRAIGHT)*Math.PI, w=Math.PI/(C*(1-STRAIGHT));
   return {x:dir*E+dir*TURN_R*Math.sin(al),dy:sgn*LOOP_A*Math.cos(al),dir:Math.cos(al)>=0?dir:-dir,v:TURN_R*w*Math.abs(Math.cos(al)),E};
 }
+// Lines leave the wings 2 beats early (on 3 of the last guitar bar), so on count 1 of the run-in the leaders are well on the way to centre
+const lead=()=>2;
 function crossing(lane,d0,tau){
-  const C=Math.max(.5,state.cross), E=hw(ROWS[lane])*EDGE_K;
+  const C=Math.max(.5,state.cross), E=hw(ROWS[lane])*EDGE_K; tau+=lead();
   if(tau<0) return {x:-d0*(START-tau*QSPEED),dy:-LOOP_A,dir:d0,v:0,E};
   return loopAt(tau/C,E,d0,true);
 }
@@ -101,6 +103,7 @@ function pioJoinAt(){
   return Math.max(1,Math.ceil(state.pioJoin/C-STRAIGHT/2))*C+STRAIGHT/2*C;
 }
 function pioCrossing(tau){
+  tau+=lead();
   const C=Math.max(.5,state.cross), E=hw(PIOD)*EDGE_K, tj=tau-pioJoinAt();
   if(tj<0) return {x:0,dy:0,dir:PIO_D0,v:0,E,still:1};
   const r=loopAt(tau/C,E,PIO_D0,false);
@@ -129,7 +132,7 @@ function travelPos(d,tAbs){
   if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(pioCrossing,tAbs-P0,0);return {x:r.x,depth:PIOD+r.dy/RY};}
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
-  const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(0,tb),(laneCount[d.lane]-1)/2-d.order);
+  const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(-lead(),tb),(laneCount[d.lane]-1)/2-d.order);
   const x=r.x, q=Math.abs(x)-START;   // still waiting in the wing: queue runs down the wing in entrance order
   if(q>0) return {x:Math.sign(x)*START,depth:ENTRY+q/RY};
   const inside=ease(clamp((START-Math.abs(x))/150,0,1));
