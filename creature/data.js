@@ -49,6 +49,7 @@ const ORDER=[
 // Things to keep in mind: [icon, short red title, text]; a plain array of strings after a point is its sub-points;
 // {fig:"lines"} draws the line order (back to front) under the point above it;
 // {fig:"beat"} two dots moving beat to beat, in time with the song.
+// {fig:"loops"} moves the two loop animations (in index.html) under the point above it.
 const NOTES=[
  ["😬","Be creepy","When slowing down and posing: be a bit scary / creepy, show teeth."],
  ["🧭","Know yourself","Know which side you’re on and which shape you strike. If you’re planning shapes that need more space, like cartwheels, communicate with Duncan and Luna so we factor this in."],
@@ -60,6 +61,7 @@ const NOTES=[
  ["🥁","On beat","Move on the beat. Adjust your pace to it, and keep it in your head the whole time."],
  ["🔄","Loop around","Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience."],
   ["This is just to prevent us bumping into each other."],
+  {fig:"loops"},
  ["🎶","Beat to beat","I’m thinking it would be nice to move “beat to beat” (see animation below)."],
   ["You can leap forward on each beat as much as you want, but that’s mainly on the beat when you give yourself the acceleration.",
    "Just an idea – I think this could help us avoiding chaos at the beginning when running towards each other."],

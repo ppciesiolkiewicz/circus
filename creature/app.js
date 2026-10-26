@@ -252,7 +252,7 @@ function linesFig(){
 }
 // "beat to beat": Duncan and Luna dots start on the first strike (count 1 of the run-in) and move in bursts,
 // a long leap then a short one, crossing in the middle. Follows the playhead;
-// before Play it demos on its own clock.
+// before Play it holds still on the start marks.
 let beatRefs=null, beatEnd=null;   // beatEnd: the beat-to-beat Play stops at the end of the run & cross
 function beatFig(){
   const W=520,H=168,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
@@ -303,6 +303,7 @@ NOTES.forEach(x=>{
     const rs=document.createElement("button");rs.className="beatplay";rs.textContent="Restart";
     rs.addEventListener("click",()=>{if(playing)stop();t=from();started=true;playBtn.click();beatEnd=runEnd();});
     w.append(b,rs);beatRefs.btn=b;notesEl.lastElementChild.appendChild(w);return;}
+  if(x.fig==="loops"){notesEl.lastElementChild.appendChild(document.querySelector(".loops"));return;}
   if(x.fig==="lines"){const w=document.createElement("div");w.className="figwrap";w.appendChild(linesFig());notesEl.lastElementChild.appendChild(w);return;}
   if(x.length===3&&/^\P{L}/u.test(x[0])){   // [icon, title, text]; sub-points start with a letter
     const [ic,ti,tx]=x,li=document.createElement("li"),i=document.createElement("span"),h=document.createElement("b");
@@ -415,11 +416,9 @@ document.getElementById("click").addEventListener("click",e=>{
 scrub.addEventListener("input",()=>{t=+scrub.value;started=true;lastBeat=Math.floor(t);if(hasSong)syncAudio();draw();});
 
 renderTable();
-{const t0=performance.now();
- (function beatTick(now){
-   // demo clock: from 1 bar before the lines leave, looping every 4 bars
-   const demo=(state.beats[0]+state.beats[1]-state.bpb)+((now-t0)/1000/beatSec())%(4*state.bpb+state.bpb);
+(function beatTick(){
+   // before Play the dots wait on their start marks (the first strike)
    if(beatEnd!==null&&playing&&t>=beatEnd){stop();beatEnd=null;}
-   drawBeatFig(started?t:demo);if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playing?"Stop":"Play";
-   requestAnimationFrame(beatTick);})(t0);}
+   drawBeatFig(started?t:preRun());if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playing?"Stop":"Play";
+   requestAnimationFrame(beatTick);})();
 })();
