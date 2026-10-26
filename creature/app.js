@@ -48,7 +48,6 @@ const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--fr
 banner.textContent="FREEZE";
 // running count, top-left corner of the plot
 const stCount=el("text",{x:24,y:78,fill:"var(--onfloor)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":64});
-const stBar=el("text",{x:26,y:100,fill:"var(--onfloor-dim)","font-family":"Archivo, sans-serif","font-size":14,"letter-spacing":"2"});
 
 const layer=el("g",{});
 dancers.forEach(d=>{
@@ -319,8 +318,8 @@ function draw(){
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
   banner.setAttribute("opacity",tag&&started?1:0);}
   if(!started)document.getElementById("sec").textContent="Ready";
-  {const c=document.getElementById("cnt").textContent, b=document.getElementById("bar").textContent;
-  stCount.textContent=started?c:""; stBar.textContent=started?(b==="–"?(t<0&&t>=-state.bpb?"COUNT-IN":""):"BAR "+b):"";}
+  {const c=document.getElementById("cnt").textContent;
+  stCount.textContent=started?c:"";}
   SECTIONS.forEach((s,i)=>document.getElementById("seg-"+i).classList.toggle("on",started&&t>=0&&i===si));
   const ci=document.getElementById("seg-ci"); if(ci)ci.classList.toggle("on",started&&t<0&&t>=-state.bpb);
   document.querySelectorAll("#rows tr").forEach((el,i)=>el.classList.toggle("on",started&&t>=0&&i===si));
