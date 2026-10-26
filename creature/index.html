@@ -146,7 +146,7 @@ select{font:500 .95rem var(--body);padding:5px 6px;border-radius:6px;border:1px 
   </div>
 
   <div class="card songbar">
-    <label class="file"><span id="songname">Load the song (mp3)</span><input type="file" id="song" accept="audio/*"></label>
+    <label class="file"><span id="songname">♪ dope-show.mp3 &middot; change</span><input type="file" id="song" accept="audio/*"></label>
     <label>Run-in starts at <input type="text" id="offset" value="2:56.00" inputmode="decimal" aria-describedby="offhelp"></label>
     <span class="nudge"><button id="nm">−0.05s</button><button id="np">+0.05s</button></span>
     <label><input type="checkbox" id="countin" checked> 1-bar count-in</label>
@@ -247,7 +247,7 @@ el("path",{d:`M${CX-RX},${BACK} A${RX},${RY} 0 0 0 ${CX+RX},${BACK} Z`,fill:"col
 el("line",{x1:CX,y1:BACK,x2:CX,y2:BACK+RY,stroke:"var(--floor-edge)","stroke-dasharray":"2 8"});
 const lbl=(x,y,t,anchor)=>{const e=el("text",{x,y,"text-anchor":anchor||"middle",fill:"var(--onfloor-dim)","font-family":"Archivo, sans-serif","font-size":15,"letter-spacing":"2"});e.textContent=t;return e;};
 lbl(6,BACK-20,"DUNCAN'S WING","start");lbl(1114,BACK-20,"LUNA'S WING","end");
-lbl(CX,BACK-74,"ELEVATED STAGE");lbl(CX,BACK-22,"STAGE");lbl(CX,BACK+RY+34,"AUDIENCE");
+lbl(CX,BACK-22,"STAGE");lbl(CX,BACK+RY+34,"AUDIENCE");
 lbl(CX-RX+6,BACK+RY*.16,"HIGH","start");lbl(CX-RX+30,BACK+RY*.35,"LOW","start");
 const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--freeze)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":28,"letter-spacing":"5",opacity:0});
 banner.textContent="FREEZE";
@@ -391,7 +391,9 @@ function tick(accent){
   o.frequency.value=accent?1500:1000;g.gain.setValueAtTime(.25,actx.currentTime);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+.06);
   o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.07);
 }
-const audio=new Audio(); audio.preservesPitch=true; let hasSong=false;
+const audio=new Audio(); audio.preservesPitch=true; let hasSong=true;
+audio.src=location.protocol==="file:"?"../audio/dope-show.mp3":"/audio/dope-show.mp3";
+audio.addEventListener("error",()=>{if(audio.src.endsWith("/audio/dope-show.mp3")){hasSong=false;document.getElementById("songname").textContent="Load the song (mp3)";}});
 const offIn=document.getElementById("offset"), countIn=document.getElementById("countin"), speedSel=document.getElementById("speed");
 function parseOff(v){const m=String(v).trim().match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);return m?(+(m[1]||0))*60+(+m[2]):null;}
 function fmtOff(x){x=Math.max(0,x);const m=Math.floor(x/60);return m+":"+(x-m*60).toFixed(2).padStart(5,"0");}
