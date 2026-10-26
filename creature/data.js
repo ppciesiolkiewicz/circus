@@ -5,8 +5,8 @@
 // so about 2 people of each line are past the middle and 2 still to come. The run-in times itself from this.
 const LEAD_PAST=1;
 // Pickup: how many beats before the 2nd bar of "Guitar picks up" everyone leaves the wings
-// (1 = on the 4 of the 1st bar). The default; the "Start before" switch next to Play changes it (0, 1 or 2).
-const PICKUP_BEATS=1;
+// (2 = on the 3 of the 1st bar). The default; the "Start before" switch next to Play changes it (0, 1 or 2).
+const PICKUP_BEATS=2;
 
 // mid: a tag shown instead of the main tag for its beats each time the lines' leaders reach centre
 // last: a tag shown instead of the main tag for the section's closing beats ("pickup" = from when they leave the wings)

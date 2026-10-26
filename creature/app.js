@@ -53,7 +53,7 @@ const caption=el("text",{x:CX,y:BACK+RY*.84+30,"text-anchor":"middle",fill:"var(
 
 const layer=el("g",{});
 // comic "STRIKE SHAPE" burst at centre on the first beat of each strike-shape moment (drawn above the dancers)
-// big countdown 1 2 3 4 from the start of "Guitar picks up", with GO on the beat they leave (drawn above the dancers)
+// big count 1 2 3 4 1 2 3 4 through "Guitar picks up", with GO on the beat they leave (drawn above the dancers)
 const POW_Y=BACK+RY*.24, pow=el("g",{opacity:0});
 {const pts=[];for(let i=0;i<28;i++){const a=i/28*2*Math.PI, r=i%2?44:70+(i%4?0:8);pts.push((r*1.45*Math.cos(a)).toFixed(1)+","+(r*Math.sin(a)).toFixed(1));}
  el("polygon",{points:pts.join(" "),fill:"#ffd23f",stroke:"#1b1b1f","stroke-width":3,"stroke-linejoin":"round"},pow);
@@ -400,8 +400,10 @@ function draw(){
   {const D=1+.1/beatSec();   // one beat plus 100ms
   const m=started&&t>=0?midBeats().find(m=>t>=m&&t<m+D):undefined;
   {const go=state.beats[0]+state.beats[1]-pickupT(), b0=state.beats[0], b=Math.floor(t);
-   if(started&&t>=b0&&t<go+1){const k=t-b;
-     bigCount.textContent=b>=go?"GO":b-b0+1;
+   if(started&&t>=b0&&t<state.beats[0]+state.beats[1]){   // all of "Guitar picks up"
+    const k=t-b;
+     const n=countAt(b);   // the GO beat keeps its count: "4 – GO", "3 – GO", "1 – GO"
+     bigCount.textContent=b===go?n+" – GO":n;
      bigCount.setAttribute("opacity",Math.max(0,1-k*.6));
      bigCount.setAttribute("transform",`translate(${CX},${BACK+RY*.42}) scale(${(1.15-.15*Math.min(1,k/.2)).toFixed(3)})`);}
    else bigCount.setAttribute("opacity",0);}
