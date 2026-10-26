@@ -220,7 +220,9 @@ function syncAudio(){audio.playbackRate=+speedSel.value;const at=songAt(t);if(at
 speedSel.addEventListener("change",()=>{audio.playbackRate=+speedSel.value;});
 
 const notesEl=document.getElementById("notes");
-NOTES.forEach(txt=>{const li=document.createElement("li");li.textContent=txt;notesEl.appendChild(li);});
+NOTES.forEach(x=>{
+  if(Array.isArray(x)){const ul=document.createElement("ul");x.forEach(y=>{const li=document.createElement("li");li.textContent=y;ul.appendChild(li);});notesEl.lastElementChild.appendChild(ul);return;}
+  const li=document.createElement("li");li.textContent=x;notesEl.appendChild(li);});
 const orderEl=document.getElementById("order");
 const mmss=x=>Math.floor(x/60)+":"+String(Math.round(x%60)).padStart(2,"0");
 ORDER.forEach(([sec,label,lines])=>{
