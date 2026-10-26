@@ -282,7 +282,7 @@ function draw(){
     pow.setAttribute("opacity",k<D-.3?1:Math.max(0,1-(k-(D-.3))/.3));
     pow.setAttribute("transform",`translate(${CX},${POW_Y}) rotate(-8) scale(${sc.toFixed(3)})`);}}
   {let tag=t>=0?(state.tags[si]||""):"";
-  const md=SECTIONS[si].mid, lst=SECTIONS[si].last;
+  const md=(SECTIONS.find(s=>s.mid)||{}).mid, lst=SECTIONS[si].last;   // strike moments can run into the slow-down
   if(t>=0&&md&&midBeats().some(m=>t>=m&&t<m+md.beats))tag=md.tag;
   if(t>=0&&lst&&bd[si][1]-t<=lst.beats)tag=lst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
