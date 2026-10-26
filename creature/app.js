@@ -250,7 +250,7 @@ function tick(accent){
   o.connect(g).connect(actx.destination);o.start();o.stop(actx.currentTime+.07);
 }
 const audio=new Audio(); audio.preservesPitch=true; let hasSong=true;
-audio.src=location.protocol==="file:"?"../audio/dope-show.mp3":"/audio/dope-show.mp3";
+audio.src=(location.protocol==="file:"?"../audio/dope-show.mp3":"/audio/dope-show.mp3")+"?v=cbr";   // constant bitrate, so seeks (Play, Reset, scrub) land exactly
 audio.addEventListener("error",()=>{hasSong=false;});
 const speedSel=document.getElementById("speed");
 const pickupBtns=[...document.querySelectorAll("#pickup button[data-p]")];
