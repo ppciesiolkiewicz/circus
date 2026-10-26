@@ -267,7 +267,7 @@ function beatFig(){
   const cnt=el("text",{x:W/2,y:H-8,"text-anchor":"middle",class:"lb"},f);
   beatRefs={W,dun,lun,cnt};return f;
 }
-// where a dot is after `u` units: a straight edge to edge, then a half-circle turn onto the return track
+// where a dot is after `u` units: a straight side to side, then a half-circle turn onto the return track
 // (Luna clockwise, Duncan counter-clockwise, as on the stage plot); negative u = still queued outside
 function beatPt(u,W,E,span,fr,y0,y1){
   const ST=STRAIGHT, RXT=44, d0=fr?-1:1;
