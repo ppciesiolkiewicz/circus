@@ -256,21 +256,27 @@ function linesFig(){
 // before Play it demos on its own clock.
 let beatRefs=null, beatEnd=null;   // beatEnd: the beat-to-beat Play stops at the end of the run & cross
 function beatFig(){
-  const W=520,H=108,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
+  const W=520,H=168,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
   f.setAttribute("role","img");f.setAttribute("aria-label","Two Duncan dots and two Luna dots moving towards each other in hits on the beat, and crossing");
   el("line",{x1:W/2,y1:8,x2:W/2,y2:H-26,stroke:"var(--floor-edge)","stroke-dasharray":"2 6"},f);
   const mk=(y,col,d)=>{const g=el("g",{},f);el("circle",{r:13,fill:col,stroke:col,"stroke-width":2.5},g);
     el("text",{"text-anchor":"middle",y:3.5,"font-size":9,fill:"var(--floor)","font-family":"Archivo, sans-serif","font-weight":700},g).textContent=d.name.slice(0,3);return {g,y};};
   const hiR=dancers.filter(d=>d.lane==="R-H0"), hiL=dancers.filter(d=>d.lane==="L-H0");
-  const dun=[mk(30,"var(--right)",hiR[0]),mk(30,"var(--right)",hiR[1])], lun=[mk(62,"var(--left)",hiL[0]),mk(62,"var(--left)",hiL[1])];
+  // out and back tracks interleave like the stage plot: Duncan 28/102, Luna 58/132
+  const dun=[mk(28,"var(--right)",hiR[0]),mk(28,"var(--right)",hiR[1])], lun=[mk(58,"var(--left)",hiL[0]),mk(58,"var(--left)",hiL[1])];
+  dun.forEach(d=>d.y1=102);lun.forEach(d=>d.y1=132);
   const cnt=el("text",{x:W/2,y:H-8,"text-anchor":"middle",class:"lb"},f);
   beatRefs={W,dun,lun,cnt};return f;
 }
-// x for a dot that has travelled `u` units from its wing (negative = still queued further out)
-function beatX(u,W,E,span,fromRight){
-  let k;
-  if(u<0)k=u/span; else {const p=u%(2*span);k=p<=span?p/span:2-p/span;}
-  return fromRight?W/2+E-2*E*k:W/2-E+2*E*k;
+// where a dot is after `u` units: a straight edge to edge, then a half-circle turn onto the return track
+// (Luna clockwise, Duncan counter-clockwise, as on the stage plot); negative u = still queued outside
+function beatPt(u,W,E,span,fr,y0,y1){
+  const ST=STRAIGHT, RXT=44, d0=fr?-1:1;
+  if(u<0)return [W/2-d0*(E-u/span/ST*2*E),y0];
+  const c=Math.floor(u/span), f=u/span-c, dir=c%2?-d0:d0, ya=c%2?y1:y0, yb=c%2?y0:y1;
+  if(f<ST)return [W/2-dir*E+dir*2*E*f/ST,ya];
+  const al=(f-ST)/(1-ST)*Math.PI;
+  return [W/2+dir*(E+RXT*Math.sin(al)),ya+(yb-ya)*(1-Math.cos(al))/2];
 }
 function drawBeatFig(tt){
   if(!beatRefs)return;
@@ -285,7 +291,8 @@ function drawBeatFig(tt){
   const gapU=span*110/(2*E);   // followers keep a good gap behind
   const pulse=rel>=0?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
   [[dun,true,1],[lun,false,5]].forEach(([pair,fr,sd])=>pair.forEach((d,i)=>{
-    d.g.setAttribute("transform",`translate(${beatX(unitsAt(rel,sd+i)-i*gapU,W,E,span,fr).toFixed(1)},${d.y}) scale(${pulse.toFixed(3)})`);}));
+    const [x,y]=beatPt(unitsAt(rel,sd+i)-i*gapU,W,E,span,fr,d.y,d.y1);
+    d.g.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${pulse.toFixed(3)})`);}));
   cnt.textContent=rel<0?"":"COUNT "+(((Math.floor(rel)%n)+n)%n+1);
 }
 NOTES.forEach(x=>{
