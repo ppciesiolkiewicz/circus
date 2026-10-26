@@ -225,7 +225,27 @@ function syncAudio(){audio.playbackRate=+speedSel.value;const at=songAt(t);if(at
 speedSel.addEventListener("change",()=>{audio.playbackRate=+speedSel.value;});
 
 const notesEl=document.getElementById("notes");
+// the 4 running lines, back (stage) to front (audience), drawn with the same dots as the stage plot
+function linesFig(){
+  const lanes=Object.keys(ROWS).sort((a,b)=>ROWS[a]-ROWS[b]), W=560, RH=38, top=26;
+  const f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${top+lanes.length*RH+22}`);f.setAttribute("class","linesfig");
+  f.setAttribute("role","img");f.setAttribute("aria-label","Line order from the stage: Duncan high, Luna high, Duncan low, Luna low");
+  el("text",{x:W/2,y:14,"text-anchor":"middle",class:"lb"},f).textContent="STAGE";
+  lanes.forEach((ln,r)=>{
+    const y=top+r*RH+RH/2, R=ln[0]==="R", col=R?"var(--right)":"var(--left)", hi=ln[2]==="H";
+    el("text",{x:8,y:y+4,fill:col,class:"ln"},f).textContent=(R?"Duncan":"Luna")+" · "+(hi?"high":"low");
+    dancers.filter(d=>d.lane===ln).forEach((d,k)=>{
+      const g=el("g",{transform:`translate(${170+k*42},${y})`},f);
+      el("circle",{r:13,fill:hi?col:"var(--floor)",stroke:col,"stroke-width":2.5},g);
+      el("text",{"text-anchor":"middle",y:3.5,"font-size":9,fill:hi?"var(--floor)":col,"font-family":"Archivo, sans-serif","font-weight":700},g).textContent=d.name.slice(0,3);
+    });
+    el("text",{x:W-14,y:y+6,"text-anchor":"end",fill:col,"font-size":20},f).textContent=R?"←":"→";
+  });
+  el("text",{x:W/2,y:top+lanes.length*RH+16,"text-anchor":"middle",class:"lb"},f).textContent="AUDIENCE";
+  return f;
+}
 NOTES.forEach(x=>{
+  if(x.fig==="lines"){const w=document.createElement("div");w.className="figwrap";w.appendChild(linesFig());notesEl.lastElementChild.appendChild(w);return;}
   if(x.length===3&&/^\P{L}/u.test(x[0])){   // [icon, title, text]; sub-points start with a letter
     const [ic,ti,tx]=x,li=document.createElement("li"),i=document.createElement("span"),h=document.createElement("b");
     i.className="ic";i.textContent=ic;h.textContent=ti;li.append(i,h," ",tx);notesEl.appendChild(li);return;}
