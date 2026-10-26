@@ -58,7 +58,7 @@ const NOTES=[
  ["💥","First shape","First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat."],
   ["Syncing the shapes is mostly for the beginning. Later we can go into more free formg"],
  ["🥁","On beat","Move on the beat. Adjust your pace to it, and keep it in your head the whole time."],
- ["🎶","Beat to beat","I’m thinking it would be nice to move “beat to beat” (see animation)."],
+ ["🎶","Beat to beat","I’m thinking it would be nice to move “beat to beat” (see animation below)."],
   ["You can leap forward on each beat as much as you want, but that’s mainly on the beat when you give yourself the acceleration.",
    "Just an idea – I think this could help us avoiding chaos at the beginning when running towards each other."],
   {fig:"beat"},
