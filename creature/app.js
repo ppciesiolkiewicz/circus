@@ -279,10 +279,10 @@ function drawBeatFig(tt){
   // Each dot covers the same distance per bar, but splits it differently between the beats (a bigger leap
   // here, a smaller one there). Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
   const rnd=(sd,bar,i)=>{const x=Math.sin(sd*91.7+bar*12.9898+i*78.233)*43758.5453;return x-Math.floor(x);};
-  const steps=(sd,bar)=>{const w=[...Array(n)].map((_,i)=>(i===0?2:1)*(.5+rnd(sd,bar,i)));const k=per/w.reduce((p,q)=>p+q,0);return w.map(x=>x*k);};
+  const steps=(sd,bar)=>{const w=[...Array(n)].map((_,i)=>(i===0?2:1)*(.15+1.85*rnd(sd,bar,i)));const k=per/w.reduce((p,q)=>p+q,0);return w.map(x=>x*k);};
   const unitsAt=(r,sd)=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,bar=Math.floor(b/n),st=steps(sd,bar),h=Math.min(1,u/.25);
     let x=bar*per;for(let i=0;i<b-bar*n;i++)x+=st[i];return x+st[b-bar*n]*(.75*(1-(1-h)*(1-h))+.25*u);};
-  const gapU=span*80/(2*E);   // followers keep a good gap behind
+  const gapU=span*110/(2*E);   // followers keep a good gap behind
   const pulse=rel>=0?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
   [[dun,true,1],[lun,false,5]].forEach(([pair,fr,sd])=>pair.forEach((d,i)=>{
     d.g.setAttribute("transform",`translate(${beatX(unitsAt(rel,sd+i)-i*gapU,W,E,span,fr).toFixed(1)},${d.y}) scale(${pulse.toFixed(3)})`);}));
