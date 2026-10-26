@@ -33,7 +33,12 @@
     <div class="btns">
       <button class="primary" id="play">Play</button>
       <button id="restart">Restart</button>
-      <button id="click" aria-pressed="false">Metronome</button>
+      <div class="pickup" id="pickup" role="group" aria-label="Start before">
+        <span>Start before</span>
+        <button data-p="0" aria-pressed="false">0 beat</button>
+        <button data-p="1" aria-pressed="true">1 beat</button>
+        <button data-p="2" aria-pressed="false">2 beat</button>
+      </div>
       <select id="speed" aria-label="Playback speed">
         <option value="0.5">0.5×</option><option value="0.75">0.75×</option><option value="1" selected>1×</option>
       </select>

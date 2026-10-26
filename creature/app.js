@@ -15,7 +15,7 @@ try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.b
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
 if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
-state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"||x==="Freeze"||x==="Move edge to edge"?SECTIONS[i].tag:x);}catch(e){}
+state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"||x==="Freeze"||x==="Move edge to edge"||x==="Freeze striking a pose"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
 
 // build dancers
@@ -49,9 +49,11 @@ lbl(CX,BACK-22,"STAGE");lbl(CX,BACK+RY+34,"AUDIENCE");
 lbl(CX-RX+6,BACK+RY*.16,"HIGH","start");lbl(CX-RX+30,BACK+RY*.35,"LOW","start");
 const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--freeze)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":28,"letter-spacing":"5",opacity:0});
 banner.textContent="FREEZE";
+const caption=el("text",{x:CX,y:BACK+RY*.84+30,"text-anchor":"middle",fill:"var(--onfloor-dim)","font-family":"Archivo, sans-serif","font-size":16,opacity:0});
 
 const layer=el("g",{});
 // comic "STRIKE SHAPE" burst at centre on the first beat of each strike-shape moment (drawn above the dancers)
+// big countdown 1 2 3 4 from the start of "Guitar picks up", with GO on the beat they leave (drawn above the dancers)
 const POW_Y=BACK+RY*.24, pow=el("g",{opacity:0});
 {const pts=[];for(let i=0;i<28;i++){const a=i/28*2*Math.PI, r=i%2?44:70+(i%4?0:8);pts.push((r*1.45*Math.cos(a)).toFixed(1)+","+(r*Math.sin(a)).toFixed(1));}
  el("polygon",{points:pts.join(" "),fill:"#ffd23f",stroke:"#1b1b1f","stroke-width":3,"stroke-linejoin":"round"},pow);
@@ -67,6 +69,8 @@ dancers.forEach(d=>{
   const tt=el("title",{},g);tt.textContent=d.name+(d.pio?"":d.type==="H"?" (high)":" (low)");
   d.g=g;
 });
+
+const bigCount=el("text",{"text-anchor":"middle",y:40,fill:"var(--onfloor)",stroke:"var(--floor)","stroke-width":4,"paint-order":"stroke","font-family":"Archivo, sans-serif","font-weight":900,"font-size":120,opacity:0});
 
 // timing
 function bounds(){let t=0;return state.beats.map(b=>{const s=t;t+=b;return[s,t];});}
@@ -85,34 +89,39 @@ const spd=u=>1+AMP*Math.cos(2*Math.PI*u);
 // LOOP_A is kept small, so each line's way out and way back stay inside its own band, clear of the next line.
 // TURN_OUT: how far from centre the turns reach - just a little past the end of the stage (300)
 const LOOP_A=.035*RY, TURN_R=62, STRAIGHT=.78, TURN_OUT=315, RUN_E=TURN_OUT-TURN_R, FILE_DELAY=.35, QSPEED=FILEGAP/.35;
-// warp for the first run: makes it reach the middle at the same point of its run as the returns do
+// warp for the first run (wing to far side): puts the middle at fraction f0 of it
 const warpCache={};
-function firstWarp(E){
-  if(warpCache[E]!==undefined)return warpCache[E];
+function firstWarp(E,f0){
+  const key=E+"|"+f0;if(warpCache[key]!==undefined)return warpCache[key];
   const s=START/(E+START);let lo=0,hi=1;
   for(let i=0;i<40;i++){const m=(lo+hi)/2;if(prof(m)<s)lo=m;else hi=m;}
-  return warpCache[E]=Math.min(.9,4*(lo-.5));
+  return warpCache[key]=clamp((lo-f0)/(f0*(1-f0)),-.5,.5);   // capped so the run never nearly stops before the turn
 }
-function loopAt(c,E,d0,offstageStart){
+function loopAt(c,E,d0){
   const C=Math.max(.5,state.cross), k=Math.floor(c), u=c-k;
   const dir=k%2===0?d0:-d0, sgn=k%2===0?-1:1;
   if(u<STRAIGHT){
-    const first=k===0&&offstageStart, from=first?-d0*START:-dir*E, to=dir*E;
-    // the first run starts further out (in the wing), so warp it to still pass the middle half-way, like every return
-    let uu=u/STRAIGHT, dw=1;
-    if(first){const a=firstWarp(E);dw=1+a*(1-2*uu);uu=uu+a*uu*(1-uu);}
-    return {x:from+(to-from)*prof(uu),dy:sgn*LOOP_A,dir,v:Math.abs(to-from)/(C*STRAIGHT)*spd(uu)*dw,E};
+    const uu=u/STRAIGHT, from=-dir*E, to=dir*E;
+    return {x:from+(to-from)*prof(uu),dy:sgn*LOOP_A,dir,v:Math.abs(to-from)/(C*STRAIGHT)*spd(uu),E};
   }
   const al=(u-STRAIGHT)/(1-STRAIGHT)*Math.PI, w=Math.PI/(C*(1-STRAIGHT));
   return {x:dir*E+dir*TURN_R*Math.sin(al),dy:sgn*LOOP_A*Math.cos(al),dir:Math.cos(al)>=0?dir:-dir,v:TURN_R*w*Math.abs(Math.cos(al)),E};
 }
-// Lines leave the wings early enough that the leaders cross centre LEAD_PAST beats before count 1 of the run-in;
-// every return crossing then lands the same way before its strike
+// The loop is timed so the leaders cross centre LEAD_PAST beats before count 1 of the run-in, and every
+// return crossing lands the same way before its strike. lead() is where that loop would have started.
 const lead=()=>Math.max(.5,state.cross)*STRAIGHT/2+LEAD_PAST;
+// Everyone leaves the wing together on the pickup (pickupT() beats before count 1); the first run, wing to the
+// far side, is warped so the leaders still cross centre LEAD_PAST beats before count 1.
+// beats before count 1 of the run-in that everyone leaves: the last guitar bar plus the pickup
+const pickupT=()=>state.bpb+(state.pickup??PICKUP_BEATS);
 function crossing(lane,d0,tau){
-  const C=Math.max(.5,state.cross), E=RUN_E; tau+=lead();
-  if(tau<0) return {x:-d0*(START-tau*QSPEED),dy:-LOOP_A,dir:d0,v:0,E};
-  return loopAt(tau/C,E,d0,true);
+  const PICKUP=pickupT(), C=Math.max(.5,state.cross), E=RUN_E, T1=PICKUP+C*STRAIGHT-lead(), r=tau+PICKUP;
+  if(r<0) return {x:-d0*(START-r*QSPEED),dy:-LOOP_A,dir:d0,v:0,E};
+  if(r<T1){
+    const a=firstWarp(E,(PICKUP-LEAD_PAST)/T1), uu=r/T1, w=uu+a*uu*(1-uu);
+    return {x:-d0*START+d0*(E+START)*prof(w),dy:-LOOP_A,dir:d0,v:(E+START)/T1*spd(w)*(1+a*(1-2*uu)),E};
+  }
+  return loopAt((tau+lead())/C,E,d0);
 }
 // "beat to beat": beats in, beats of travel out. Everyone makes the same steps, a long leap then a short one
 // (65% / 35% of each two-beat stretch); within a beat a hit of acceleration on the beat, then keep moving
@@ -133,7 +142,7 @@ function pioCrossing(tau){
   tau+=lead();
   const C=Math.max(.5,state.cross), E=RUN_E, tj=tau-pioJoinAt();
   if(tj<0) return {x:0,dy:0,dir:PIO_D0,v:0,E,still:1};
-  const r=loopAt(tau/C,E,PIO_D0,false);
+  const r=loopAt(tau/C,E,PIO_D0);
   // fade Pio's loop offset in over the first beat so Pio doesn't jump sideways off the mark,
   // and over two beats move him up from his mark to run just in front of the low lines
   r.dy=r.dy*clamp(tj,0,1)+(PIO_RUN-PIOD)*RY*ease(clamp(tj/2,0,1)); return r;
@@ -142,10 +151,10 @@ function pioCrossing(tau){
 // Beats (from 0) when the run's leaders cross centre, snapped to the nearest count 1, only inside Run in & cross; cached per setting
 let midCache={};
 function midBeats(){
-  const P0=state.beats[0]+state.beats[1], end=state.beats[2], key=[state.cross,P0,end,lead()].join();
+  const P0=state.beats[0]+state.beats[1], end=state.beats[2], key=[state.cross,P0,end,lead(),pickupT()].join();
   if(midCache.key===key)return midCache.v;
-  const v=[];let prev=crossing("R-H0",-1,-lead()).x;
-  for(let tb=-lead()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(b<P0+end&&!v.includes(b))v.push(b);}prev=x;}
+  const v=[];let prev=crossing("R-H0",-1,-pickupT()).x;
+  for(let tb=-pickupT()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(b<P0+end&&!v.includes(b))v.push(b);}prev=x;}
   midCache={key,v};return v;
 }
 function follow(cross,tb,slot){
@@ -169,7 +178,7 @@ function travelPos(d,tAbs){
   if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(tau=>pioCrossing(beatWarp(tau)),tAbs-P0,0);return {x:r.x,depth:PIOD+r.dy/RY};}
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
-  const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-lead(),tb),(laneCount[d.lane]-1)/2-d.order);
+  const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-pickupT(),tb),(laneCount[d.lane]-1)/2-d.order);
   // still waiting: an L in the wing - the first two side by side at the top, the rest down the wing under the second
   const x=r.x, q=Math.abs(x)-START;
   // (columns 40 apart, shifted 20 inwards so both sit inside the wing; the shift fades out over the first steps of the run)
@@ -244,6 +253,10 @@ const audio=new Audio(); audio.preservesPitch=true; let hasSong=true;
 audio.src=location.protocol==="file:"?"../audio/dope-show.mp3":"/audio/dope-show.mp3";
 audio.addEventListener("error",()=>{hasSong=false;});
 const speedSel=document.getElementById("speed");
+const pickupBtns=[...document.querySelectorAll("#pickup button")];
+function showPickup(){const p=state.pickup??PICKUP_BEATS;pickupBtns.forEach(b=>b.setAttribute("aria-pressed",String(+b.dataset.p===p)));}
+pickupBtns.forEach(b=>b.addEventListener("click",()=>{state.pickup=+b.dataset.p;save();showPickup();draw();}));
+showPickup();
 const offset=191;   // song time (3:11) of count 1 of the run-in
 const beatSec=()=>60/state.bpm;
 const preRun=()=>state.beats[0]+state.beats[1];
@@ -386,6 +399,12 @@ function draw(){
   }
   {const D=1+.1/beatSec();   // one beat plus 100ms
   const m=started&&t>=0?midBeats().find(m=>t>=m&&t<m+D):undefined;
+  {const go=state.beats[0]+state.beats[1]-pickupT(), b0=state.beats[0], b=Math.floor(t);
+   if(started&&t>=b0&&t<go+1){const k=t-b;
+     bigCount.textContent=b>=go?"GO":b-b0+1;
+     bigCount.setAttribute("opacity",Math.max(0,1-k*.6));
+     bigCount.setAttribute("transform",`translate(${CX},${BACK+RY*.42}) scale(${(1.15-.15*Math.min(1,k/.2)).toFixed(3)})`);}
+   else bigCount.setAttribute("opacity",0);}
   if(m===undefined)pow.setAttribute("opacity",0);
   else{const k=t-m, sc=k<.15?.3+k/.15*.9:1.2-(k-.15)*.2;
     pow.setAttribute("opacity",k<D-.3?1:Math.max(0,1-(k-(D-.3))/.3));
@@ -393,11 +412,13 @@ function draw(){
   {let tag=t>=0?(state.tags[si]||""):"";
   const md=(SECTIONS.find(s=>s.mid)||{}).mid, lst=SECTIONS[si].last;   // strike moments can run into the slow-down
   if(t>=0&&md&&midBeats().some(m=>t>=m&&t<m+md.beats))tag=md.tag;
-  if(t>=0&&lst&&bd[si][1]-t<=lst.beats)tag=lst.tag;
+  if(t>=0&&lst&&bd[si][1]-t<=(lst.beats==="pickup"?pickupT():lst.beats))tag=lst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   banner.textContent=tag.toUpperCase();
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
-  banner.setAttribute("opacity",tag&&started?1:0);}
+  banner.setAttribute("opacity",tag&&started?1:0);
+  const nt=SECTIONS[si].note, note=t>=0&&nt&&(nt.beats==null||bd[si][1]-t<=nt.beats)?nt.text:"";
+  caption.textContent=note;caption.setAttribute("opacity",note&&started?1:0);}
   if(!started)document.getElementById("sec").textContent="Ready";
   SECTIONS.forEach((s,i)=>document.getElementById("seg-"+i).classList.toggle("on",started&&t>=0&&i===si));
   document.querySelectorAll("#rows tr").forEach((el,i)=>el.classList.toggle("on",started&&t>=0&&i===si));
@@ -436,10 +457,6 @@ playBtn.addEventListener("click",()=>{
   requestAnimationFrame(loop);
 });
 document.getElementById("restart").addEventListener("click",()=>{t=startT();started=playing;lastBeat=Math.ceil(t)-1;if(playing&&hasSong)syncAudio();draw();});
-document.getElementById("click").addEventListener("click",e=>{
-  clickOn=!clickOn;e.currentTarget.setAttribute("aria-pressed",clickOn);
-  if(clickOn&&!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(err){}}
-});
 scrub.addEventListener("input",()=>{t=+scrub.value;started=true;lastBeat=Math.floor(t);if(hasSong)syncAudio();draw();});
 
 renderTable();

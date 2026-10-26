@@ -4,17 +4,21 @@
 // On every strike (count 1 as the lines meet mid-stage) the leaders crossed the middle this many beats before,
 // so about 2 people of each line are past the middle and 2 still to come. The run-in times itself from this.
 const LEAD_PAST=1;
+// Pickup: how many beats before the 2nd bar of "Guitar picks up" everyone leaves the wings
+// (1 = on the 4 of the 1st bar). The default; the "Start before" switch next to Play changes it (0, 1 or 2).
+const PICKUP_BEATS=1;
 
 // mid: a tag shown instead of the main tag for its beats each time the lines' leaders reach centre
-// last: a tag shown instead of the main tag for the section's closing beats
+// last: a tag shown instead of the main tag for the section's closing beats ("pickup" = from when they leave the wings)
+// note: a smaller caption under the tag, for the whole section (or only its closing `beats`, if given)
 const SECTIONS=[
   {id:"pio",name:"Count in - Pio dies",desc:"One bar count-in; Pio is already at front centre, dies and doesn’t move",beats:4,tag:"Count in - Pio dies"},
-  {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,last:{beats:4,tag:"Start moving towards centre"},tag:"Cue to prepare – guitar picks up"},
+  {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,last:{beats:"pickup",tag:"Start moving towards centre"},tag:"Cue to prepare – guitar picks up",note:{text:"We can start running a beat or two before “There’s lots of pretty”, so it’s easier to cross the stage (TBC)."}},
   {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,tag:"Move side to side",mid:{beats:4,tag:"Strike shape low/high on 1st beat"}},
   {id:"slow1",name:"Slow down",desc:"Keep travelling, slowing to a stop",beats:4,tag:"Slow down"},
-  {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze striking a pose"},
+  {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Strike a scary pose"},
   {id:"slow2",name:"Slow down, look",desc:"Move again, slowing to a stop, looking out at the audience",beats:4,tag:"Slow down, look at audience"},
-  {id:"freeze2",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze striking a pose"},
+  {id:"freeze2",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Strike a scary pose"},
   {id:"bow",name:"Line",desc:"Form one line at the back, by the stage",beats:17,tag:"Form the line for bow"},
   {id:"pose",name:"Pose",desc:"Strike a pose on count 2 of the last bar, just as the song is finishing",beats:4,fz:1,tag:"Strike a pose"}
 ];
@@ -52,19 +56,21 @@ const ORDER=[
 // {fig:"beat"} two dots moving beat to beat, in time with the song.
 // {fig:"loops"} moves the two loop animations (in index.html) under the point above it.
 const NOTES=[
- ["😬","Be creepy","When slowing down and posing: be a bit scary / creepy, show teeth."],
- ["🧭","Know yourself","Know which side you’re on and which shape you strike. If you’re planning shapes that need more space, like cartwheels, communicate with Duncan and Luna so we factor this in."],
- ["🏃","Run first","Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line."],
- ["↔️","Form lines","We run towards each other and we should form lines as per animation -> Starting from stage: Duncan Group → Luna Group → Duncan Group → Luna group"],
+ ["😬","Be creepy","When slowing down and posing, be a bit scary and creepy – show your teeth."],
+ ["🧭","Know yourself","Know which side you’re on and which shape you strike. If your shape needs more space (like a cartwheel), tell Duncan and Luna so we can plan for it."],
+ ["🏃","Run first","Don’t start with a shape. Run towards the centre first, especially if you’re at the front of your line."],
+ ["⏱️","Start before","We can start running a beat or two before “There’s lots of pretty”, so it’s easier to cross the stage (TBC)."],
+  ["Know where the first beat is."],
+ ["↔️","Form lines","Run towards each other and form lines as in the animation. From the stage: Duncan’s group → Luna’s group → Duncan’s group → Luna’s group."],
   {fig:"lines"},
- ["💥","First shape","First shape (high or low) is in the middle: the first person strikes it behind the middle (a meter from the middle let's say), and we all strike on the beat."],
-  ["Syncing the shapes is mostly for the beginning. Later we can go into more free formg"],
- ["🥁","On beat","Move on the beat. Adjust your pace to it, and keep it in your head the whole time."],
- ["🔄","Loop around","Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience."],
-  ["This is just to prevent us bumping into each other."],
+ ["💥","First shape","The first shape (high or low) is in the middle: the first person strikes it just past the middle (about a metre past), and we all strike on the beat."],
+  ["Syncing the shapes matters most at the beginning. Later it can get more free-form."],
+ ["🥁","On beat","Move on the beat. Match your pace to it and keep it in your head the whole time."],
+ ["🔄","Loop around","Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t make a sharp 180° turn – curve a little towards the stage/audience."],
+  ["This is just so we don’t bump into each other."],
   {fig:"loops"},
- ["🎶","Beat to beat","I’m thinking it would be nice to move “beat to beat” (see animation below)."],
-  ["You can leap forward on each beat as much as you want, but that’s mainly on the beat when you give yourself the acceleration.",
-   "Just an idea – I think this could help us avoiding chaos at the beginning when running towards each other."],
+ ["🎶","Beat to beat","It would be nice to move “beat to beat” (see animation below)."],
+  ["That gives us 4 steps for each half of the stage. A “step” is just one push on the beat – it can be several real steps, as many as you like.",
+   "Just an idea – I think it could help us avoid chaos at the start, when we run towards each other."],
   {fig:"beat"}
 ];

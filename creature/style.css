@@ -30,6 +30,8 @@ h1{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.05;le
 .notes>li>b{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.9em;margin-right:4px}
 .vidnote{margin:0;font-size:.95rem}
 .vids{display:inline-block;margin:8px 0 18px;padding:9px 16px;border-radius:8px;background:var(--accent);color:#fff;font-weight:600;text-decoration:none}
+.pickup{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.pickup span{font:600 .8rem var(--body);text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-right:4px}
 .loops{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
 .loops figure{margin:0;background:var(--floor);border-radius:8px;padding:8px 8px 6px}
 .loops svg{display:block;width:100%;height:auto}
