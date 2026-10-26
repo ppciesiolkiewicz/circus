@@ -13,6 +13,19 @@
 </head>
 <body>
 
+<dialog id="pickup-dlg" aria-labelledby="pickup-dlg-h">
+  <h2 id="pickup-dlg-h">Start before</h2>
+  <p>We leave the wings a little before the run starts, so we have time to reach the middle by the first strike.</p>
+  <p>The switch sets how early we go, counted back from the 2nd bar of &ldquo;Guitar picks up&rdquo;:</p>
+  <ul>
+    <li><b>0 beat</b> &ndash; go on the 1 of the 2nd bar</li>
+    <li><b>1 beat</b> &ndash; go on the 4 of the 1st bar</li>
+    <li><b>2 beat</b> &ndash; go on the 3 of the 1st bar (default)</li>
+  </ul>
+  <p>The big count on the stage plot shows <b>GO</b> on the beat we leave. Know where the first beat is.</p>
+  <form method="dialog"><button class="primary">Got it</button></form>
+</dialog>
+
 <div class="wrap">
   <header>
     <div>
@@ -35,6 +48,7 @@
       <button id="restart">Restart</button>
       <div class="pickup" id="pickup" role="group" aria-label="Start before">
         <span>Start before</span>
+        <button class="info" id="pickup-info" aria-label="What is Start before?" aria-haspopup="dialog">i</button>
         <button data-p="0" aria-pressed="false">0 beat</button>
         <button data-p="1" aria-pressed="false">1 beat</button>
         <button data-p="2" aria-pressed="true">2 beat</button>
