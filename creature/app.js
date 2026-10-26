@@ -110,13 +110,13 @@ function pioCrossing(tau){
   r.dy*=clamp(tj,0,1); return r;
 }
 // slot: place in the lane at the first freeze, in LANEGAPs from centre, leader furthest ahead
-// Beats (from 0) when the run's leaders cross centre, snapped to the beat; cached per setting
+// Beats (from 0) when the run's leaders cross centre, snapped to the nearest count 1; cached per setting
 let midCache={};
 function midBeats(){
   const P0=state.beats[0]+state.beats[1], end=state.beats[2], key=[state.cross,P0,end,lead()].join();
   if(midCache.key===key)return midCache.v;
   const v=[];let prev=crossing("R-H0",-1,-lead()).x;
-  for(let tb=-lead()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0)v.push(P0+Math.max(0,Math.round(tb)));prev=x;}
+  for(let tb=-lead()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(!v.includes(b))v.push(b);}prev=x;}
   midCache={key,v};return v;
 }
 function follow(cross,tb,slot){
