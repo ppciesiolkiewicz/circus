@@ -151,7 +151,7 @@ const rowsEl=document.getElementById("rows"), strip=document.getElementById("str
 const scrub=document.getElementById("scrub");
 function renderTable(){
   rowsEl.innerHTML="";strip.querySelectorAll(".seg").forEach(n=>n.remove());
-  if(countIn.checked){
+  {
     const seg=document.createElement("div");seg.className="seg";seg.id="seg-ci";
     seg.style.flex=`${state.bpb} 0 0`;seg.textContent="Count-in";
     seg.addEventListener("click",()=>{t=-state.bpb;started=true;draw();});
@@ -185,7 +185,7 @@ const cast=document.getElementById("cast");
   cast.appendChild(d);
 });
 
-let t=0, started=false, playing=false, last=0, clickOn=false, actx=null, lastBeat=-1;
+let t=-state.bpb, started=false, playing=false, last=0, clickOn=false, actx=null, lastBeat=-1;
 const bpmIn=document.getElementById("bpm"), bpbIn=document.getElementById("bpb");
 bpmIn.value=state.bpm;bpbIn.value=state.bpb;
 bpmIn.addEventListener("change",()=>{state.bpm=clamp(+bpmIn.value||91,40,240);bpmIn.value=state.bpm;save();updateBars();});
@@ -202,22 +202,9 @@ function tick(accent){
 }
 const audio=new Audio(); audio.preservesPitch=true; let hasSong=true;
 audio.src=location.protocol==="file:"?"../audio/dope-show.mp3":"/audio/dope-show.mp3";
-audio.addEventListener("error",()=>{if(audio.src.endsWith("/audio/dope-show.mp3")){hasSong=false;document.getElementById("songname").textContent="Load the song (mp3)";}});
-const offIn=document.getElementById("offset"), countIn=document.getElementById("countin"), speedSel=document.getElementById("speed");
-countIn.addEventListener("change",renderTable);
-function parseOff(v){const m=String(v).trim().match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);return m?(+(m[1]||0))*60+(+m[2]):null;}
-function fmtOff(x){x=Math.max(0,x);const m=Math.floor(x/60);return m+":"+(x-m*60).toFixed(2).padStart(5,"0");}
-let offset=191; try{const o=localStorage.getItem("blocking-offset-311");if(o!==null&&!isNaN(+o))offset=+o;}catch(e){}
-offIn.value=fmtOff(offset);
-function setOff(x){offset=Math.max(0,x);offIn.value=fmtOff(offset);try{localStorage.setItem("blocking-offset-311",offset);}catch(e){}if(playing&&hasSong)syncAudio();}
-offIn.addEventListener("change",()=>{const v=parseOff(offIn.value);if(v===null){offIn.value=fmtOff(offset);}else setOff(v);});
-document.getElementById("nm").addEventListener("click",()=>setOff(offset-.05));
-document.getElementById("np").addEventListener("click",()=>setOff(offset+.05));
-document.getElementById("song").addEventListener("change",e=>{
-  const f=e.target.files&&e.target.files[0]; if(!f)return;
-  audio.src=URL.createObjectURL(f); hasSong=true;
-  document.getElementById("songname").textContent="♪ "+f.name;
-});
+audio.addEventListener("error",()=>{hasSong=false;});
+const speedSel=document.getElementById("speed");
+const offset=191;   // song time (3:11) of count 1 of the run-in
 const beatSec=()=>60/state.bpm;
 const preRun=()=>state.beats[0]+state.beats[1];
 const songAt=tt=>offset+(tt-preRun())*beatSec();
@@ -313,18 +300,18 @@ function loop(now){
   draw();if(playing)requestAnimationFrame(loop);
 }
 const playBtn=document.getElementById("play");
-const startT=()=>countIn.checked?-state.bpb:0;
+const startT=()=>-state.bpb;   // the count-in is the first section of the timeline
 playBtn.addEventListener("click",()=>{
   if(playing){stop();return;}
   started=true;
-  if(t>=total()||t===0)t=startT();
+  if(t>=total())t=startT();
   if(clickOn&&!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
   if(actx&&actx.state==="suspended")actx.resume();
   playing=true;playBtn.textContent="Pause";last=performance.now();lastBeat=Math.ceil(t)-1;
   if(hasSong){syncAudio();if(songAt(t)>=0)audio.play().catch(()=>{});}
   requestAnimationFrame(loop);
 });
-document.getElementById("restart").addEventListener("click",()=>{t=playing?startT():0;started=playing;lastBeat=Math.ceil(t)-1;if(playing&&hasSong)syncAudio();draw();});
+document.getElementById("restart").addEventListener("click",()=>{t=startT();started=playing;lastBeat=Math.ceil(t)-1;if(playing&&hasSong)syncAudio();draw();});
 document.getElementById("click").addEventListener("click",e=>{
   clickOn=!clickOn;e.currentTarget.setAttribute("aria-pressed",clickOn);
   if(clickOn&&!actx){try{actx=new (window.AudioContext||window.webkitAudioContext)();}catch(err){}}
