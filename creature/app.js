@@ -2,10 +2,10 @@
 
 // geometry (viewBox units)
 const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
-const ROWS={"R-H0":.11,"L-H0":.20,"R-L0":.29,"L-L0":.38};
+const ROWS={"R-H0":.08,"L-H0":.19,"R-L0":.30,"L-L0":.41};   // lines a little apart, so the two groups don't brush past each other mid-stage
 const PIOD=.62, PIO_RUN=.47, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
-const AMP=.3, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
+const AMP=.15, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
 const BOW=SECTIONS.findIndex(s=>s.id==="bow");
 let state={bpm:91,bpb:4,cross:8,pioJoin:8,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
@@ -80,21 +80,35 @@ const prof=u=>u+AMP*Math.sin(2*Math.PI*u)/(2*Math.PI);   // speed = 1+AMPÂ·cos â
 const spd=u=>1+AMP*Math.cos(2*Math.PI*u);
 // Each line runs a super-elongated loop: a long straight (fast at the ends, slowest mid-stage),
 // then a half-circle turn that swings up/downstage by LOOP_A before running back.
-const LOOP_A=.09*RY, TURN_R=62, STRAIGHT=.78, EDGE_K=.62, FILE_DELAY=.35, QSPEED=FILEGAP/.35;
+// LOOP_A is kept small, so each line's way out and way back stay inside its own band, clear of the next line.
+// TURN_OUT: how far from centre the turns reach - just a little past the end of the stage (300)
+const LOOP_A=.035*RY, TURN_R=62, STRAIGHT=.78, TURN_OUT=315, RUN_E=TURN_OUT-TURN_R, FILE_DELAY=.35, QSPEED=FILEGAP/.35;
+// warp for the first run: makes it reach the middle at the same point of its run as the returns do
+const warpCache={};
+function firstWarp(E){
+  if(warpCache[E]!==undefined)return warpCache[E];
+  const s=START/(E+START);let lo=0,hi=1;
+  for(let i=0;i<40;i++){const m=(lo+hi)/2;if(prof(m)<s)lo=m;else hi=m;}
+  return warpCache[E]=Math.min(.9,4*(lo-.5));
+}
 function loopAt(c,E,d0,offstageStart){
   const C=Math.max(.5,state.cross), k=Math.floor(c), u=c-k;
   const dir=k%2===0?d0:-d0, sgn=k%2===0?-1:1;
   if(u<STRAIGHT){
-    const uu=u/STRAIGHT, from=(k===0&&offstageStart)?-d0*START:-dir*E, to=dir*E;
-    return {x:from+(to-from)*prof(uu),dy:sgn*LOOP_A,dir,v:Math.abs(to-from)/(C*STRAIGHT)*spd(uu),E};
+    const first=k===0&&offstageStart, from=first?-d0*START:-dir*E, to=dir*E;
+    // the first run starts further out (in the wing), so warp it to still pass the middle half-way, like every return
+    let uu=u/STRAIGHT, dw=1;
+    if(first){const a=firstWarp(E);dw=1+a*(1-2*uu);uu=uu+a*uu*(1-uu);}
+    return {x:from+(to-from)*prof(uu),dy:sgn*LOOP_A,dir,v:Math.abs(to-from)/(C*STRAIGHT)*spd(uu)*dw,E};
   }
   const al=(u-STRAIGHT)/(1-STRAIGHT)*Math.PI, w=Math.PI/(C*(1-STRAIGHT));
   return {x:dir*E+dir*TURN_R*Math.sin(al),dy:sgn*LOOP_A*Math.cos(al),dir:Math.cos(al)>=0?dir:-dir,v:TURN_R*w*Math.abs(Math.cos(al)),E};
 }
-// Lines leave the wings RUN_LEAD beats early, so on count 1 of the run-in the leaders are near centre
-const lead=()=>RUN_LEAD;
+// Lines leave the wings early enough that the leaders cross centre LEAD_PAST beats before count 1 of the run-in;
+// every return crossing then lands the same way before its strike
+const lead=()=>Math.max(.5,state.cross)*STRAIGHT/2+LEAD_PAST;
 function crossing(lane,d0,tau){
-  const C=Math.max(.5,state.cross), E=hw(ROWS[lane])*EDGE_K; tau+=lead();
+  const C=Math.max(.5,state.cross), E=RUN_E; tau+=lead();
   if(tau<0) return {x:-d0*(START-tau*QSPEED),dy:-LOOP_A,dir:d0,v:0,E};
   return loopAt(tau/C,E,d0,true);
 }
@@ -107,7 +121,7 @@ function pioJoinAt(){
 }
 function pioCrossing(tau){
   tau+=lead();
-  const C=Math.max(.5,state.cross), E=hw(PIO_RUN)*EDGE_K, tj=tau-pioJoinAt();
+  const C=Math.max(.5,state.cross), E=RUN_E, tj=tau-pioJoinAt();
   if(tj<0) return {x:0,dy:0,dir:PIO_D0,v:0,E,still:1};
   const r=loopAt(tau/C,E,PIO_D0,false);
   // fade Pio's loop offset in over the first beat so Pio doesn't jump sideways off the mark,
@@ -115,13 +129,13 @@ function pioCrossing(tau){
   r.dy=r.dy*clamp(tj,0,1)+(PIO_RUN-PIOD)*RY*ease(clamp(tj/2,0,1)); return r;
 }
 // slot: place in the lane at the first freeze, in LANEGAPs from centre, leader furthest ahead
-// Beats (from 0) when the run's leaders cross centre, snapped to the nearest count 1; cached per setting
+// Beats (from 0) when the run's leaders cross centre, snapped to the nearest count 1, only inside Run in & cross; cached per setting
 let midCache={};
 function midBeats(){
   const P0=state.beats[0]+state.beats[1], end=state.beats[2], key=[state.cross,P0,end,lead()].join();
   if(midCache.key===key)return midCache.v;
   const v=[];let prev=crossing("R-H0",-1,-lead()).x;
-  for(let tb=-lead()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(!v.includes(b))v.push(b);}prev=x;}
+  for(let tb=-lead()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(b<P0+end&&!v.includes(b))v.push(b);}prev=x;}
   midCache={key,v};return v;
 }
 function follow(cross,tb,slot){
@@ -250,20 +264,20 @@ function linesFig(){
   el("text",{x:W/2,y:top+lanes.length*RH+16,"text-anchor":"middle",class:"lb"},f).textContent="AUDIENCE";
   return f;
 }
-// "beat to beat": Duncan and Luna dots start on the first strike (count 1 of the run-in) and move in bursts,
-// a long leap then a short one, crossing in the middle. Follows the playhead;
+// "beat to beat": Duncan and Luna dots move in bursts, a long leap then a short one, and the leaders
+// are a bit past the middle on the first strike (count 1 of the run-in), then cross. Follows the playhead;
 // before Play it holds still on the start marks.
 let beatRefs=null, beatEnd=null;   // beatEnd: the beat-to-beat Play stops at the end of the run & cross
 function beatFig(){
   const W=520,H=168,f=document.createElementNS(NS,"svg");f.setAttribute("viewBox",`0 0 ${W} ${H}`);f.setAttribute("class","linesfig");
-  f.setAttribute("role","img");f.setAttribute("aria-label","Two Duncan dots and two Luna dots moving towards each other in hits on the beat, and crossing");
+  f.setAttribute("role","img");f.setAttribute("aria-label","Three Duncan dots and three Luna dots moving towards each other in hits on the beat, and crossing");
   el("line",{x1:W/2,y1:8,x2:W/2,y2:H-26,stroke:"var(--floor-edge)","stroke-dasharray":"2 6"},f);
   const mk=(y,col,d)=>{const g=el("g",{},f);el("circle",{r:13,fill:col,stroke:col,"stroke-width":2.5},g);
     el("text",{"text-anchor":"middle",y:3.5,"font-size":9,fill:"var(--floor)","font-family":"Archivo, sans-serif","font-weight":700},g).textContent=d.name.slice(0,3);return {g,y};};
   const hiR=dancers.filter(d=>d.lane==="R-H0"), hiL=dancers.filter(d=>d.lane==="L-H0");
-  // out and back tracks interleave like the stage plot: Duncan 28/102, Luna 58/132
-  const dun=[mk(28,"var(--right)",hiR[0]),mk(28,"var(--right)",hiR[1])], lun=[mk(58,"var(--left)",hiL[0]),mk(58,"var(--left)",hiL[1])];
-  dun.forEach(d=>d.y1=102);lun.forEach(d=>d.y1=132);
+  // each group keeps its out and back tracks close together, with clear space between the groups: Duncan 28/60, Luna 100/132
+  const dun=[0,1,2].map(i=>mk(28,"var(--right)",hiR[i])), lun=[0,1,2].map(i=>mk(100,"var(--left)",hiL[i]));
+  dun.forEach(d=>d.y1=60);lun.forEach(d=>d.y1=132);
   const cnt=el("text",{x:W/2,y:H-8,"text-anchor":"middle",class:"lb"},f);
   beatRefs={W,dun,lun,cnt};return f;
 }
@@ -277,26 +291,32 @@ function beatPt(u,W,E,span,fr,y0,y1){
   const al=(f-ST)/(1-ST)*Math.PI;
   return [W/2+dir*(E+RXT*Math.sin(al)),ya+(yb-ya)*(1-Math.cos(al))/2];
 }
+// On count 1 the leader is a bit past the middle: beatAt1() units travelled by then.
+// The dots leave beatLead() beats earlier (even, so the long/short leaps stay on 1).
+const BEAT_PAST=40;   // px past the middle line on count 1
+const beatAt1=()=>{const E=beatRefs.W/2-100;return state.cross*STRAIGHT*(E+BEAT_PAST)/(2*E);};
+const beatLead=()=>Math.ceil(beatAt1()/2)*2;
 function drawBeatFig(tt){
   if(!beatRefs)return;
   const {W,dun,lun,cnt}=beatRefs, E=W/2-100, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]);   // starts on the first strike (count 1 of the run-in)
   const span=state.cross;   // units per crossing: one unit per beat on average
   // Everyone makes the same steps: a long leap then a short one, 65% / 35% of each two-beat stretch.
-  // Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
+  // Within a beat: a hit of acceleration on the beat, then keep moving through to the next one - never a full stop.
   const st=[1.3,.7];
-  const unitsAt=r=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,h=Math.min(1,u/.25);
-    return Math.floor(b/2)*2+(b%2?st[0]:0)+st[b%2]*(.75*(1-(1-h)*(1-h))+.25*u);};
-  const gapU=span*110/(2*E);   // followers keep a good gap behind
-  const pulse=rel>=0?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
+  const unitsAt=r=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,h=Math.min(1,u/.35);
+    return Math.floor(b/2)*2+(b%2?st[0]:0)+st[b%2]*(.5*(1-(1-h)*(1-h))+.5*u);};
+  const gapU=span*80/(2*E);   // followers keep a gap behind
+  const L=beatLead(), off=beatAt1()-L;
+  const pulse=rel>=-L?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
   [[dun,true],[lun,false]].forEach(([pair,fr])=>pair.forEach((d,i)=>{
-    const [x,y]=beatPt(unitsAt(rel)-i*gapU,W,E,span,fr,d.y,d.y1);
+    const [x,y]=beatPt(unitsAt(rel+L)+off-i*gapU,W,E,span,fr,d.y,d.y1);
     d.g.setAttribute("transform",`translate(${x.toFixed(1)},${y.toFixed(1)}) scale(${pulse.toFixed(3)})`);}));
-  cnt.textContent=rel<0?"":"COUNT "+(((Math.floor(rel)%n)+n)%n+1);
+  cnt.textContent=rel<-L?"":"COUNT "+(((Math.floor(rel)%n)+n)%n+1);
 }
 NOTES.forEach(x=>{
   if(x.fig==="beat"){const w=document.createElement("div");w.className="figwrap";w.appendChild(beatFig());
-    // start the song a bar before the first strike, so the dots move almost straight away
-    const from=()=>state.beats[0]+state.beats[1]-state.bpb;
+    // start the song when the dots leave (at least a bar before the first strike)
+    const from=()=>preRun()-Math.max(state.bpb,beatLead());
     const b=document.createElement("button");b.className="primary beatplay";b.textContent="Play";
     const runEnd=()=>bounds()[2][1];
     b.addEventListener("click",()=>{const go=!playing;if(go){t=from();started=true;}playBtn.click();beatEnd=go?runEnd():null;});
@@ -417,8 +437,8 @@ scrub.addEventListener("input",()=>{t=+scrub.value;started=true;lastBeat=Math.fl
 
 renderTable();
 (function beatTick(){
-   // before Play the dots wait on their start marks (the first strike)
+   // before Play the dots wait on their start marks
    if(beatEnd!==null&&playing&&t>=beatEnd){stop();beatEnd=null;}
-   drawBeatFig(started?t:preRun());if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playing?"Stop":"Play";
+   drawBeatFig(started?t:preRun()-beatLead());if(beatRefs&&beatRefs.btn)beatRefs.btn.textContent=playing?"Stop":"Play";
    requestAnimationFrame(beatTick);})();
 })();
