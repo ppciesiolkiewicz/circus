@@ -39,7 +39,7 @@ el("rect",{x:CX+START-34,y:BACK-8,width:68,height:398,rx:8,fill:"none",stroke:"v
 el("path",{d:`M${CX-RX},${BACK} A${RX},${RY} 0 0 0 ${CX+RX},${BACK} Z`,fill:"color-mix(in srgb,var(--onfloor) 6%,transparent)",stroke:"var(--floor-edge)","stroke-width":2});
 el("line",{x1:CX,y1:BACK,x2:CX,y2:BACK+RY,stroke:"var(--floor-edge)","stroke-dasharray":"2 8"});
 const lbl=(x,y,t,anchor)=>{const e=el("text",{x,y,"text-anchor":anchor||"middle",fill:"var(--onfloor-dim)","font-family":"Archivo, sans-serif","font-size":15,"letter-spacing":"2"});e.textContent=t;return e;};
-lbl(6,BACK-20,"DUNCAN'S WING","start");lbl(1114,BACK-20,"LUNA'S WING","end");
+lbl(6,BACK-20,"LUNA'S WING","start");lbl(1114,BACK-20,"DUNCAN'S WING","end");
 lbl(CX,BACK-22,"STAGE");lbl(CX,BACK+RY+34,"AUDIENCE");
 lbl(CX-RX+6,BACK+RY*.16,"HIGH","start");lbl(CX-RX+30,BACK+RY*.35,"LOW","start");
 const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--freeze)","font-family":"Archivo, sans-serif","font-weight":700,"font-size":28,"letter-spacing":"5",opacity:0});
@@ -90,7 +90,7 @@ function crossing(lane,d0,tau){
 }
 // Pio: holds centre, then runs in step with the smaller side's lines. He joins the first time
 // their leaders pass mid-stage after pioJoin beats, so he steps off his mark at x=0 with them.
-const PIO_D0=LEFT.length<=RIGHT.length?-1:1;
+const PIO_D0=LEFT.length<=RIGHT.length?1:-1;
 function pioJoinAt(){
   const C=Math.max(.5,state.cross);
   return Math.max(1,Math.ceil(state.pioJoin/C-STRAIGHT/2))*C+STRAIGHT/2*C;
@@ -120,7 +120,7 @@ function follow(cross,tb){
 function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
   if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(pioCrossing,tAbs-P0);return {x:r.x,depth:PIOD+r.dy/RY};}
-  const tb=tAbs-P0, d0=d.side==="R"?1:-1, delay=d.file*FILE_DELAY;
+  const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
   const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(0,tb));
   const x=r.x, q=Math.abs(x)-START;   // still waiting in the wing: queue runs down the wing in entrance order
