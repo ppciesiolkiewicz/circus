@@ -281,10 +281,10 @@ function drawBeatFig(tt){
   if(!beatRefs)return;
   const {W,dun,lun,cnt}=beatRefs, E=W/2-100, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]);   // starts on the first strike (count 1 of the run-in)
   const per=n+1, span=per*state.cross/n;   // units per bar (count 1 weighs double); one crossing = state.cross beats
-  // Each dot covers the same distance per bar, but splits it differently between the beats (a bigger leap
-  // here, a smaller one there). Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
+  // Each dot covers the same distance per bar in near-equal steps (count 1 a little bigger, small
+  // per-person differences). Within a beat: a hit of acceleration on the beat, then a slow glide - never a full stop.
   const rnd=(sd,bar,i)=>{const x=Math.sin(sd*91.7+bar*12.9898+i*78.233)*43758.5453;return x-Math.floor(x);};
-  const steps=(sd,bar)=>{const w=[...Array(n)].map((_,i)=>(i===0?2:1)*(.15+1.85*rnd(sd,bar,i)));const k=per/w.reduce((p,q)=>p+q,0);return w.map(x=>x*k);};
+  const steps=(sd,bar)=>{const w=[...Array(n)].map((_,i)=>(i===0?1.3:1)*(.8+.4*rnd(sd,bar,i)));const k=per/w.reduce((p,q)=>p+q,0);return w.map(x=>x*k);};
   const unitsAt=(r,sd)=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,bar=Math.floor(b/n),st=steps(sd,bar),h=Math.min(1,u/.25);
     let x=bar*per;for(let i=0;i<b-bar*n;i++)x+=st[i];return x+st[b-bar*n]*(.75*(1-(1-h)*(1-h))+.25*u);};
   const gapU=span*110/(2*E);   // followers keep a good gap behind
