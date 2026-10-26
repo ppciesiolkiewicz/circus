@@ -6,6 +6,7 @@ const ROWS={"R-H0":.14,"L-H0":.29,"R-L0":.44,"L-L0":.59};   // lines a little ap
 const PIOD=.62, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08+.064*2*RX/RY,   // bow line a further 6.4% of the floor width away from the stage
       FILEGAP=40, LANEGAP=74, FREEZE_OUT=.2;   // LANEGAP: space between people in a line at the freezes
+const STAG={"R-H0":-1,"L-H0":1,"R-L0":-1,"L-L0":1};   // first slow-down ends staggered: each row half a gap off the next, so no one stands behind anyone
 const BOW_HW=330;   // bow line half-width: a bit wider than the stage (300), dots close together
 const AMP=.15, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
@@ -154,14 +155,14 @@ function midBeats(){
   for(let tb=-pickupT()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(b<P0+end&&!v.includes(b))v.push(b);}prev=x;}
   midCache={key,v};return v;
 }
-function follow(cross,tb,slot){
+function follow(cross,tb,slot,lane){
   const B=state.beats.slice(2);
   if(tb<=B[0]){const r=cross(tb);return {x:r.x,dy:r.dy};}
   const st=cross(B[0]); let x=st.x, t=tb-B[0];
   const lim=st.E+TURN_R;
   const room=dx=>Math.max(0,(st.dir>0?lim-dx:dx+lim)*.9);
   // first slow-down: everyone drifts in to the middle of the stage instead of on to the edges
-  const xt=st.dir*slot*LANEGAP;
+  const xt=st.dir*slot*LANEGAP+(STAG[lane]||0)*LANEGAP/4;
   const out=xx=>({x:xx,dy:st.dy});
   if(t<B[1]){const u=t/B[1];return out(lerp(x,xt,1-(1-u)*(1-u)));}
   x=xt;t-=B[1];
@@ -175,11 +176,11 @@ function travelPos(d,tAbs){
   // from the first slow-down on, everyone drifts FREEZE_OUT further from the stage, ready for the freezes
   const fo=1+FREEZE_OUT*ease(clamp((tAbs-P0-state.beats[2])/(state.beats[3]||1),0,1));
   if(d.pio){const tb=tAbs-P0, jn=pioJoinBeat(d);if(tb<jn)return {x:0,depth:PIOD*fo};
-    const r=follow(tau=>crossing(d.lane,1,beatWarp(tau)-d.file*FILE_DELAY),tb,(laneCount[d.lane]-1)/2-d.order);
+    const r=follow(tau=>crossing(d.lane,1,beatWarp(tau)-d.file*FILE_DELAY),tb,(laneCount[d.lane]-1)/2-d.order,d.lane);
     return {x:r.x,depth:lerp(PIOD,ROWS[d.lane]+r.dy/RY,ease(clamp((tb-jn)/2,0,1)))*fo};}   // two beats from his mark into the line
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
-  const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-pickupT(),tb),(laneCount[d.lane]-1)/2-d.order);
+  const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-pickupT(),tb),(laneCount[d.lane]-1)/2-d.order,d.lane);
   // still waiting: an L in the wing - the first two side by side at the top, the rest down the wing under the second
   const x=r.x, q=Math.abs(x)-START;
   // (columns 40 apart, shifted 20 inwards so both sit inside the wing; the shift fades out over the first steps of the run)
