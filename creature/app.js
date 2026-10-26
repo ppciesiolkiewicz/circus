@@ -10,7 +10,7 @@ const AMP=.65, DC2=90;
 let state={bpm:91,bpb:4,cross:8,pioJoin:16,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
 try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null)state.pioJoin=16;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
-if(!state.pioDies2){if(state.beats[0]===4)state.beats[0]=2;state.pioDies2=1;}   // Pio dies went 4 → 2 beats
+if(!state.pre46){if(state.beats[0]<=4&&state.beats[1]===4){state.beats[0]=4;state.beats[1]=6;}state.pre46=1;}   // Pio dies 4 + guitar 6 beats; guitar lands on a bar 1
 state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
 const BOW=SECTIONS.length-1;
@@ -152,6 +152,12 @@ const rowsEl=document.getElementById("rows"), strip=document.getElementById("str
 const scrub=document.getElementById("scrub");
 function renderTable(){
   rowsEl.innerHTML="";strip.querySelectorAll(".seg").forEach(n=>n.remove());
+  if(countIn.checked){
+    const seg=document.createElement("div");seg.className="seg";seg.id="seg-ci";
+    seg.style.flex=`${state.bpb} 0 0`;seg.textContent="Count-in";
+    seg.addEventListener("click",()=>{t=-state.bpb;started=true;draw();});
+    strip.insertBefore(seg,ph);
+  }
   const T=total()||1;
   SECTIONS.forEach((s,i)=>{
     const tr=document.createElement("tr");tr.id="row-"+i;
@@ -166,7 +172,7 @@ function renderTable(){
     strip.insertBefore(seg,ph);
   });
   updateBars();
-  scrub.max=T; if(t>T)t=T; draw();
+  scrub.min=startT(); scrub.max=T; if(t>T)t=T; draw();
 }
 function updateBars(){
   SECTIONS.forEach((s,i)=>{document.querySelector(`#row-${i} .bars`).textContent=+(state.beats[i]/state.bpb).toFixed(2);});
@@ -188,7 +194,7 @@ const pjIn=document.getElementById("piojoin");pjIn.value=state.pioJoin;
 pjIn.addEventListener("change",()=>{state.pioJoin=clamp(Math.round(+pjIn.value)||0,0,128);pjIn.value=state.pioJoin;save();draw();});
 const crossIn=document.getElementById("cross");crossIn.value=state.cross;
 crossIn.addEventListener("change",()=>{state.cross=clamp(Math.round(+crossIn.value)||8,1,32);crossIn.value=state.cross;save();draw();});
-bpbIn.addEventListener("change",()=>{state.bpb=clamp(Math.round(+bpbIn.value)||4,1,12);bpbIn.value=state.bpb;save();updateBars();draw();});
+bpbIn.addEventListener("change",()=>{state.bpb=clamp(Math.round(+bpbIn.value)||4,1,12);bpbIn.value=state.bpb;save();renderTable();});
 
 function tick(accent){
   if(!actx)return;const o=actx.createOscillator(),g=actx.createGain();
@@ -199,6 +205,7 @@ const audio=new Audio(); audio.preservesPitch=true; let hasSong=true;
 audio.src=location.protocol==="file:"?"../audio/dope-show.mp3":"/audio/dope-show.mp3";
 audio.addEventListener("error",()=>{if(audio.src.endsWith("/audio/dope-show.mp3")){hasSong=false;document.getElementById("songname").textContent="Load the song (mp3)";}});
 const offIn=document.getElementById("offset"), countIn=document.getElementById("countin"), speedSel=document.getElementById("speed");
+countIn.addEventListener("change",renderTable);
 function parseOff(v){const m=String(v).trim().match(/^(?:(\d+):)?(\d+(?:\.\d+)?)$/);return m?(+(m[1]||0))*60+(+m[2]):null;}
 function fmtOff(x){x=Math.max(0,x);const m=Math.floor(x/60);return m+":"+(x-m*60).toFixed(2).padStart(5,"0");}
 let offset=191; try{const o=localStorage.getItem("blocking-offset-311");if(o!==null&&!isNaN(+o))offset=+o;}catch(e){}
@@ -314,10 +321,12 @@ function draw(){
   if(!started)document.getElementById("sec").textContent="Ready";
   {const c=document.getElementById("cnt").textContent, b=document.getElementById("bar").textContent;
   stCount.textContent=started?c:""; stBar.textContent=started?(b==="–"?(t<0&&t>=-state.bpb?"COUNT-IN":""):"BAR "+b):"";}
-  document.querySelectorAll(".strip .seg").forEach((el,i)=>el.classList.toggle("on",started&&t>=0&&i===si));
+  SECTIONS.forEach((s,i)=>document.getElementById("seg-"+i).classList.toggle("on",started&&t>=0&&i===si));
+  const ci=document.getElementById("seg-ci"); if(ci)ci.classList.toggle("on",started&&t<0&&t>=-state.bpb);
   document.querySelectorAll("#rows tr").forEach((el,i)=>el.classList.toggle("on",started&&t>=0&&i===si));
-  ph.style.left=`${(tp/(total()||1))*100}%`;
-  scrub.value=tp;
+  const S=startT(), tl=Math.max(S,t);
+  ph.style.left=`${((tl-S)/((total()-S)||1))*100}%`;
+  scrub.value=tl;
   drawCue();
   drawOrder();
 }
