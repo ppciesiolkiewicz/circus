@@ -4,7 +4,7 @@
 // Beats before the run-in that the lines leave the wings (4 = on count 1 of the last guitar bar)
 const RUN_LEAD=4;
 
-// mid: a caption shown under the main tag for its beats each time the lines' leaders reach centre
+// mid: a tag shown instead of the main tag for its beats each time the lines' leaders reach centre
 // last: a tag shown instead of the main tag for the section's closing beats
 const SECTIONS=[
   {id:"pio",name:"Count in - Pio dies",desc:"One bar count-in; Pio is already at front centre, dies and doesn’t move",beats:4,tag:"Count in - Pio dies"},
