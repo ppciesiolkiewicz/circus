@@ -4,7 +4,9 @@
 const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
 const ROWS={"R-H0":.08,"L-H0":.19,"R-L0":.30,"L-L0":.41};   // lines a little apart, so the two groups don't brush past each other mid-stage
 const PIOD=.62, PIO_RUN=.47, PIO_FROM=-.13;
-const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
+const ENTRY=.12, BOWD=.08+.064*2*RX/RY,   // bow line a further 6.4% of the floor width away from the stage
+      FILEGAP=40, LANEGAP=62;
+const BOW_HW=330;   // bow line half-width: a bit wider than the stage (300), dots close together
 const AMP=.15, DC2=30, DZ2=.05*RY;   // second slow-down: a little further out, a little towards the audience
 
 const BOW=SECTIONS.findIndex(s=>s.id==="bow");
@@ -112,6 +114,14 @@ function crossing(lane,d0,tau){
   if(tau<0) return {x:-d0*(START-tau*QSPEED),dy:-LOOP_A,dir:d0,v:0,E};
   return loopAt(tau/C,E,d0,true);
 }
+// "beat to beat": beats in, beats of travel out. Everyone makes the same steps, a long leap then a short one
+// (65% / 35% of each two-beat stretch); within a beat a hit of acceleration on the beat, then keep moving
+// through to the next one. Lands on whole even beats, so the strikes stay where they were.
+const BEAT_STEPS=[1.3,.7];
+function beatWarp(r){
+  const b=Math.floor(r),u=r-b,h=Math.min(1,u/.35),p=((b%2)+2)%2;
+  return Math.floor(b/2)*2+(p?BEAT_STEPS[0]:0)+BEAT_STEPS[p]*(.5*(1-(1-h)*(1-h))+.5*u);
+}
 // Pio: holds centre, then runs in step with the smaller side's lines. He joins the first time
 // their leaders pass mid-stage after pioJoin beats, so he steps off his mark at x=0 with them.
 const PIO_D0=LEFT.length<=RIGHT.length?1:-1;
@@ -156,10 +166,10 @@ function follow(cross,tb,slot){
 }
 function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
-  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(pioCrossing,tAbs-P0,0);return {x:r.x,depth:PIOD+r.dy/RY};}
+  if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(tau=>pioCrossing(beatWarp(tau)),tAbs-P0,0);return {x:r.x,depth:PIOD+r.dy/RY};}
   const tb=tAbs-P0, d0=d.side==="R"?-1:1, delay=d.file*FILE_DELAY;
   // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
-  const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(-lead(),tb),(laneCount[d.lane]-1)/2-d.order);
+  const r=follow(tau=>crossing(d.lane,d0,beatWarp(tau)-delay),Math.max(-lead(),tb),(laneCount[d.lane]-1)/2-d.order);
   // still waiting: an L in the wing - the first two side by side at the top, the rest down the wing under the second
   const x=r.x, q=Math.abs(x)-START;
   // (columns 40 apart, shifted 20 inwards so both sit inside the wing; the shift fades out over the first steps of the run)
@@ -173,7 +183,7 @@ function positions(tb){
   if(tb<bowStart) return dancers.map(d=>travelPos(d,tb));
   const frozen=dancers.map(d=>travelPos(d,bowStart));
   const idx=frozen.map((p,i)=>i).sort((a,b)=>frozen[a].x-frozen[b].x);
-  const n=dancers.length, hw=RX*Math.sqrt(1-BOWD*BOWD)-20, sp=2*hw/(n-1);
+  const n=dancers.length, hw=BOW_HW, sp=2*hw/(n-1);
   const out=new Array(n);
   const tau=tb-bowStart, u=TBow>0?ease(clamp(tau/(TBow*.7),0,1)):1;
   idx.forEach((di,k)=>{const f=frozen[di];out[di]={x:lerp(f.x,-hw+k*sp,u),depth:lerp(f.depth,BOWD,u)};});
@@ -300,11 +310,8 @@ function drawBeatFig(tt){
   if(!beatRefs)return;
   const {W,dun,lun,cnt}=beatRefs, E=W/2-100, n=state.bpb, rel=tt-(state.beats[0]+state.beats[1]);   // starts on the first strike (count 1 of the run-in)
   const span=state.cross;   // units per crossing: one unit per beat on average
-  // Everyone makes the same steps: a long leap then a short one, 65% / 35% of each two-beat stretch.
-  // Within a beat: a hit of acceleration on the beat, then keep moving through to the next one - never a full stop.
-  const st=[1.3,.7];
-  const unitsAt=r=>{if(r<=0)return 0;const b=Math.floor(r),u=r-b,h=Math.min(1,u/.35);
-    return Math.floor(b/2)*2+(b%2?st[0]:0)+st[b%2]*(.5*(1-(1-h)*(1-h))+.5*u);};
+  // same steps as the main plot (beatWarp)
+  const unitsAt=r=>r<=0?0:beatWarp(r);
   const gapU=span*80/(2*E);   // followers keep a gap behind
   const L=beatLead(), off=beatAt1()-L;
   const pulse=rel>=-L?1+.22*Math.max(0,1-(rel-Math.floor(rel))/.3):1;
