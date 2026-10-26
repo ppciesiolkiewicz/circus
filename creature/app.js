@@ -49,11 +49,11 @@ const banner=el("text",{x:CX,y:BACK+RY*.84,"text-anchor":"middle",fill:"var(--fr
 banner.textContent="FREEZE";
 
 const layer=el("g",{});
-// comic "STRIKE!" burst at centre on the first beat of each strike-shape moment (drawn above the dancers)
+// comic "STRIKE SHAPE" burst at centre on the first beat of each strike-shape moment (drawn above the dancers)
 const POW_Y=BACK+RY*.24, pow=el("g",{opacity:0});
 {const pts=[];for(let i=0;i<28;i++){const a=i/28*2*Math.PI, r=i%2?44:70+(i%4?0:8);pts.push((r*1.45*Math.cos(a)).toFixed(1)+","+(r*Math.sin(a)).toFixed(1));}
  el("polygon",{points:pts.join(" "),fill:"#ffd23f",stroke:"#1b1b1f","stroke-width":3,"stroke-linejoin":"round"},pow);
- const tx=el("text",{"text-anchor":"middle",y:10,fill:"#d7261e",stroke:"#1b1b1f","stroke-width":1.5,"font-family":"Archivo, sans-serif","font-weight":900,"font-size":30,"letter-spacing":"1"},pow);tx.textContent="STRIKE!";}
+ for(const [y,w] of [[-4,"STRIKE"],[22,"SHAPE"]]){const tx=el("text",{"text-anchor":"middle",y,fill:"#d7261e",stroke:"#1b1b1f","stroke-width":1.5,"font-family":"Archivo, sans-serif","font-weight":900,"font-size":26,"letter-spacing":"1"},pow);tx.textContent=w;}}
 dancers.forEach(d=>{
   const g=el("g",{},layer);
   const col=d.pio?"var(--pio)":d.side==="R"?"var(--right)":"var(--left)";
