@@ -80,7 +80,7 @@ const prof=u=>u+AMP*Math.sin(2*Math.PI*u)/(2*Math.PI);   // speed = 1+AMPÂ·cos â
 const spd=u=>1+AMP*Math.cos(2*Math.PI*u);
 // Each line runs a super-elongated loop: a long straight (fast at the ends, slowest mid-stage),
 // then a half-circle turn that swings up/downstage by LOOP_A before running back.
-const LOOP_A=.045*RY, TURN_R=62, STRAIGHT=.78, EDGE_K=.62, FILE_DELAY=.35, QSPEED=FILEGAP/.35;
+const LOOP_A=.09*RY, TURN_R=62, STRAIGHT=.78, EDGE_K=.62, FILE_DELAY=.35, QSPEED=FILEGAP/.35;
 function loopAt(c,E,d0,offstageStart){
   const C=Math.max(.5,state.cross), k=Math.floor(c), u=c-k;
   const dir=k%2===0?d0:-d0, sgn=k%2===0?-1:1;
