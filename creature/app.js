@@ -5,7 +5,7 @@ const CX=560, BACK=150, RX=440, RY=370, START=520, SPAN=2*START;
 const ROWS={"R-H0":.11,"L-H0":.20,"R-L0":.29,"L-L0":.38};
 const PIOD=.62, PIO_FROM=-.13;
 const ENTRY=.12, BOWD=.08, FILEGAP=40, LANEGAP=62;
-const AMP=.65, DC2=90;
+const AMP=.3, DC2=90;
 
 let state={bpm:91,bpb:4,cross:8,pioJoin:16,beats:SECTIONS.map(s=>s.beats),tags:SECTIONS.map(s=>s.tag)};
 try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){state=sv;if(state.pioJoin==null)state.pioJoin=16;}
@@ -86,8 +86,8 @@ function loopAt(c,E,d0,offstageStart){
   const al=(u-STRAIGHT)/(1-STRAIGHT)*Math.PI, w=Math.PI/(C*(1-STRAIGHT));
   return {x:dir*E+dir*TURN_R*Math.sin(al),dy:sgn*LOOP_A*Math.cos(al),dir:Math.cos(al)>=0?dir:-dir,v:TURN_R*w*Math.abs(Math.cos(al)),E};
 }
-// Lines leave the wings 2 beats early (on 3 of the last guitar bar), so on count 1 of the run-in the leaders are well on the way to centre
-const lead=()=>2;
+// Lines leave the wings RUN_LEAD beats early, so on count 1 of the run-in the leaders are near centre
+const lead=()=>RUN_LEAD;
 function crossing(lane,d0,tau){
   const C=Math.max(.5,state.cross), E=hw(ROWS[lane])*EDGE_K; tau+=lead();
   if(tau<0) return {x:-d0*(START-tau*QSPEED),dy:-LOOP_A,dir:d0,v:0,E};
