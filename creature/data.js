@@ -24,10 +24,9 @@ const LEFT=[["Luna","H",1],["Cody","L"],["Keto","H"],["Tal","L"],["Sunshine","H"
 // Running order: [song time in seconds, section, lines]. A line can be {cue, do:[...]}:
 // cue is the first few words of the lyric only (never full lyric lines), do is what happens on it.
 const ORDER=[
- [0,"Intro",["go in"]],
- [6,"Drums",["go in"]],
- [16,"Verse",["Scientist teases me with fire stick for fun to entertain the audience","We always jitter on a 1st bot bit of the line","Changing the who is winning and who is scared and crawling back",
-   {cue:"The, the, the",do:["scientists hits the stage and yells to wakeup the creature"]},
+ [0,"Intro",["scientists goes in"]],
+ [6,"Drums",["lights up a fire staff"]],
+ [16,"Verse",[{cue:"The, the, the",do:["scientists hits the stage and yells to wakeup the creature"]},
    {cue:"Drugs, they say",do:["creature jumps out","the scientist backs up"]},
    {cue:"We love in vain",do:["the roles turn now the scientist leaps at creature with stick and creature backs down"]},
    {cue:"The cops and queers",do:["creature goes around and role change - scientist is scared and backs down"]},
