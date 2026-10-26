@@ -48,10 +48,11 @@ const ORDER=[
 
 // Things to keep in mind, shown under the timeline. An array right after a point is its sub-points.
 const NOTES=[
- "First shape (high or low) happens in the middle: run towards centre, and the first person strikes their shape just behind the middle and we all try to strike the shape on the beat. Dont start with a shape - but rather move towards centre first (especially if you’re at the beginning of your line). After that, free flow side to side.",
-  ["On next beats we can move more free form but keeping this idea of being on the beat in mind"],
- "Move on the beat - Adjust your pace to the beat. Keep the beat in your head the whole time.",
- "We move in a circular movement (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) goes counter-clockwise. When turning back at the side of the stage, don’t do a 180deg turn but go slightly towards the stage/audience",
-  ["This is to avoid bumping into each other"],
- "Slowing down and striking a pose be a bit scary / creepy, show teeth etc."
+ "Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line.",
+ "First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat.",
+  ["After that, move more free form, but stay on the beat."],
+ "Move on the beat. Adjust your pace to it, and keep it in your head the whole time.",
+ "Move in a loop (see animation): Luna’s group (left) goes clockwise, Duncan’s group (right) counter-clockwise. At the side of the stage don’t turn 180°, curve slightly towards the stage/audience.",
+  ["This stops us bumping into each other."],
+ "Slowing down and posing: be a bit scary / creepy, show teeth."
 ];
