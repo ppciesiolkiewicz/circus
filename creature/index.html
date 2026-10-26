@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Creature &middot; Finale Blocking</title>
+<title>Scientist &amp; Creature &ndash; The Dope Show</title>
 <meta name="description" content="Top-down blocking for the creature finale at Paradise Circus: entrance, freezes and bow, synced to the song.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -117,8 +117,8 @@ select{font:500 .95rem var(--body);padding:5px 6px;border-radius:6px;border:1px 
   <header>
     <div>
       <a class="back" href="/">&larr; Paradise Circus</a>
-      <h1>Creature &middot; Finale Blocking</h1>
-      <p class="sub">The Dope Show &middot; 91 bpm &middot; top-down, audience at the bottom</p>
+      <h1>Scientist &amp; Creature &ndash; The Dope Show</h1>
+      <p class="sub">Finale blocking &middot; 91 bpm &middot; top-down, audience at the bottom</p>
     </div>
   </header>
 
@@ -323,7 +323,8 @@ function travelPos(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
   if(d.pio){if(tAbs<P0)return {x:0,depth:PIOD};const r=follow(pioCrossing,tAbs-P0);return {x:r.x,depth:PIOD+r.dy/RY};}
   const tb=tAbs-P0, d0=d.side==="R"?1:-1, delay=d.file*FILE_DELAY;
-  const r=follow(tau=>crossing(d.lane,d0,tau-delay),tb);
+  // before the run-in (count-in, Pio dies, guitar cue) everyone already stands in line in the wing
+  const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(0,tb));
   const x=r.x, q=Math.abs(x)-START;   // still waiting in the wing: queue runs down the wing in entrance order
   if(q>0) return {x:Math.sign(x)*START,depth:ENTRY+q/RY};
   const inside=ease(clamp((START-Math.abs(x))/150,0,1));
