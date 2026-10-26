@@ -9,12 +9,12 @@ const RUN_LEAD=4;
 const SECTIONS=[
   {id:"pio",name:"Count in - Pio dies",desc:"One bar count-in; Pio is already at front centre, dies and doesn’t move",beats:4,tag:"Count in - Pio dies"},
   {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,last:{beats:RUN_LEAD,tag:"Start moving towards centre"},tag:"Cue to prepare – guitar picks up"},
-  {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross side to side in shape (slowest in the middle)",beats:32,tag:"Move side to side",mid:{beats:4,tag:"Strike shape low/high on 1st beat"}},
+  {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,tag:"Move edge to edge",mid:{beats:4,tag:"Strike shape low/high on 1st beat"}},
   {id:"slow1",name:"Slow down",desc:"Keep travelling, slowing to a stop",beats:4,tag:"Slow down"},
   {id:"freeze1",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze striking a pose"},
   {id:"slow2",name:"Slow down, look",desc:"Move again, slowing to a stop, looking out at the audience",beats:4,tag:"Slow down, look at audience"},
   {id:"freeze2",name:"Freeze",desc:"Hold the shape",beats:4,fz:1,tag:"Freeze striking a pose"},
-  {id:"bow",name:"Line",desc:"Form one line at the back, by the stage",beats:17,tag:"Form the line"},
+  {id:"bow",name:"Line",desc:"Form one line at the back, by the stage",beats:17,tag:"Form the line for bow"},
   {id:"pose",name:"Pose",desc:"Strike a pose on count 2 of the last bar, just as the song is finishing",beats:4,fz:1,tag:"Strike a pose"}
 ];
 
@@ -56,7 +56,7 @@ const NOTES=[
  ["↔️","Form lines","We run towards each other and we should form lines as per animation - Duncan Group → Luna Group → Duncan Group → Luna group"],
   {fig:"lines"},
  ["💥","First shape","First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat."],
-  ["Syncing the shapes is mostly for the beginning. Later we can go into more free form"],
+  ["Syncing the shapes is mostly for the beginning. Later we can go into more free formg"],
  ["🥁","On beat","Move on the beat. Adjust your pace to it, and keep it in your head the whole time."],
  ["🎶","Beat to beat","I’m thinking it would be nice to move “beat to beat” (see animation)."],
   ["You can leap forward on each beat as much as you want, but that’s mainly on the beat when you give yourself the acceleration.",
