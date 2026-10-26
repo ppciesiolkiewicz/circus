@@ -37,8 +37,8 @@ const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim
 el("rect",{x:0,y:0,width:1120,height:560,fill:"var(--floor)"});
 el("rect",{x:CX-300,y:BACK-104,width:600,height:50,rx:3,fill:"color-mix(in srgb,var(--onfloor) 12%,transparent)",stroke:"var(--floor-edge)","stroke-width":2});
 el("rect",{x:CX-300,y:BACK-50,width:600,height:46,rx:3,fill:"color-mix(in srgb,var(--onfloor) 7%,transparent)",stroke:"var(--floor-edge)","stroke-width":2});
-el("rect",{x:CX-START-34,y:BACK-8,width:68,height:398,rx:8,fill:"none",stroke:"var(--floor-edge)","stroke-dasharray":"5 5"});
-el("rect",{x:CX+START-34,y:BACK-8,width:68,height:398,rx:8,fill:"none",stroke:"var(--floor-edge)","stroke-dasharray":"5 5"});
+el("rect",{x:CX-START-38,y:BACK-8,width:76,height:398,rx:8,fill:"none",stroke:"var(--floor-edge)","stroke-dasharray":"5 5"});
+el("rect",{x:CX+START-38,y:BACK-8,width:76,height:398,rx:8,fill:"none",stroke:"var(--floor-edge)","stroke-dasharray":"5 5"});
 el("path",{d:`M${CX-RX},${BACK} A${RX},${RY} 0 0 0 ${CX+RX},${BACK} Z`,fill:"color-mix(in srgb,var(--onfloor) 6%,transparent)",stroke:"var(--floor-edge)","stroke-width":2});
 el("line",{x1:CX,y1:BACK,x2:CX,y2:BACK+RY,stroke:"var(--floor-edge)","stroke-dasharray":"2 8"});
 const lbl=(x,y,t,anchor)=>{const e=el("text",{x,y,"text-anchor":anchor||"middle",fill:"var(--onfloor-dim)","font-family":"Archivo, sans-serif","font-size":15,"letter-spacing":"2"});e.textContent=t;return e;};
@@ -148,9 +148,9 @@ function travelPos(d,tAbs){
   const r=follow(tau=>crossing(d.lane,d0,tau-delay),Math.max(-lead(),tb),(laneCount[d.lane]-1)/2-d.order);
   // still waiting: an L in the wing - the first two side by side at the top, the rest down the wing under the second
   const x=r.x, q=Math.abs(x)-START;
-  // (shifted 15 inwards so both columns sit inside the wing; the shift fades out over the first steps of the run)
-  if(q>0) return q<=FILEGAP?{x:Math.sign(x)*(START-15+q*.75),depth:ENTRY}:{x:Math.sign(x)*(START+15),depth:ENTRY+(q-FILEGAP)/RY};
-  const xs=q>-30?x-Math.sign(x)*15*(1+q/30):x;
+  // (columns 40 apart, shifted 20 inwards so both sit inside the wing; the shift fades out over the first steps of the run)
+  if(q>0) return q<=FILEGAP?{x:Math.sign(x)*(START-20+q),depth:ENTRY}:{x:Math.sign(x)*(START+20),depth:ENTRY+(q-FILEGAP)/RY};
+  const xs=q>-30?x-Math.sign(x)*20*(1+q/30):x;
   const inside=ease(clamp((START-Math.abs(x))/150,0,1));
   return {x:xs,depth:lerp(ENTRY,ROWS[d.lane],inside)+r.dy/RY*inside};
 }
