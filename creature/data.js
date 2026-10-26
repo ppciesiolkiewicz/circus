@@ -53,7 +53,7 @@ const NOTES=[
  ["😬","Be creepy","When slowing down and posing: be a bit scary / creepy, show teeth."],
  ["🧭","Know yourself","Know which side you’re on and which shape you strike. If you’re planning shapes that need more space, like cartwheels, communicate with Duncan and Luna so we factor this in."],
  ["🏃","Run first","Don’t start with a shape. Run towards centre first, especially if you’re at the front of your line."],
- ["↔️","Form lines","We run towards each other and we should form lines as per animation - Duncan Group → Luna Group → Duncan Group → Luna group"],
+ ["↔️","Form lines","We run towards each other and we should form lines as per animation -> Starting from stage: Duncan Group → Luna Group → Duncan Group → Luna group"],
   {fig:"lines"},
  ["💥","First shape","First shape (high or low) is in the middle: the first person strikes it just behind the middle, and we all strike on the beat."],
   ["Syncing the shapes is mostly for the beginning. Later we can go into more free formg"],

@@ -28,8 +28,8 @@ h1{font-family:var(--serif);font-weight:400;font-size:2.4rem;line-height:1.05;le
 .notes>li{position:relative;padding-left:2em}
 .notes .ic{position:absolute;left:0;top:-.05em;font-size:1.2em}
 .notes>li>b{color:var(--accent);font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:.9em;margin-right:4px}
-.vidnote{margin:16px 0 0;font-size:.95rem}
-.vids{display:inline-block;margin-top:8px;padding:9px 16px;border-radius:8px;background:var(--accent);color:#fff;font-weight:600;text-decoration:none}
+.vidnote{margin:0;font-size:.95rem}
+.vids{display:inline-block;margin:8px 0 18px;padding:9px 16px;border-radius:8px;background:var(--accent);color:#fff;font-weight:600;text-decoration:none}
 .loops{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:14px}
 .loops figure{margin:0;background:var(--floor);border-radius:8px;padding:8px 8px 6px}
 .loops svg{display:block;width:100%;height:auto}
