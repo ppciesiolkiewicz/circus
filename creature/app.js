@@ -275,10 +275,11 @@ function draw(){
     let name=SECTIONS[si].name;
     document.getElementById("sec").textContent=name;
   }
-  {const m=started&&t>=0?midBeats().find(m=>t>=m&&t<m+1):undefined;
+  {const D=1+.1/beatSec();   // one beat plus 100ms
+  const m=started&&t>=0?midBeats().find(m=>t>=m&&t<m+D):undefined;
   if(m===undefined)pow.setAttribute("opacity",0);
   else{const k=t-m, sc=k<.15?.3+k/.15*.9:1.2-(k-.15)*.2;
-    pow.setAttribute("opacity",k<.7?1:Math.max(0,1-(k-.7)/.3));
+    pow.setAttribute("opacity",k<D-.3?1:Math.max(0,1-(k-(D-.3))/.3));
     pow.setAttribute("transform",`translate(${CX},${POW_Y}) rotate(-8) scale(${sc.toFixed(3)})`);}}
   {let tag=t>=0?(state.tags[si]||""):"";
   const md=SECTIONS[si].mid, lst=SECTIONS[si].last;
