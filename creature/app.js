@@ -183,7 +183,20 @@ function follow(cross,tb,slot,lane){
   if(t<B[3]){const u=t/B[3], k=1-(1-u)*(1-u);return out2(x+st.dir*d2*k,k);}
   return out2(x+st.dir*d2,1);
 }
+// Free flow: each dancer drifts on their own slow loops (own speed and phase), fading in after the last synced strike
+// and back out before the slow-down, so everyone is back on the path when the freeze positions start.
+function wander(d,tb){
+  const end=state.beats[2], u=clamp((tb-FREE)/((end-FREE)||1),0,1);
+  if(u<=0||u>=1)return {x:0,d:0};
+  const h=[...(d.lane+d.file+(d.order||0)+(d.side||""))].reduce((a,c)=>a*31+c.charCodeAt(0)>>>0,7), k=Math.sin(Math.PI*u)**2;
+  const ph=(h%628)/100, f=.5+(h%7)/10, g=.4+(h%5)/10;
+  return {x:k*(110*Math.sin(tb*f+ph)+40*Math.sin(tb*g*2.3+ph*2)), d:k*.14*Math.sin(tb*g+ph*1.7)};
+}
 function travelPos(d,tAbs){
+  const p=travelBase(d,tAbs), w=wander(d,tAbs-state.beats[0]-state.beats[1]);
+  return w.x||w.d?{x:p.x+w.x,depth:clamp(p.depth+w.d,.03,1.2)}:p;
+}
+function travelBase(d,tAbs){
   const W=state.beats[0], P0=W+state.beats[1];
   // from the first slow-down on, everyone drifts FREEZE_OUT further from the stage, ready for the freezes
   const fo=1+FREEZE_OUT*ease(clamp((tAbs-P0-state.beats[2])/(state.beats[3]||1),0,1));
