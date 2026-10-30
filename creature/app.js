@@ -139,7 +139,9 @@ function preWarp(x){   // x: beats since leaving the wing, 0..pickupT()
   const w=b<2?PRE_SMALL:L, cum=b<2?b*PRE_SMALL:2*PRE_SMALL+(b-2)*L;
   return cum+w*(.5*(1-(1-h)*(1-h))+.5*u);
 }
+const FREE=(SECTIONS[2]||{}).free||Infinity;   // beats into the run where the synced steps end
 function beatWarp(r){
+  if(r>=FREE)return r;   // free flow: smooth movement, no steps (FREE is even, so beatWarp(FREE)===FREE)
   if(r<0&&r>=-pickupT())return preWarp(r+pickupT())-pickupT();
   const b=Math.floor(r),u=r-b,h=Math.min(1,u/.35),p=((b%2)+2)%2;
   return Math.floor(b/2)*2+(p?BEAT_STEPS[0]:0)+BEAT_STEPS[p]*(.5*(1-(1-h)*(1-h))+.5*u);
@@ -162,7 +164,7 @@ function midBeats(){
   const P0=state.beats[0]+state.beats[1], end=state.beats[2], key=[state.cross,P0,end,lead(),pickupT()].join();
   if(midCache.key===key)return midCache.v;
   const v=[];let prev=crossing("R-H0",-1,-pickupT()).x;
-  for(let tb=-pickupT()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(b<P0+end&&!v.includes(b))v.push(b);}prev=x;}
+  for(let tb=-pickupT()+.05;tb<end;tb+=.05){const x=crossing("R-H0",-1,tb).x;if(prev<0!==x<0){const b=P0+Math.max(0,Math.round(tb/state.bpb)*state.bpb);if(b<P0+end&&b<P0+FREE&&!v.includes(b))v.push(b);}prev=x;}
   midCache={key,v};return v;
 }
 function follow(cross,tb,slot,lane){
@@ -431,6 +433,7 @@ function draw(){
   const md=(SECTIONS.find(s=>s.mid)||{}).mid, lst=SECTIONS[si].last;   // strike moments can run into the slow-down
   if(t>=0&&md&&midBeats().some(m=>t>=m&&t<m+md.beats))tag=md.tag;
   if(t>=0&&lst&&bd[si][1]-t<=(lst.beats==="pickup"?pickupT():lst.beats))tag=lst.tag;
+  if(t>=0&&si===2&&t>=bd[2][0]+FREE)tag=FREE_TAG;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
   const sig=state.beats[0]+state.beats[1]-pickupT();   // the first beat we leave the wings: Pio gives the signal
   if(t>=0&&t>=sig&&t<sig+1)tag=SIGNAL_TAG;
