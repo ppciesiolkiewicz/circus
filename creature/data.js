@@ -7,7 +7,7 @@ const LEAD_PAST=1;
 // Pickup: how many beats before the 2nd bar of "Guitar picks up" everyone leaves the wings
 // (4 = on the 1 of the 1st bar, the start of "Guitar picks up"). The default; the "Start before" switch next to Play changes it (0, 1, 2 or 4).
 const PICKUP_BEATS=4;
-// Shown on the stage for one beat, on the first beat we leave the wings (moves with the "Start before" switch)
+// Shown on the stage for one beat, 2 beats before we leave the wings (moves with the "Start before" switch)
 const SIGNAL_TAG="Pio gives signal";
 // Tag shown from the start of the free flow
 const FREE_TAG="Free flow";
@@ -17,7 +17,7 @@ const FREE_TAG="Free flow";
 // last: a tag shown instead of the main tag for the section's closing beats ("pickup" = from when they leave the wings)
 // note: a smaller caption under the tag, for the whole section (or only its closing `beats`, if given)
 const SECTIONS=[
-  {id:"pio",name:"Count in - Pio dies",desc:"One bar count-in; Pio is already at front centre, dies and doesn’t move",beats:4,tag:"Count in - Pio dies"},
+  {id:"pio",name:"Count in - Pio dies",desc:"Two bars; Pio is already at front centre, dies and doesn’t move",beats:8,tag:"Count in - Pio dies"},
   {id:"cue",name:"Guitar picks up",desc:"Cue to prepare; Pio stays dead, everyone ready in the wings",beats:8,last:{beats:"pickup",tag:"Start moving towards centre"},tag:"Cue to prepare – guitar picks up",note:{text:"We can start running a beat or two before “There’s lots of pretty”, so it’s easier to cross the stage (TBC)."}},
   {id:"travel",name:"Run in & cross",desc:"Run in single file, split into 2 lines, cross edge to edge in shape (slowest in the middle)",beats:32,free:16,tag:"Move side to side",mid:{beats:4,tag:"Strike shape low/high on 1st beat"}},
   {id:"slow1",name:"Slow down",desc:"Keep travelling, slowing to a stop",beats:4,tag:"Slow down"},

@@ -15,7 +15,8 @@ let state={bpm:89.92,bpb:4,cross:8,pioJoin:8,beats:SECTIONS.map(s=>s.beats),tags
 try{const sv=JSON.parse(localStorage.getItem("blocking-v3")||"null");if(sv&&sv.beats&&sv.beats.length===SECTIONS.length){if(sv.beats[BOW]===20)sv.beats[BOW]=17;state=sv;if(state.pioJoin==null||state.pioJoin===16||state.pioJoin===24)state.pioJoin=8;}
 if(!Array.isArray(state.tags)||state.tags.length!==SECTIONS.length)state.tags=SECTIONS.map(s=>s.tag);
 if(!state.pre28){if(state.beats[0]<=4&&state.beats[1]<=6){state.beats[0]=2;state.beats[1]=8;}state.pre28=1;}   // Pio dies 2 + guitar 8 beats; count 1 stays on the song's 1
-if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}   // count-in merged into Pio dies
+if(!state.ciPio){if(state.beats[0]===2)state.beats[0]=4;state.tags[0]=SECTIONS[0].tag;state.ciPio=1;}
+if(!state.dies8){if(state.beats[0]===4)state.beats[0]=8;state.dies8=1;}   // Pio dies lasts 2 bars   // count-in merged into Pio dies
 if(state.bpm===91)state.bpm=89.92;   // measured tempo (beat tracking), was a round guess
 state.tags=state.tags.map((x,i)=>x==="Run · high & low shapes"||x==="Freeze"||x==="Move edge to edge"||x==="Freeze striking a pose"||x==="Strike a scary pose"?SECTIONS[i].tag:x);}catch(e){}
 function save(){try{localStorage.setItem("blocking-v3",JSON.stringify(state));}catch(e){}}
@@ -448,7 +449,7 @@ function draw(){
   if(t>=0&&lst&&bd[si][1]-t<=(lst.beats==="pickup"?pickupT():lst.beats))tag=lst.tag;
   if(t>=0&&si===2&&t>=bd[2][0]+FREE)tag=FREE_TAG;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
-  const sig=state.beats[0]+state.beats[1]-pickupT();   // the first beat we leave the wings: Pio gives the signal
+  const sig=state.beats[0]+state.beats[1]-pickupT()-2;   // 2 beats before we leave the wings: Pio gives the signal
   if(t>=0&&t>=sig&&t<sig+1)tag=SIGNAL_TAG;
   banner.textContent=tag.toUpperCase();
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
