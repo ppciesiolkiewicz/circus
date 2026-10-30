@@ -130,7 +130,17 @@ function crossing(lane,d0,tau){
 // (65% / 35% of each two-beat stretch); within a beat a hit of acceleration on the beat, then keep moving
 // through to the next one. Lands on whole even beats, so the strikes stay where they were.
 const BEAT_STEPS=[1.3,.7];
+// Pre-beat (wing to stage, from pickupT() beats before count 1): one step on every beat. The first 2 steps are small,
+// the rest large; the large ones are sized so all the steps add up to the beats. Same hit-on-the-beat as above.
+const PRE_SMALL=.6;
+function preWarp(x){   // x: beats since leaving the wing, 0..pickupT()
+  const n=pickupT(), L=(n-2*PRE_SMALL)/(n-2), v=clamp(x,0,n);
+  const b=Math.min(Math.floor(v),n-1), u=v-b, h=Math.min(1,u/.35);
+  const w=b<2?PRE_SMALL:L, cum=b<2?b*PRE_SMALL:2*PRE_SMALL+(b-2)*L;
+  return cum+w*(.5*(1-(1-h)*(1-h))+.5*u);
+}
 function beatWarp(r){
+  if(r<0&&r>=-pickupT())return preWarp(r+pickupT())-pickupT();
   const b=Math.floor(r),u=r-b,h=Math.min(1,u/.35),p=((b%2)+2)%2;
   return Math.floor(b/2)*2+(p?BEAT_STEPS[0]:0)+BEAT_STEPS[p]*(.5*(1-(1-h)*(1-h))+.5*u);
 }
@@ -422,6 +432,8 @@ function draw(){
   if(t>=0&&md&&midBeats().some(m=>t>=m&&t<m+md.beats))tag=md.tag;
   if(t>=0&&lst&&bd[si][1]-t<=(lst.beats==="pickup"?pickupT():lst.beats))tag=lst.tag;
   if(tag.includes("|")){const [h1,h2]=tag.split("|").map(x=>x.trim());tag=(t-bd[si][0])<state.beats[si]/2?h1:h2;}
+  const sig=state.beats[0]+state.beats[1]-pickupT();   // the first beat we leave the wings: Pio gives the signal
+  if(t>=0&&t>=sig&&t<sig+1)tag=SIGNAL_TAG;
   banner.textContent=tag.toUpperCase();
   banner.setAttribute("fill",t>=0&&SECTIONS[si].fz?"var(--freeze)":"var(--onfloor)");
   banner.setAttribute("opacity",tag&&started?1:0);
