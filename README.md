@@ -4,7 +4,7 @@ Character book, MC script and songs for the fire show at Paradise Circus, Pai.
 
 | Page | What it holds |
 | --- | --- |
-| [`index.html`](index.html) | **The menu.** Landing page. Links to the song only — the book is reachable at `/book.html` but not listed. Public. |
+| [`index.html`](index.html) | **The menu.** Landing page. Public. The book isn't in the list — a small 🎪 in the top-right corner logs in to it. |
 | [`disguise.html`](disguise.html) | **Disguise** — the looping song, with chords over the words and an auto-scroll for playing it live. Public. |
 | [`creature/`](creature/index.html) | **Creature** — top-down finale blocking (run-in, freezes, bow line) synced to `audio/dope-show.mp3`, plus the running order. Split into `index.html` (markup), `data.js` (sections, cast, running order), `app.js`, `style.css`. Public. |
 | [`book.html`](book.html) | **Circus ideas.** Characters and acts, the full MC script, and tonight's running order. **Password protected.** |
