@@ -118,10 +118,25 @@ h1 em { font-style: italic; color: var(--ember); }
   font-family: var(--mono); font-size: .64rem; letter-spacing: .12em;
   text-transform: uppercase; color: var(--muted);
 }
-@media (prefers-reduced-motion: reduce) { .link { transition: none; } }
+/* The way into the book: a single emoji, top-right, nearly invisible.
+   The book sits behind basic auth, so the browser asks for the login. */
+.login {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  right: calc(env(safe-area-inset-right, 0px) + 12px);
+  font-size: 1.1rem; line-height: 1;
+  padding: 6px; border-radius: 8px;
+  text-decoration: none;
+  opacity: .45;
+  transition: opacity .15s ease;
+}
+.login:hover, .login:focus-visible { opacity: 1; }
+.login:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .link, .login { transition: none; } }
 </style>
 </head>
 <body>
+<a class="login" href="/book.html" title="Log in" aria-label="Log in">&#x1F3AA;</a>
 <div class="wrap">
   <p class="eyebrow">Pai, Thailand</p>
   <h1>Paradise <em>Circus</em></h1>

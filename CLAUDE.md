@@ -7,7 +7,7 @@ He performs fire, plays the looping song, and MCs the whole night.
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The menu. A small landing page. Links to the song only — the book is deliberately unlisted. Public. |
+| `index.html` | The menu. A small landing page. Public. The book isn't in the list; a small 🎪 top-right (`.login`) leads to it and the browser asks for the login. |
 | `book.html` | The book. Three pages in one file: **Characters**, **MC script**, **Tonight**. Behind basic auth. |
 | `disguise.html` | Standalone page for the song *Disguise* — chords, roster, setup checklist, auto-scroll. Public. |
 | `creature/` | *Scientist & Creature – The Dope Show* finale blocking, served at `/creature/`. `index.html` markup, `data.js` sections/cast/running order (edit here), `app.js` animation, `style.css`. Song: `audio/dope-show.mp3`, auto-loaded. Animated stage plot, beat sheet, running order. Song lyrics are never written into it: the act script may cue a moment by the first few words of a lyric line, never whole lines. Public. |
